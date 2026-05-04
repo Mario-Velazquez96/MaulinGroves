@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+	<types>
+		<members>Federal_FinancialSnapshot_Insert</members>
+		<members>Federal_FinancialSnapshot_Insert_PDF</members>
+		<members>GPIS_Federal_Workbook</members>
+		<members>obefForm</members>
+		<name>ApexPage</name>
+	</types>
+	<version>66.0</version>
+</Package>
