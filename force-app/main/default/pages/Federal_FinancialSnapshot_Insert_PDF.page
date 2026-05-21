@@ -12,7 +12,7 @@
             <tr style="height:20pt">
                 <td style="width:275pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" rowspan="5">
                     <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: center;"/>
-                    <apex:image url="{!$Resource.GPISLogo}" width="100%"/>
+                    <apex:image url="{!$Resource.GrovesLogoPage}" width="100%"/>
                     <p style="text-indent: 0pt;text-align: left;"></p>
                 </td>
                 <td style="width:274pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#0502a0">

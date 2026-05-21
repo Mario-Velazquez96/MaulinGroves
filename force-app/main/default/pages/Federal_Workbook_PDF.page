@@ -1,0 +1,1505 @@
+<apex:page id="Federal_Workbook_PDF" showHeader="false" standardController="Lead" extensions="Federal_LeadControllerExtension" tabStyle="Lead" showQuickActionVfHeader="false"
+    applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" renderAs="pdf">
+    <apex:stylesheet value="{!$Resource.workbookStyles}" />
+    <apex:stylesheet value="{!$Resource.modal}" />
+
+    <html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>GPIS Federal Benefits and Retirement Analysis</title>
+        <meta name="author" content="L. Colley" />
+        <meta name="description" content="This workbook is designed to help you start building your retirement income plan." />
+
+    </head>
+    <center>
+        <apex:image url="{!$Resource.Pg1FedBookNewLogo}" width="100%" />
+        <p style="text-indent: 0pt;text-align: left;"></p>
+    </center>
+
+    <div style="page-break-after: always" />
+
+    <!-- PAGE 2 BEGIN -->
+
+    <apex:image url="{!$Resource.Pg2FedbookTop}" width="100%" />
+    <p style="padding-top: 2pt;text-indent: 0pt;text-align: left;">
+        <br/>
+    </p>
+    <table style="width: 90%" align="center" cellspacing="0">
+        <tbody>
+            <tr style="height:16pt">
+                <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="3">
+                    <p class="s15" style="padding-left: 10pt;text-align: left;">Date:
+                        <span style="padding-left: 5 pt;">
+                            <apex:outputText value="{0, date, MM/dd/YYYY}">
+                                <apex:param value="{!Today()}" />
+                            </apex:outputText>
+                        </span>
+                    </p>
+                </td>
+                <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="5">
+                    <p class="s15" style="padding-left: 5 pt;text-align: center;">
+                        Specialist Name:
+                        <span style="padding-left: 5 pt;">
+                            <apex:outputText value="{!$User.FirstName + ' ' + $User.LastName}" />
+                        </span>
+                    </p>
+                </td>
+                <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="2">
+                    <p class="s15" style="padding-left: 5 pt;text-align: left;">Phone:
+                        <span style="padding-left: 5 pt;">
+                            <apex:outputText value="{!$User.MobilePhone}" />
+                        </span>
+                    </p>
+                </td>
+            </tr>
+            <tr style="height:16pt">
+                <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="4">
+                    <p class="s15" style="padding-top: 4pt;text-align: right;">Email:
+                    </p>
+                </td>
+                <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="5">
+                    <p class="s15" style="padding-top: 4pt;text-align: left;padding-left: 5pt;">
+                        <u>
+                            <a href="{!$User.Email}" style="color: blue;font-size: 10pt;">
+                                <apex:outputText value="{!$User.Email}" />
+                            </a>
+                        </u>
+                    </p>
+                </td>
+                <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="1">
+                    <p class="s15" style="padding-left: 15 pt;text-align: left;">
+                    </p>
+                </td>
+            </tr>
+            <tr style="height:16pt">
+                <td style="border-bottom-style:solid;border-bottom-width:0pt" colspan="10">
+                    <p class="s20" style="padding-top: 4pt;text-align: center;font-family: sans-serif;font-size: 9pt;color: red;">Information used in this analysis is provided by the federal employee.
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p style="padding-top: 0pt;text-indent: 0pt;text-align: left;"></p>
+    <apex:form >
+        <apex:pageBlock id="page2">
+
+            <table style="width: 99%" align="center" cellspacing="0">
+                <tbody>
+                    <tr style="height:16pt">
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="1">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:center;">
+                                Name:
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="2">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                <b>
+                                    <apex:outputText value="{!Lead.Name}" />
+                                </b>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="1">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:center;">
+                                Phone:
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="2">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                <b>
+                                    <apex:outputText value="{!Lead.MobilePhone_Formatted__c}" />
+                                </b>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="4">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                Email:
+                                <span style="padding-left:10pt;color:blue;">
+                                    <b>
+                                        <u>
+                                            <apex:outputText value="{!Lead.Email}" />
+                                        </u>
+                                    </b>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:16pt">
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="1">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:center;">
+                                Address:
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="9">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                <b>
+                                    <apex:outputText value="{!Lead.Street}" />
+                                </b>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:16pt">
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="1">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:center;">
+                                City:
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="2">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                <b>
+                                    <apex:outputText value="{!Lead.City}" />
+                                </b>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="2">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:center;">
+                                State:
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="1">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                <b>
+                                    <apex:outputText value="{!Lead.State}" />
+                                </b>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="4">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                Postal Code:
+                                <span style="padding-left:10pt">
+                                    <b>
+                                        <apex:outputText value="{!Lead.PostalCode}" />
+                                    </b>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:16pt">
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="1">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:center;">
+                                Hire Date:
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="2">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                <!-- <b>
+                                <apex:outputText value="{0, date, MM/dd/YYYY}">
+                                    <apex:param value="{!Lead.Date_of_Hire__c}"/>
+                                </apex:outputText>
+                                
+                            </b> -->
+                                <b>
+                                    <span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                        <apex:outputText value="{0, date, MM/dd/YYYY}">
+                                            <apex:param value="{!Lead.Date_of_Hire__c}" />
+                                        </apex:outputText>
+                                    </span>
+                                </b>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="1">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:center;">
+                                Job Title:
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="2">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                <b>
+                                    <span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                        <apex:outputText value="{!Lead.Title}" />
+                                    </span>
+                                </b>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="4">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                Agency:
+                                <span style="padding-left:10pt">
+                                    <b>
+                                        <span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                            <apex:outputText value="{!Lead.Company}" /> </span>
+                                    </b>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:16pt">
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="1">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:center;">
+                                DOB:
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="2">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                <b>
+                                    <span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                        <apex:outputText value="{0, date, MM/dd/YYYY}">
+                                            <apex:param value="{!Lead.Date_of_Birth__c}" />
+                                        </apex:outputText>
+                                    </span>
+                                </b>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="2">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:right;">
+                                Current Age:
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="1">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:center;">
+                                <b>
+                                    <apex:outputText value="{!Lead.Contact_Age__c}" />
+                                </b>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="2">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                Exp. Retirement Date:
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="2">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                <b>
+                                    <span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                        <apex:outputText value="{0, date, MM/dd/YYYY}">
+                                            <apex:param value="{!Lead.Expected_Retirement_Date__c}" />
+                                        </apex:outputText>
+                                    </span>
+                                </b>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:16pt">
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="3">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:center;">
+                                Years of Credible Service:
+                                <span style="padding-left:5pt;">
+                                    <apex:outputText value="{!Lead.Years_of_Employment__c}" />
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="3">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:center;">
+                                Exp. Retirement Age:
+                                <span style="padding-left:5pt;">
+                                    <apex:outputText value="{!Lead.Expected_Retirement_Age__c}" />
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="2">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                Federal Employee:
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="2">
+                            <p class="s15" style="padding-left:5pt;padding-top:1pt;text-align:left;">
+
+
+                                <span style="padding-left:3pt;background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                    <apex:image url="/img/samples/flag_green.gif" rendered="{!Lead.Federal_Employee__c == 'Yes'}" />
+                                </span>
+                                <b>
+                                    <apex:outputText value="{!Lead.Federal_Employee__c}" />
+                                </b>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:16pt">
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="4">
+                            <p class="s15" style="padding-top:4pt;text-align:center;">
+                                Marital Status:
+                                <span style="padding-left:15pt;padding-right:10pt;">
+                                    <b>
+                                        <span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                            <apex:outputText value="{!Lead.Marital_Status__c}" />
+                                        </span>
+                                    </b>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="5">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                <span style="">
+                                    <apex:outputText value="Spouse Name:" rendered="{!IF( Lead.Marital_Status__c == 'Married' || Lead.Marital_Status__c == 'Registered Partnership', true, false)}"
+                                    />
+                                    <span style="padding-left:5pt;background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                        <apex:outputText value="{!Lead.Spouse_Name__r.Name}" rendered="{!IF( Lead.Marital_Status__c == 'Married' || Lead.Marital_Status__c == 'Registered Partnership', true, false)}"
+                                        />
+                                    </span>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="1">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:16pt">
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="5">
+                            <p class="s15" style="padding-top:4pt;padding-left:5pt;text-align:center;">
+                                Base Salary ($):
+                             
+                                    <b>
+                                        <span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                            <apex:outputText value="{0, number, $###,###,##0.00}">
+                                                <apex:param value="{!Lead.Base_Salary__c}" />
+                                            </apex:outputText>
+                                        </span>
+                                    </b>
+                           
+                                <span style="padding-left:10pt;">
+                                    Salary Interval:
+                                </span>
+                                <span style="padding-left:4pt;background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                    <apex:outputField value="{!Lead.Salary_Interval__c}" style="height:16px;background-color: #00daff0f;border: none;border: 1px solid #ccc;">
+                                        <apex:actionSupport action="{!save}" event="onchange" reRender="page2" />
+                                    </apex:outputField>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="5">
+                            <p class="s15" style="padding-top:4pt;text-align:center;">
+                                Affiliation:
+                                <span style="padding-left:4pt;">
+                                    <b>
+                                        <span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                            <apex:outputText value="{!Lead.Affiliation__c}" />
+                                        </span>
+                                    </b>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:16pt">
+                    <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="3">
+                        <p class="s15" style="padding-top: 2pt;font-size: 9pt;">
+                            TSP Balance ($):
+                            <span style="padding-left:2pt;font-size: 9pt;">
+                                <b>
+                                    <span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                    <apex:outputField value="{!Lead.TSP_Total__c}" style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                        <!-- SM NEW STARTS Bajrang -->
+                                        <!--   <apex:actionSupport action="{!save}" event="onchange" reRender="page2,financial" />  -->
+
+                                        <apex:actionSupport action="{!save}" event="onchange" reRender="page2,financial,OBEF" />
+                                        <!-- SM NEW END Bajrang -->
+                                    </apex:outputField></span>
+                                </b>
+                            </span>
+                        </p>
+                    </td>
+                    <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="7">
+                        <p class="s15" style="padding-top: 2pt;font-size: 9pt;">
+                            <apex:outputField value="{!Lead.percTSP__c}" style="background-color: #00daff0f;border: none;border: 1px solid #ccc;">
+                                <apex:actionSupport action="{!save}" event="onchange" reRender="page2" />
+                            </apex:outputField>%
+                            <apex:outputField value="{!Lead.dollarTSP__c}" style="background-color: #00daff0f;border: none;border: 1px solid #ccc;">
+                                <apex:actionSupport action="{!save}" event="onchange" reRender="page2" />
+                            </apex:outputField>$
+                            <span class="s15" style="padding-left:5pt;font-size: 9pt;">
+                                <apex:outputText value="TSP Contribution (%):" rendered="{!IF(Lead.percTSP__c == true, true, false)}" />
+                            </span>
+                            <span style="padding-left:8pt;font-size: 9pt;">
+                                <b>    <span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                    <apex:outputField value="{!Lead.TSP_Contribution__c}" style="padding-left:5pt;font-size: 11pt;background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;"
+                                        rendered="{!IF(Lead.percTSP__c == true, true, false)}">
+                                        <apex:actionSupport action="{!save}" event="onchange" reRender="page2" />
+                                    </apex:outputField></span>
+                                </b>
+                            </span>
+                            <span class="s20" style="padding-left:4pt;color:red;font-size: 9pt;">
+                                <apex:outputText value="+ 5% Govt. Match" rendered="{!(Lead.TSP_Contribution__c != null && Lead.TSP_Contribution__c >= 0.05 && Lead.percTSP__c == true) || (Lead.ROTH_TSP_Contribution__c != null && Lead.ROTH_TSP_Contribution__c >= 0.05 && Lead.percROTH__c == true)}"
+                                />
+                            </span>
+                            <br/>
+                            <span class="s15" style="padding-left:5pt;font-size: 9pt;">
+                                <apex:outputText value="TSP Contribution ($):" rendered="{!IF(Lead.dollarTSP__c == true, true, false)}" />
+                            </span>
+                            <span class="s15" style="padding-left:5pt;font-size: 9pt;background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                <apex:outputField value="{!Lead.Monthly_Contribution__c}" style="height:17px;width: 70px;background-color: #00daff0f;border: none;border: 1px solid #ccc;"
+                                    rendered="{!IF(Lead.dollarTSP__c == true, true, false)}">
+                                    <apex:actionSupport action="{!save}" event="onchange" reRender="page2" />
+                                </apex:outputField>
+                            </span>
+                        </p>
+                    </td>
+                    </tr>
+                    <tr style="height:23pt">
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="4">
+                            <p class="s15" style="padding-top: 2pt;font-size: 9pt;">
+                                Tax-Free TSP Balance ($):
+                                <span style="padding-left:1pt;font-size: 9pt;">
+                                    <b>
+                                        <span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                        <apex:outputField value="{!Lead.ROTH_Total__c}" style="height:17px;width: 90px;background-color: #00daff0f;border: none;border: 1px solid #ccc;">
+
+                                            <apex:actionSupport action="{!save}" event="onchange" reRender="page2,financial,OBEF" />
+                                          
+                                        </apex:outputField>
+                                        </span>
+                                    </b>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="6">
+                            <p class="s15" style="padding-top: 2pt;font-size: 9pt;">
+                                <apex:outputField value="{!Lead.percROTH__c}" style="background-color: #00daff0f;border: none;border: 1px solid #ccc;">
+                                    <apex:actionSupport action="{!save}" event="onchange" reRender="page2" />
+                                </apex:outputField>%
+                                <apex:outputField value="{!Lead.dollarROTH__c}" style="background-color: #00daff0f;border: none;border: 1px solid #ccc;">
+                                    <apex:actionSupport action="{!save}" event="onchange" reRender="page2" />
+                                </apex:outputField>$
+                                <span class="s15" style="padding-left:5pt;font-size: 9pt;">
+                                    <apex:outputText value="ROTH TSP Contribution (%):" rendered="{!IF(Lead.percROTH__c == true, true, false)}" />
+                                </span>
+                                <span style="padding-left:10pt;font-size: 9pt;">
+                                    <b>
+                                        <span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                        <apex:outputField value="{!Lead.ROTH_TSP_Contribution__c}" style="height:17px;width: 45px;background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;"
+                                            rendered="{!IF(Lead.percROTH__c == true, true, false)}">
+                                            <apex:actionSupport action="{!save}" event="onchange" reRender="page2" />
+                                        </apex:outputField>
+                                        </span>
+                                    </b>
+                                </span>
+                                <br/>
+                                <span class="s15" style="padding-left:5pt;font-size: 9pt;">
+                                    <apex:outputText value="ROTH TSP Contribution ($):" rendered="{!IF(Lead.dollarROTH__c == true, true, false)}" />
+                                </span>
+                                <span class="s15" style="padding-left:5pt;font-size: 9pt;background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                    <apex:outputField value="{!Lead.Monthly_ROTH_Contribution__c}" style="height:17px;width: 70px;background-color: #00daff0f;border: none;border: 1px solid #ccc;"
+                                        rendered="{!IF(Lead.dollarROTH__c == true, true, false)}">
+                                        <apex:actionSupport action="{!save}" event="onchange" reRender="page2" />
+                                    </apex:outputField>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:23pt">
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="5">
+                            <p class="s15" style="padding-top:4pt;text-align:center;">
+                                Retirement System:
+                                <span style="padding-left:5pt;">
+                                    <apex:outputField value="{!Lead.FERS__c}" />FERS
+                                    <apex:outputField value="{!Lead.Special_Group_Member__c}" />Special Groups
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="5">
+                            <p class="s15" style="padding-left:10pt;padding-top:4pt;text-align:left;">
+                                FEGLI Plan:
+                                <span style="padding-left:5pt;">
+                                    <apex:outputField value="{!Lead.Basic__c}" />Basic
+                                    <apex:outputField value="{!Lead.OptionA__c}" />Option A
+                                    <apex:outputField value="{!Lead.OptionB__c}" />Option B
+                                    <apex:outputField value="{!Lead.OptionC__c}" />Option C
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:16pt">
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="1">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:center;">
+                                FEGLI Code:
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="4">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:left;">
+                                <span style="padding-left:10pt;background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                    <apex:outputText value="{!Lead.FEGLI_Code_Picklist__c}" />
+
+                                </span>
+                                <apex:outputText value="Values: " />
+                                <apex:outputText value="{!Lead.FEGLI_Code__c}" />
+                            </p>
+                        </td>
+                        <td style="border-bottom-style:solid;border-bottom-width:1pt" colspan="6">
+                            <p class="s15" style="padding-left:5pt;padding-top:4pt;text-align:center;color:black;">
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table style="width: 100%" align="center" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td colspan="100%">
+                            <p class="s20" style="padding-top: 8pt;font-size: 10pt;text-align: justify;">
+                                The objective of this workbook is to give the Federal Employee a working knowledge of their current core benefits. It is
+                                not intended to offer tax or investing advice. Understanding how the federal retirement system
+                                works will offer you invaluable insight and the ability to make an informed decision when
+                                the time comes to plan for your retirement. Your retirement income is based on the system
+                                you are employed under, either CSRS, CSRS Offset, or FERS. While it is important to understand
+                                how this works, it is equally important to understand your other core benefits, what they
+                                are, how they affect your income during the working years and how to maximize your pension
+                                into retirement.
+                                <br/>
+                            </p>
+                            <p class="s20" style="padding-top: 5pt;font-size: 10pt;text-align: center;">
+                                The first steps in developing a financial strategy are understanding:
+                                <br/>
+                                <br/>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="100%">
+                            <p class="s20" style="font-size: 10pt;text-align: center;color: #2E5395;">
+                                <b> • What you have • What you need
+                                    <br/>• What you want • What your income will be
+                                    <br/>• What your costs will be • What your options are </b>
+                                <br/>
+                                <br/>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="100%">
+                            <p class="s20" style="font-size: 10pt;text-align: center;">
+                                During this review, we will cover the following core benefits that apply to you:
+                                <br/>
+                                <br/>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="100%">
+                            <p class="s20" style="font-size: 10pt;text-align: center;color: #2E5395;">
+                                <b> • Federal Employee Group Life Insurance (FEGLI)
+                                    <br/>• Your Federal Employee Retirement System
+                                    <br/>• Retirement Annuities
+                                    <br/>• FERS Supplement Annuity
+                                    <br/>• Thrift Savings Plan
+                                    <br/>• Social Security Annuity
+                                    <br/>• Your Personalized Financial Snapshot
+                                    <br/>• GPIS Attachment Library
+                                    <br/>
+                                </b>
+                                <br/>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="100%">
+                            <p class="s20" style="font-size: 10pt;text-align: center;color: red;">
+                                <b> In retirement two things will occur:
+                                    <br/>
+                                    <br/>
+                                </b>
+                                <span style="font-size: 10pt;">
+                                    <b>
+                                        <u>
+                                            Income Will Decrease and Costs Will Increase
+                                        </u>
+                                    </b>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="100%">
+                            <p class="s38" style="font-size: 11pt;text-align: center;">
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </apex:pageBlock>
+    </apex:form>
+
+
+    <div style="page-break-after: always" />
+
+    <!-- Basic Life Section Begin -->
+
+    <apex:actionRegion >
+        <apex:outputPanel id="basicForm" rendered="{!$CurrentPage.parameters.basicCheckbox}">
+            <apex:include pageName="BasicLife_PDF" />
+            <apex:actionSupport action="{!getPage}" event="onchange" reRender="basicForm_PDF" />
+        </apex:outputPanel>
+    </apex:actionRegion>
+
+    <!-- Basic Life Section End -->
+
+    <!-- Option A / C Section Begin -->
+
+    <apex:actionRegion >
+        <apex:outputPanel id="formAC_PDF">
+            <apex:include pageName="FEGLIAC_PDF" />
+            <apex:actionSupport action="{!getPage}" event="onchange" reRender="formAC_PDF" />
+        </apex:outputPanel>
+    </apex:actionRegion>
+
+    <!-- Option A / C Section End -->
+
+    <!-- Option B Section Begin -->
+
+    <apex:actionRegion >
+        <apex:outputPanel id="formB_PDF">
+            <apex:include pageName="optionB_PDF" />
+            <apex:actionSupport action="{!getPage}" event="onchange" reRender="formB_PDF" />
+        </apex:outputPanel>
+    </apex:actionRegion>
+
+    <!-- Option B Section End -->
+
+    <!--- FERS SPECIAL GROUPS BEGIN -->
+
+    <apex:actionRegion >
+        <apex:outputPanel id="fersSpecialGroups">
+            <apex:include pageName="FERS_Special_Groups_PDF" />
+            <apex:actionSupport action="{!getPage}" event="onchange" reRender="fersSpecialGroups" />
+        </apex:outputPanel>
+    </apex:actionRegion>
+
+
+    <!--- FERS SPECIAL GROUPS END -->
+
+    <!-- FERS Section Begin -->
+
+    <apex:actionRegion >
+        <apex:outputPanel id="FERS_System_PDF">
+            <apex:include pageName="FERSSection_PDF" />
+            <apex:actionSupport action="{!getPage}" event="onchange" reRender="FERS_System_PDF" />
+        </apex:outputPanel>
+    </apex:actionRegion>
+
+    <!-- FERS Section End -->
+
+    <!-- TSP Section Begin -->
+
+    <apex:form >
+
+
+        <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: left;" />
+        <apex:image url="{!$Resource.Pg15FedbookTop}" width="100%" />
+
+        <apex:pageBlock id="page15" mode="edit">
+            <p style="padding-top: 3pt;"></p>
+
+
+            <table style="width: 100%" align="center" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td colspan="7">
+                            <p class="s38" style="font-size:9pt;text-align: justify;">
+                                The Thrift Savings Plan (TSP) is a retirement savings and investment plan for Federal employees and members of the uniformed
+                                services, including the Ready Reserve. It was established by Congress in the Federal Employees
+                                Retirement System Act of 1986. For FERS employees, TSP is one of a three-part retirement
+                                package that also includes your FERS basic annuity and Social Security. For a FERS employee
+                                to take full advantage of this plan, they should contribute 5% to receive the full matching
+                                benefit. CSRS employees receive no matching funds.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;color:red;text-align: center;">
+                                <u>
+                                    <b>Contribution Limits</b>
+                                </u>
+                            </p>
+                        </td>
+                        <td colspan="1">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;color:red;text-align: center;">
+                                <u>
+                                    <b>{!previousYear.MasterLabel}</b>
+                                </u>
+                            </p>
+                        </td>
+                        <td colspan="1">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;color:red;text-align: center;">
+                                <u>
+                                    <b>{!currentYear.MasterLabel}</b>
+                                </u>
+                            </p>
+                        </td>
+                        <td colspan="3">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;color:red;text-align: center;">
+                                <u>
+                                    <b>Government Matching Contributions</b>
+                                </u>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;color:red;text-align: justify;">
+                                •
+                                <span style="padding-left: 5pt; color: black;">
+                                    Regular Contribution
+                                </span>
+                            </p>
+                        </td>
+                        <td colspan="1">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">
+                                <!-- <b>$23,000</b> -->
+                                 <apex:outputText value="{0, number, $###,###}">
+                                            <apex:param value="{!previousYear.Regular_Contribution__c}" />
+                                        </apex:outputText>
+                            </p>
+                        </td>
+                        <td colspan="1">
+                            <p class="s20" style="padding-top: 3pt;font-size:9pt;text-align: center;">
+                                <!-- <apex:outputField value="{!Lead.Regular_Contribution__c}" /> -->
+                                     <apex:outputText value="{0, number, $###,###}">
+                                        <apex:param value="{!currentYear.Regular_Contribution__c}" />
+                                    </apex:outputText>
+                            </p>
+                        </td>
+                        <td colspan="3">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;color:red;text-align: center;">
+                                •
+                                <span style="padding-left: 5pt; color: black;">
+                                    CSRS and CSRS Offset employees receive no
+                                    <br/>
+                                </span>
+                                <span style="padding-left: 14pt; color: black;">
+                                    matching funds
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;color:red;text-align: left;">
+                                •
+                                <span style="padding-left: 5pt; color: black;">
+                                    Catch-Up Contribution
+                                </span>
+                                <br/>
+                                <span style="font-size: 8pt;padding-left: 15pt;text-align: center;">
+                                    for employees over age 50
+                                </span>
+                            </p>
+                        </td>
+                        <td colspan="1">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">
+                                <!-- <b>$ 7,500</b> -->
+                                 <apex:outputText value="{0, number, $###,###}" style="">
+                                            <apex:param value="{!previousYear.Catch_Up_Contribution__c}" />
+                                        </apex:outputText>
+                            </p>
+                        </td>
+                        <td colspan="1">
+                            <p class="s20" style="padding-top: 3pt;font-size:9pt;text-align: center;">
+                                <!-- <apex:outputField value="{!Lead.Catchup_Contribution__c}" /> -->
+                                   <apex:outputText value="{0, number, $###,###}">
+                                        <apex:param value="{!currentYear.Catch_Up_Contribution__c}" />
+                                    </apex:outputText>
+                            </p>
+                        </td>
+                        <td colspan="3">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;color:red;text-align: center;">
+                                •
+                                <span style="padding-left: 5pt; color: black;">
+                                    FERS employees receive up to 5% of
+                                    <br/>
+                                </span>
+                                <span style="padding-left: 14pt; color: black;">
+                                    personal contributions
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;color:red;text-align: justify;">
+                                •
+                                <span style="padding-left: 5pt; color: black;">
+                                    Total Contributions
+                                </span>
+                            </p>
+                        </td>
+                        <td colspan="1">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">
+                                <!-- <b>$30,500</b> -->
+                                  <apex:outputText value="{0, number, $###,###}">
+                                            <apex:param value="{!previousYear.Regular_Contribution__c + previousYear.Catch_Up_Contribution__c }" />
+                                        </apex:outputText>
+                            </p>
+                        </td>
+                        <td colspan="1">
+                            <p class="s20" style="padding-top: 3pt;font-size:9pt;text-align: center;">
+                                <!-- <apex:outputText value="{0, number, $###,###,##0.00}">
+                                    <apex:param value="{!Lead.Catchup_Contribution__c + Lead.Regular_Contribution__c}" />
+                                </apex:outputText> -->
+                                      <apex:outputText value="{0, number, $###,###}">
+                                        <apex:param value="{!currentYear.Regular_Contribution__c + currentYear.Catch_Up_Contribution__c}" />
+                                    </apex:outputText>
+                            </p>
+                        </td>
+                        <td colspan="3">
+                            <p class="s38" style="padding-left: 20pt;font-size:9pt;color:red;text-align: center;">
+                                •
+                                <span style="padding-left: 5pt; color: black;">
+                                    1% agency automatic contribution
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <p class="s38" style="padding-top: 3pt;color: red;font-size:9pt;text-align: center;">
+                                <u>
+                                    <b>TSP Options in Retirement</b>
+                                </u>
+                            </p>
+                        </td>
+                        <td colspan="3">
+                            <p class="s38" style="padding-left: 20pt;font-size:9pt;color:red;text-align: center;">
+                                •
+                                <span style="padding-left: 5pt; color: black;">
+                                    From 1% - 3% of employee contribution is
+                                    <br/>
+                                </span>
+                                <span style="padding-left: 14pt; color: black;">
+                                    matched at 100%
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <p class="s38" style="padding-left: 5pt;color: #2E5395;font-size:9pt;text-align: center;">
+                                • Monthly Payments
+                                <span style="padding-left: 15pt;">
+                                    • Rollover
+                                </span>
+                                <br/> • Annuitize
+                                <span style="padding-left: 15pt;">
+                                    • Do Nothing
+                                </span>
+                            </p>
+                        </td>
+                        <td colspan="3">
+                            <p class="s38" style="padding-left: 20pt;font-size:9pt;color:red;text-align: center;">
+                                •
+                                <span style="padding-left: 5pt; color: black;">
+                                    From 4% - 5% of employee contribution is
+                                    <br/>
+                                </span>
+                                <span style="padding-left: 14pt; color: black;">
+                                    matched at 50%
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <p class="s38" style="font-size:9pt;color:red;text-align: justify;">
+                                <br/>
+                            </p>
+                        </td>
+                        <td colspan="1">
+                            <p class="s38" style="font-size:9pt;text-align: center;">
+                            </p>
+                        </td>
+                        <td colspan="1">
+                            <p class="s20" style="font-size:9pt;text-align: center;">
+                                <br/>
+                            </p>
+                        </td>
+                        <td colspan="3">
+                            <p class="s38" style="font-size:9pt;text-align: center;">
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">
+                            <p class="s38" style="font-size:8pt;text-align: center;">
+                                <br/> Visit
+                                <a href="https://www.tsp.gov/" style="color: blue;">https://www.tsp.gov/</a> for current contribution limits.
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="padding-top: 0pt;padding-left: 4pt;text-indent: 0pt;text-align: left;" />
+            <apex:image url="{!$Resource.Pg15FedbookMid}" width="100%" />
+            <p style="padding-top: 0pt;"></p>
+            <table style="width: 100%" align="center" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td colspan="7">
+                            <p class="s38" style="font-size:9pt;text-align: justify;">
+                                Information in this workbook came from many sources, (see below) and due to time and space, has been condensed to offer you
+                                a basic overview. It is not meant to provide a detailed explanation of all benefits. Below
+                                are links with extensive information on the benefits that we covered during our review. Should
+                                you have additional questions, please review these links and contact us so we may assist
+                                you further.
+                            </p>
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: justify;">
+                                Federal Retirement:
+                                <a href="http://www.opm.gov/retirement-services/publications-forms/pamphlets/ri90-8.pdf" style="color: blue;">http://www.opm.gov/retirement-services/publications-forms/pamphlets/ri90-8.pdf</a>
+                            </p>
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: justify;">
+                                FERS:
+                                <a href="http://www.opm.gov/retirement-services/fers-information/" style="color: blue;">http://www.opm.gov/retirement-services/fers-information/</a>
+                            </p>
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: justify;">
+                                CSRS:
+                                <a href="http://www.opm.gov/retirement-services/csrs-information/" style="color: blue;">http://www.opm.gov/retirement-services/csrs-information/</a>
+                            </p>
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: justify;">
+                                FEGLI:
+                                <a href="http://www.opm.gov/healthcare-insurance/life-insurance/" style="color: blue;">http://www.opm.gov/healthcare-insurance/life-insurance/</a>
+                            </p>
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: justify;">
+                                TSP:
+                                <a href="https://www.tsp.gov/index.shtml" style="color: blue;">https://www.tsp.gov/index.shtml</a>
+                            </p>
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: justify;">
+                                Social Security:
+                                <a href="https://www.ssa.gov/" style="color: blue;">https://www.ssa.gov/</a>
+                            </p>
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: justify;">
+                                Windfall Elimination Provision:
+                                <a href="http://www.socialsecurity.gov/pubs/EN-05-10045.pdf" style="color: blue;">http://www.socialsecurity.gov/pubs/EN-05-10045.pdf</a>
+                            </p>
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: justify;">
+                                Government Pension Offset (GPO):
+                                <a href="http://www.socialsecurity.gov/pubs/EN-05-10007.pdf" style="color: blue;">http://www.socialsecurity.gov/pubs/EN-05-10007.pdf</a>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="padding-top: 9pt;padding-left: 4pt;text-indent: 0pt;text-align: left;" />
+            <apex:image url="{!$Resource.Pg15FedbookMid2}" width="100%" />
+            <p style="padding-top: 3pt;"></p>
+            <table style="width: 100%" align="center" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td style="width:513pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
+                            colspan="2" bgcolor="#2D74B5">
+                            <p class="s13" style="padding-top: 4pt;padding-left: 1pt;font-size:9pt;text-align: center;">MILITARY TIME RECAPTURE</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:127pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                            <p class="s15" style="padding-left: 1pt;font-size:9pt;text-align: center;">Army</p>
+                        </td>
+                        <td style="width:386pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                            <p class="s38" style="padding-left: 1pt;font-size:9pt;text-align: center;">
+                                DFAS – Indianapolis Center, ATTN: IN-FO-FC-A, 8899 E 56, Indianapolis, IN 46249-0875
+                                <br/> Fax: 317-542-2779</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:127pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                            <p class="s15" style="padding-left: 1pt;ffont-size:9pt;text-indent: 0pt;text-align: center;">Navy</p>
+                        </td>
+                        <td style="width:386pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                            <p class="s38" style="padding-left: 1pt;font-size:9pt;text-indent: 0pt;text-align: center;">
+                                Director, DFAS – Cleveland Center-JJCS/FMCS
+                                <br/> Anthony J. Celebreeze Federal Bldg., Cleveland, OH 44199-2055
+                                <br/> Fax: 216-522-5974
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:127pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                            <p class="s15" style="padding-left: 1pt;font-size:9pt;text-indent: 0pt;text-align: center;">Air Force</p>
+                        </td>
+                        <td style="width:386pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                            <p class="s38" style="padding-left: 1pt;font-size:9pt;text-indent: 0pt;text-align: center;">
+                                DFAS-DE/FUPBC, 6760 East Irvington Place, Denver CO 80279-5000
+                                <br/> Fax : 303-676-7408</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:127pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                            <p class="s15" style="padding-left: 1pt;text-indent: 0pt;font-size:9pt;text-align: center;">Marines</p>
+                        </td>
+                        <td style="width:386pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                            <p class="s38" style="padding-left: 1pt;font-size:9pt;text-indent: 0pt;text-align: center;">
+                                DFAS – Kansas City Center, 1500 East 95th Street, Kansas City, MO 64197-0001
+                                <br/> Fax: 800-929-4207
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:127pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                            <p class="s15" style="padding-left: 1pt;text-indent: 0pt;font-size:9pt;text-align: center;">Coast Guard</p>
+                        </td>
+                        <td style="width:386pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                            <p class="s38" style="padding-left: 1pt;font-size:9pt;text-indent: 0pt;text-align: center;">
+                                Commanding Officer Settlements and Records | U.S. Coast Guard
+                                <br/> Military Pay and Personnel Center, 444 SE Quincy Street, Topeka, KS 66683-3591
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <center>
+                <p style="padding-top: 0pt;text-align: left;" />
+                <apex:image url="{!$Resource.Pg15FedbookBottom}" width="100%" />
+                <p style="text-indent: 0pt;text-align: left;"></p>
+            </center>
+
+        </apex:pageBlock>
+    </apex:form>
+
+
+    <div style="page-break-after: always" />
+
+
+    <!-- PAGE 16 BEGIN -->
+
+    <apex:form >
+
+
+        <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: left;" />
+        <apex:image url="{!$Resource.Pg15FedbookMid2}" width="100%" />
+
+        <apex:pageBlock id="page16" mode="edit">
+            <p style="padding-top: 3pt;"></p>
+
+
+            <table style="width: 100%" align="center" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td style="width:491pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="4" bgcolor="#2D74B5">
+                            <p class="s13" style="padding-top: 4pt;font-size:9pt;padding-left: 3pt;padding-right: 1pt;text-indent: 0pt;text-align: center;">FEDERAL EMPLOYEES GROUP LIFE INSURANCE (FEGLI)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:120pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;line-height: 11pt;text-align: left;">Election Change</p>
+                            <p style="padding-top: 5pt;text-indent: 0pt;text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;line-height: 11pt;text-align: left;">Designation of a Beneficiary</p>
+                        </td>
+                        <td style="width:108pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="2">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 3pt;font-size:9pt;text-align: center;">SF-2817</p>
+                            <p style="padding-top: 4pt;text-indent: 0pt;text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="s38" style="padding-left: 3pt;padding-right: 2pt;font-size:9pt;text-align: center;">SF-2823</p>
+                        </td>
+                        <td style="width:263pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 3pt;font-size:9pt;text-align: center;">An accident must be reported to OPM within 20 days of accident. All other claims must be filed
+                                with OPM within 90 days.
+                                <br/> All claims are settled by the office of Federal Employees Group Life Insurance, P.O. 2627,
+                                Jersey City, NJ 07303-2627
+                                <br/> Phone: 1-800-633-4542 | Fax: 201-395-7950
+                                <br/>
+                                <u>
+                                    <a href="http://www.opm.gov/" style="color: blue;">www.opm.gov</a>
+                                </u>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:491pt;border-top-style:solid;border-top-width:2pt;border-bottom-style:solid;border-bottom-width:2pt" colspan="4">
+                            <p style="text-indent: 0pt;text-align: left;">
+                                <br/>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:491pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="4" bgcolor="#2D74B5">
+                            <p class="s13" style="padding-top: 8pt;padding-left: 3pt;font-size:9pt;text-indent: 0pt;text-align: center;">FEDERAL EMPLOYEES’ RETIREMENT SYSTEM (FERS) / CIVIL SERVICE RETIREMENT SYSTEM (CSRS)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p style="text-indent: 0pt;text-align: left;">
+                                <br/>
+                            </p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 3pt;font-size:9pt;line-height: 11pt;text-align: center;">FERS</p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 23pt;font-size:9pt;line-height: 11pt;text-align: left;">CSRS</p>
+                        </td>
+                        <td style="width:223pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            rowspan="7">
+                            <p class="s15" style="padding-top: 6pt;padding-left: 8pt;padding-right: 6pt;font-size:9pt;text-align: center;">Office of Personnel Management</p>
+                            <p class="s38" style="padding-top: 4pt;padding-left: 15pt;padding-right: 6pt;font-size:9pt;text-align: center;">All forms must be filed with the OPM – usually done through your personnel office, you will have
+                                one year after separation to file your disability retirement form with OPM.
+                                <br/> 1-888-767-6738 |
+                                <u>
+                                    <a href="http://www.opm.gov/" style="color: blue;">www.opm.gov</a>
+                                </u>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;line-height: 11pt;text-align: left;">Deferred Retirement</p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 3pt;font-size:9pt;text-align: center;">R-92-19</p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 17pt;font-size:9pt;text-align: left;">SF-1496</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;line-height: 12pt;text-align: left;">Death Benefits</p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 3pt;font-size:9pt;text-align: center;">SF-3104</p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 17pt;font-size:9pt;text-align: left;">SF-2800</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;line-height: 11pt;text-align: left;">Retirement</p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 3pt;font-size:9pt;text-align: center;">SF-3107</p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 17pt;font-size:9pt;text-align: left;">SF-2801</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;line-height: 11pt;text-align: left;">Application for Refund</p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 3pt;font-size:9pt;text-align: center;">SF-3106</p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 17pt;font-size:9pt;text-align: left;">SF-2802</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;line-height: 11pt;text-align: left;">Disability Retirement</p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 3pt;font-size:9pt;text-align: center;">SF-3105</p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 17pt;font-size:9pt;text-align: left;">SF-2824</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;line-height: 11pt;text-align: left;">Deposit or Re-deposit</p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 3pt;font-size:9pt;text-align: center;">None</p>
+                        </td>
+                        <td style="width:63pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 17pt;font-size:9pt;text-align: left;">SF-2803</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:491pt;border-top-style:solid;border-top-width:2pt;border-bottom-style:solid;border-bottom-width:2pt" colspan="4">
+                            <p style="text-indent: 0pt;text-align: left;">
+                                <br/>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:491pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="4" bgcolor="#2D74B5">
+                            <p class="s13" style="padding-top: 8pt;padding-left: 3pt;font-size:9pt;text-indent: 0pt;text-align: center;">FEDERAL EMPLOYEES’ RETIREMENT SYSTEM (FERS) / CIVIL SERVICE RETIREMENT SYSTEM (CSRS)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;text-align: left;">Election Form</p>
+                        </td>
+                        <td style="width:126pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">TSP - 1</p>
+                        </td>
+                        <td style="width:223pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            rowspan="12">
+                            <p style="font-size:9pt;text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="s15" style="padding-left: 3pt;font-size:9pt;text-align: center;">Thrift Savings Line</p>
+                            <p class="s38" style="padding-top: 3pt;padding-left: 8pt;font-size:9pt;text-align: center;">
+                                For Interfund transfers, account balance, and current interest rates, call 1-877-968-3778 or visit
+                                <a href="http://www.tsp.gov/" style="color:blue;">www.tsp.gov</a>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;text-align: left;">Designation of a Beneficiary</p>
+                        </td>
+                        <td style="width:126pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">TSP - 3</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;text-align: left;">Change of Address</p>
+                        </td>
+                        <td style="width:126pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">TSP - 9</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;text-align: left;">Spouse Information</p>
+                        </td>
+                        <td style="width:126pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">TSP - 11C</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;text-align: left;">Change in Name</p>
+                        </td>
+                        <td style="width:126pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">TSP - 15</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;text-align: left;">Exception to Spousal</p>
+                        </td>
+                        <td style="width:126pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">TSP - 16</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;text-align: left;">Account Balance of Deceased</p>
+                        </td>
+                        <td style="width:126pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">TSP - 17</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;text-align: left;">Loan Application</p>
+                        </td>
+                        <td style="width:126pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">TSP - 20</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;text-align: left;">Hardship Loan Application</p>
+                        </td>
+                        <td style="width:126pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">TSP - 20H</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-left: 5pt;font-size:9pt;text-align: left;">Full Withdrawal Request
+                                <br/> Retirees / Separatees</p>
+                        </td>
+                        <td style="width:126pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">TSP - 70</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;text-align: left;">In-Service Withdrawal</p>
+                        </td>
+                        <td style="width:126pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">TSP - 75</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:142pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                            <p class="s15" style="padding-top: 3pt;padding-left: 7pt;font-size:9pt;text-align: left;">Tax Considerations</p>
+                        </td>
+                        <td style="width:126pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="2">
+                            <p class="s38" style="padding-top: 3pt;font-size:9pt;text-align: center;">TSP – 536</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:491pt;border-top-style:solid;border-top-width:2pt" colspan="4">
+                            <p style="text-indent: 0pt;text-align: left;">
+                                <br/>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:491pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="4" bgcolor="#2D74B5">
+                            <p class="s13" style="padding-top: 3pt;padding-left: 3pt;text-indent: 0pt;text-align: center;">VETERANS’ BENEFITS</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:491pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt"
+                            colspan="4">
+                            <p class="s38" style="padding-top: 3pt;padding-left: 3pt;padding-right: 1pt;font-size:9pt;text-align: center;">
+                                Call 1-800-827-1000 for any form or visit
+                                <a href="http://www.va.gov/" style="color: blue">www.va.gov</a>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <center>
+                <p style="padding-top: 0pt;text-align: left;" />
+                <apex:image url="{!$Resource.Pg16FedbookBottom}" width="100%" />
+                <p style="text-indent: 0pt;text-align: left;"></p>
+            </center>
+
+        </apex:pageBlock>
+    </apex:form>
+
+
+    <div style="page-break-after: always" />
+
+    <!-- TSP Section End -->
+
+    <!-- NOTES -->
+
+    <center>
+        <apex:form id="Notes_Section" style="width: 100%">
+            <apex:pageBlock id="notespage" mode="edit">
+
+                <table style="width: 100%" align="center" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <td colspan="100%">
+                                <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: left;" />
+                                <apex:image url="{!$Resource.Notes_Header}" width="100%" />
+                                <p style="padding-top: 3pt;"></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- <table style="width: 95%" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <td style="100%">
+                                <p style="text-indent: 15pt;text-align: top-left; text-position: top; word-wrap: break-word; padding-left: 3pt;text-align:left;">
+                                    <center>
+                                        <apex:outputField value="{!Lead.Description}" />
+                                    </center>
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table> -->
+                <table style="width: 95%;" cellspacing="0">
+    <tbody>
+        <tr>
+            <td style="width:100%;">
+                <p style="text-indent: 15pt; text-align: left; word-wrap: break-word; padding-left: 3pt;">
+                    <apex:outputField value="{!Lead.Description}" />
+                </p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+                <table style="width: 100%" align="center" cellspacing="0">
+                    <tbody>
+                        <tr style="height:16pt">
+                            <td colspan="100%">
+                                <center>
+                                    <p style="margin-left:5pt;margin-right:5pt;padding-top: 0pt;text-align: left;" />
+                                    <apex:image url="{!$Resource.Notes_Footer}" width="100%" />
+                                    <p style="text-indent: 0pt;text-align: left;"></p>
+                                </center>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </apex:pageBlock>
+        </apex:form>
+    </center>
+
+    <div style="page-break-after: always" />
+
+    <!-- NOTES END -->
+
+    <!-- Financial Snapshot Section Begin -->
+
+    <apex:actionRegion >
+        <apex:outputPanel id="financialInsert_PDF">
+            <apex:include pageName="Federal_FinancialSnapshot_Insert_PDF" />
+            <apex:actionSupport action="{!getPage}" event="onchange" reRender="financialInsert_PDF" />
+        </apex:outputPanel>
+    </apex:actionRegion>
+
+    <!-- Financial Snapshot Section End -->
+
+    <!-- PACKET END SECTION BEGIN -->
+
+    <apex:variable var="cnt" value="{!0}" />
+    <apex:form >
+
+        <apex:pageBlock id="page17" mode="edit">
+
+            <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: left;" />
+            <apex:image url="{!$Resource.Pg17FedbookMidNewLogo}" width="100%" />
+            <p style="padding-top: 10pt;"></p>
+
+            <center>
+                <apex:commandButton action="{!pdfAction}" value="Save Attachment" />
+                <apex:commandButton action="{!pdfActionEmail}" value="Email to Client" />
+            </center>
+
+            <table style="width: 100%" align="center" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td colspan="auto">
+                            <p class="s38" style="font-size: 10pt;text-align: center;">Disclaimer: Please accept this information in a general context and apply what you believe fits
+                                your situation. All values in this presentation are subject to change and are not guaranteed
+                                - for illustration purposes only.</p>
+                            <p style="padding-top: 7pt;text-indent: 0pt;text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="s38" style="font-size: 10pt;text-align: center;">GPIS in not affiliated with any government agency.
+                                <br/>Gottstein Management Corp. Lic. #0G63175 DBA: GPIS Employee Benefits Specialist</p>
+                            <p class="s15" style="padding-top: 8pt;text-align: center;">GPIS Employee Benefits Specialist. All rights reserved. No part of this publication/presentation
+                                may be reproduced, stored in a retrieval system, or transmitted in any form or by any means,
+                                electronic, mechanical, photocopy, recording, or otherwise, without the prior written permission
+                                of GPIS.</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </apex:pageBlock>
+    </apex:form>
+
+
+    <div style="{!if(cnt < 1, 'page-break-before:avoid;','page-break-before:always;')}">
+        <apex:variable var="cnt" value="{!cnt+1}" />
+    </div>
+
+    <!-- PACKET END SECTION END -->
+
+    </html>
+
+
+
+    <footer class="slds-modal__footer"></footer>
+
+</apex:page>

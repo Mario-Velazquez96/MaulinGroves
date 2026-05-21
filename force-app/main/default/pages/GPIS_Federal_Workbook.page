@@ -256,7 +256,7 @@
                             <td colspan="100%">
                                 <center>
                                     <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: left;" />
-                                    <apex:image url="{!$Resource.Pg1FedBook}" width="100%" />
+                                    <apex:image url="{!$Resource.Pg1FedBookNewLogo}" width="100%" />
                                     <p style="text-indent: 0pt;text-align: left;">
                                     </p>
                                 </center>
@@ -2501,7 +2501,7 @@
                         <tr>
                             <td colspan="100%">
                                 <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: left;" />
-                                <apex:image url="{!$Resource.Pg17FedbookMid}" width="100%" />
+                                <apex:image url="{!$Resource.Pg17FedbookMidNewLogo}" width="100%" />
                                 <p style="padding-top: 10pt;"></p>
 
                                 <center>

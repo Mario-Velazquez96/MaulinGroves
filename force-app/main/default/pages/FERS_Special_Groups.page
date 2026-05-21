@@ -1,0 +1,297 @@
+<apex:page id="fersSpecialGroups" showHeader="false" standardController="Lead" extensions="Federal_LeadControllerExtension"
+    tabStyle="Lead" showQuickActionVfHeader="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" rendered="{!IF(Lead.Special_Group_Member__c == true, true, false)}">
+    <apex:stylesheet value="{!$Resource.workbookStyles}" />
+
+    <p style="padding-top: 1pt;text-indent: 0pt;text-align: left;">
+        <br/>
+    </p>
+
+    <apex:form >
+        <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: left;" />
+        <apex:image url="{!$Resource.Pg13FedbookTop}" width="100%" />
+
+        <apex:pageBlock id="page13" mode="edit">
+            <!-- Calculate Button Hide<center> <apex:commandButton onclick="window.location.top.reload();" action="{!RerenderPage}" value="Calculate" style="color: green;"/>  </center>-->
+            <p style="padding-top: 3pt;"></p>
+
+
+            <table style="width: 100%" align="center" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td colspan="10">
+                            <p class="s38" style="font-size: 11pt;text-align: justify;color: #2E5395;">
+                                <b>Benefit Formula</b>
+                                <span style=" color: black;">
+                                    - How your benefit is calculated: Your benefit is based on your "high-3 average pay". This is figured by averaging your highest
+                                    basic pay over any 3 consecutive years of creditable service. In addition to your High
+                                    Three, your years of creditable service and age at retirement are key factors.
+                                    <br
+                                    />
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="10">
+                            <p class="s20" style="font-size: 11pt;text-align: justify;color: #2E5395;">
+                                <apex:actionRegion >
+                                    $
+                                    <apex:inputField value="{!Lead.High_3_Salary__c}" style="height: 17px; width:70px;background-color: #00daff0f;border: none;border: 1px solid #ccc;">
+                                        <apex:actionSupport action="{!save}" event="onchange" reRender="page13,FERS_Calculations,Snapshot,OBEF,FERSSection,page11,page10,min,page12,financial,page11,page10,page14"
+                                        />
+                                    </apex:inputField>
+                                </apex:actionRegion>
+                                <span class="s20" style="padding-left: 2pt;color: #2E5395;">
+                                    <b> :Your High-3 Salary </b>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:88pt">
+                        <td style="width:512pt" colspan="2">
+                            <p class="s38" style="padding-left: 2pt;font-size:9pt;text-align: justify;">Members of Special Groups, such as
+                                <u>Law Enforcement Officers, Firefighters, and Air traffic Controllers</u>, pay different levels
+                                of employee contributions toward retirement and are eligible for retirement under age and
+                                service combinations, that differ from those that apply for the standard retirement.</p>
+                            <p class="s38" style="padding-left: 2pt;padding-top: 5pt;font-size:9pt;text-align: justify;">Law enforcement officers and firefighters under the FERS system are defined to be classified
+                                as Special Group employees if the position held is limited to "young and vigorous" personnel.
+                                In addition, they must have occupied a primary, or first-line law enforcement, or firefighter
+                                position for at least 3 years, before moving to a secondary (administrative or supervisory)
+                                position.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:193pt">
+                        <td style="width:233pt">
+                            <p class="s38" style="font-size: 10pt;text-align: center;color: #2E5395;">
+                                <b>FERS Special Groups</b>
+                            </p>
+                            <p class="s38" style="padding-top: 5pt;font-size:9pt;text-align: center;color: #2E5395;">
+                                •
+                                <span style="padding-left: 5pt;color: black;">
+                                    You can retire with unreduced benefits at age 50, with at least 20 years of creditable service.
+                                </span>
+                            </p>
+                            <p class="s38" style="padding-top: 5pt;font-size:9pt;text-align: center;color: #2E5395;">
+                                •
+                                <span style="padding-left: 5pt;color: black;">
+                                    At any age, with at least 25 years of creditable service.
+                                </span>
+                            </p>
+                            <p class="s38" style="padding-top: 5pt;font-size:9pt;text-align: center;color: #2E5395;">
+                                •
+                                <span style="padding-left: 5pt;color: black;">
+                                    At Age 50 with at least 20 years of service (unreduced benefit).
+                                </span>
+                            </p>
+                            <p class="s38" style="padding-top: 5pt;font-size:9pt;text-align: center;color: #2E5395;">
+                                •
+                                <span style="padding-left: 5pt;color: black;">
+                                    At Any Age, with at least 25 years of creditable service (unreduced benefit).
+                                </span>
+                            </p>
+                        </td>
+                        <td style="width:279pt">
+                            <p class="s38" style="font-size: 10pt;text-align: center;color: red;">
+                                <b>The formula for Special Groups is:</b>
+                            </p>
+                            <p class="s38" style="padding-top: 5pt;font-size:9pt;text-align: center;">1.7% x 'high-three' x (first) 20 years AND</p>
+                            <p class="s38" style="padding-top: 5pt;font-size:9pt;text-align: center;">1% x ‘high-three’ for any amount over 20 years</p>
+                            <p class="s38" style="padding-top: 5pt;font-size:9pt;text-align: center;">Example:</p>
+                            <p class="s38" style="padding-top: 5pt;font-size:9pt;text-align: center;">A 53-year-old with 23 years of service and a high-three of$115,000:</p>
+                            <p class="s38" style="padding-top: 5pt;font-size:9pt;text-align: center;">1.7% x
+                                <u>
+                                    <b>$115,000</b>
+                                </u>
+                                <b>=</b>
+                                <u>
+                                    <b>$1,955.00</b>
+                                </u>
+                                <b>x</b> (first) 20 years of service =
+                            </p>
+                            <p class="s38" style="padding-top: 5pt;font-size:9pt;text-align: center;">
+                                <b>
+                                    <u>$39,100.00</u>
+                                </b>
+                            </p>
+                            <p class="s38" style="padding-top: 5pt;font-size:9pt;text-align: center;">1% x
+                                <u>
+                                    <b>$115,000</b>
+                                </u>
+                                <b>=</b>
+                                <u>
+                                    <b>$1,150.00</b>
+                                </u>
+                                <b>x</b> (remaining) 3 years =
+                            </p>
+                            <p class="s38" style="padding-top: 5pt;font-size:9pt;text-align: center;">
+                                <b>
+                                    <u>$3,450.00</u>
+                                </b>
+                            </p>
+                            <p class="s38" style="padding-top: 5pt;font-size:9pt;text-align: center;color: red;">
+                                <b>Total FERS Annuity $42,550.00 Annually</b>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:17pt">
+                        <td colspan="2">
+                            <p class="s38" style="font-size: 9pt;text-align: center;">
+                                1.7% x
+                                <b>
+                                    <u>
+                                        <apex:outputText value="{0, number, $###,###,##0.00}">
+                                            <apex:param value="{!Lead.High_3_Salary__c}" />
+                                        </apex:outputText>
+                                    </u>
+                                </b>
+                                =
+                                <b>
+                                    <u>
+                                        <apex:outputText value="{0, number, $###,###,##0.00}">
+                                            <apex:param value="{!Lead.High_3_Salary__c * 0.017}" />
+                                        </apex:outputText>
+                                    </u>
+                                </b>
+                                x 20 Years =
+                                <b>
+                                    <u>
+                                        <apex:outputText value="{0, number, $###,###,##0.00}">
+                                            <apex:param value="{!(Lead.High_3_Salary__c * 0.017) * 20}" />
+                                        </apex:outputText>
+                                    </u>
+                                </b>
+                                <span style="padding-left: 25pt;">
+                                    1% x
+                                    <b>
+                                        <u>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}">
+                                                <apex:param value="{!Lead.High_3_Salary__c}" />
+                                            </apex:outputText>
+                                        </u>
+                                    </b>
+                                    =
+                                    <b>
+                                        <u>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}">
+                                                <apex:param value="{!Lead.High_3_Salary__c * 0.01}" />
+                                            </apex:outputText>
+                                        </u>
+                                    </b>
+                                    x
+                                    <apex:inputField value="{!Lead.Remaining_Years__c}" style="height: 17px; width:40px;background-color: #00daff0f;border: none;border: 1px solid #ccc;">
+                                        <apex:actionSupport action="{!save}" event="onchange" reRender="page13,FERS_Calculations,Snapshot,OBEF,FERSSection,page11,page10,min,page12,financial,page11,page10,page14"
+                                        />
+                                    </apex:inputField>
+                                    Remaining Years =
+                                    <b>
+                                        <u>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}">
+                                                <apex:param value="{!(Lead.High_3_Salary__c * 0.01) * Lead.Remaining_Years__c}" />
+                                            </apex:outputText>
+                                        </u>
+                                    </b>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:12pt">
+                        <td style="width:233pt">
+                            <p class="s15" style="padding-left: 11pt;font-size:9pt;color: red;text-align: center;">
+                                <apex:outputText value="{0, number, $###,###,##0.00}">
+                                    <apex:param value="{!((Lead.High_3_Salary__c * 0.017) * 20) + ((Lead.High_3_Salary__c * 0.01) * Lead.Remaining_Years__c)}"
+                                    />
+                                </apex:outputText>
+                            </p>
+                            <p class="s38" style="padding-left: 11pt;color: red;font-size:9pt;text-align: center;">Total Annual Annuity</p>
+                        </td>
+                        <td style="width:279pt">
+                            <p class="s15" style="padding-top: 6pt;padding-left: 22pt;font-size:9pt;padding-right: 4pt;color: red;text-align: center;">
+                                <apex:outputText value="{0, number, $###,###,##0.00}">
+                                    <apex:param value="{!(((Lead.High_3_Salary__c * 0.017) * 20) + ((Lead.High_3_Salary__c * 0.01) * Lead.Remaining_Years__c)) / 12}"
+                                    />
+                                </apex:outputText>
+                            </p>
+                            <p class="s38" style="padding-left: 22pt;padding-right: 4pt;font-size:9pt;color: red;line-height: 12pt;text-align: center;">Total Monthly Annuity</p>
+                        </td>
+                    </tr>
+                    <tr style="height:275pt">
+                        <td style="width:512pt" colspan="2">
+                            <p class="s38" style="padding-top: 2pt;font-size: 10pt;text-align: center;color: #2E5395;">
+                                <b>Air Traffic Controllers</b>
+                            </p>
+                            <p class="s38" style="padding-top: 4pt;font-size:9pt;text-align: justify;">Special Provisions version 100 - Century Reauthorization Act wasadoptedon February 10, 2004,
+                                and will impact the mandatory retirement calculation under CSRS and FERS.</p>
+                            <p class="s38" style="padding-top: 4pt;font-size:9pt;text-align: center;color:red;">
+                                <b>Highlights</b>
+                            </p>
+                            <p class="s38" style="padding-top: 4pt;font-size:9pt;text-align: center;color:red;">
+                                •
+                                <span style="padding-left: 5 pt; color: black;">
+                                    Second-level supervisors will not be subject to mandatory retirement.
+                                </span>
+                            </p>
+                            <p class="s38" style="padding-top: 4pt;font-size:9pt;text-align: center;color:red;">
+                                •
+                                <span style="padding-left: 5 pt; color: black;">
+                                    Applies to active ATC with a date of birth prior to January 1, 1965.
+                                </span>
+                            </p>
+                            <p class="s38" style="padding-top: 4pt;font-size:9pt;text-align: center;color:red;">
+                                •
+                                <span style="padding-left: 5 pt; color: black;">
+                                    Retires on MRA (MRA is between 55 and 57, depending on date of birth).
+                                </span>
+                            </p>
+                            <p class="s38" style="padding-top: 4pt;font-size:9pt;text-align: center;color:red;">
+                                •
+                                <span style="padding-left: 5 pt; color: black;">
+                                    Has 30 years of service.
+                                </span>
+                            </p>
+                            <p class="s38" style="padding-top: 4pt;font-size:9pt;text-align: center;color:red;">
+                                •
+                                <span style="padding-left: 5 pt; color: black;">
+                                    Has at least 5 years of service as an ATC.
+                                </span>
+                            </p>
+                            <p class="s38" style="padding-top: 4pt;font-size:9pt;text-align: center;color:red;">
+                                •
+                                <span style="padding-left: 5 pt; color: black;">
+                                    Second-level supervisors under FERS will make additional deposits.
+                                </span>
+                            </p>
+                            <p style="padding-top: 7pt;text-indent: 0pt;text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="s38" style="padding-top: 2pt;font-size: 10pt;text-align: center;color: red;">
+                                <b>Calculating FERS Annuity</b>
+                            </p>
+                            <p style="text-indent: 0pt;text-align: left;">
+                                <br/>
+                            </p>
+                            <p class="s38" style="font-size:9pt;text-align: center;">1.7% for all years of service (even those over 20 years) except military buy-back (military buy-back
+                                years will be calculated at 1%).</p>
+                            <p class="s38" style="padding-left: 4pt;padding-right: 5pt;font-size:9pt;line-height: 11pt;text-align: center;">If a FERS ATC at 1.7% COLA will not start until age 62.</p>
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+
+            <p style="text-align: left;"></p>
+            <center>
+                <p style="margin-left:5pt;margin-right:5pt;padding-top: 0pt;text-align: left;" />
+                <apex:image url="{!$Resource.Pg13FedbookBottom}" width="100%" />
+                <p style="text-indent: 0pt;text-align: left;"></p>
+            </center>
+
+        </apex:pageBlock>
+    </apex:form>
+
+
+    <div style="page-break-after: always" />
+
+</apex:page>

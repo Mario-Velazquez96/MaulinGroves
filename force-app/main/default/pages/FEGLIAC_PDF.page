@@ -1,0 +1,781 @@
+<apex:page id="formAC_PDF"  showHeader="false" standardController="Lead" extensions="Federal_LeadControllerExtension" tabStyle="Lead" showQuickActionVfHeader="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" renderAs="pdf"> 
+  <apex:stylesheet value="{!$Resource.workbookStyles}"/>  
+
+<center>      
+    <apex:form id="formOptionA" style="width: 100%" rendered="{!IF(Lead.OptionA__c == true || (Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != 'Ao' && Lead.FEGLI_Code_Picklist__c != 'Bo' && Lead.FEGLI_Code_Picklist__c != 'Co' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'E')) && Lead.FEGLI_Code_Picklist__c != 'Go' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'I')) && Lead.FEGLI_Code_Picklist__c != 'Ko' && Lead.FEGLI_Code_Picklist__c != 'Lo' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'M')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Q')) && Lead.FEGLI_Code_Picklist__c != 'So' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'U')) && Lead.FEGLI_Code_Picklist__c != 'Wo' && Lead.FEGLI_Code_Picklist__c != 'Xo' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Y'))),true, false)}">
+        <apex:pageBlock id="page4" mode="edit">
+            <table style="width: 100%; margin-top: -5pt;" align="center" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td colspan="100%">            
+                            <p style="text-align: left;"/>
+                                <apex:image url="{!$Resource.Pg4FedbookTop}" width="100%"/>
+                            <p style="text-indent: 0pt;text-align: left;">
+                            </p>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>      
+                   
+
+        <table style="width: 100%" align="center" cellspacing="0">
+            <tbody>
+                <tr style="height:13pt">
+                    <td colspan="100%">
+                        <p class="s38" style="font-size: 9pt;text-align: justify;">
+                            <b>Optional Life Insurance – </b>
+                   Federal employees who are covered under the Basic life insurance program may also elect to purchase one or all three of the Optional coverage plans.
+                        </p>
+                        <p style="text-indent: 0pt;text-align: left;">
+                            <br/>
+                        </p>
+                        <p class="s38" style="font-size: 9pt;text-align: justify;">
+                            <b>Option A – </b>Standard Optional Insurance – 
+                                <span style=" color: red;">The employee pays the full cost </span>for this optional insurance which offers an additional $10,000 of FEGLI. Option A also offers an equal amount of AD&amp;D protection. Costs are age-based.
+                        </p>
+                        <p class="s38" style="font-size: 9pt;padding-top: 5pt;0pt;text-align: center;">
+                            <span class="s38" style="font-size: 9pt;color: red;">
+                                <b>
+                                    <u>Option A – After Retirement</u>
+                                </b>
+                            </span>
+                        </p>
+                </td>
+        </tr>
+      </tbody>
+   </table>
+    <table style="width: 100%" align="center" cellspacing="0">
+        <tbody>
+            <tr style="height:22pt">
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#C00000">
+                    <p class="s13" style="font-size: 9pt;padding-left: 0pt;line-height: 10pt;text-align: center;">
+                   Employee<br/> Age Band
+                   </p>
+                </td>
+                <td style="width:68pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#C00000">
+                    <p class="s13" style="font-size: 9pt;padding-left: 0pt;line-height: 10pt;text-align: center;">
+                   Bi-Weekly Factor</p>
+                </td>
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#C00000">
+                    <p class="s13" style="font-size: 9pt;text-indent: 0pt;text-align: center;">
+                   Monthly Factor</p>
+                </td>
+                <td style="width:316pt;border-left-style:solid;border-left-width:1pt" colspan="4">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+                   The amount of your Option A life Insurance decreases at age 65 or at retirement,</p>
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">whichever is later, at a rate of 2% per month until a 75% reduction is reached.</p>
+                </td>
+            </tr>
+            <tr style="height:13pt">
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+               Under 35</p>
+                </td>
+                <td style="width:68pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+               $0.20</p>
+                </td>
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 1pt;padding-right: 1pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$0.43</p>
+                </td>
+                <td style="width:156pt;border-left-style:solid;border-left-width:1pt">
+                    <p style="text-indent: 0pt;text-align: left;">
+                        <br/>
+                    </p>
+                </td>
+                <td style="width:160pt">
+                    <p style="text-indent: 0pt;text-align: left;">
+                        <br/>
+                    </p>
+                </td>
+            </tr>
+            <tr style="height:13pt">
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+               35-39</p>
+                </td>
+                <td style="width:68pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+               $0.20</p>
+                </td>
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 1pt;padding-right: 1pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+               $0.43</p>
+                </td>
+                <td style="width:156pt;border-left-style:solid;border-left-width:1pt">
+                    <p style="text-indent: 0pt;text-align: left;">
+                        <br/>
+                    </p>
+                </td>
+                <td style="width:160pt">
+                    <p style="text-indent: 0pt;text-align: left;">
+                        <br/>
+                    </p>
+                </td>
+            </tr>
+            <tr style="height:13pt">
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+               40-44</p>
+                </td>
+                <td style="width:68pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$0.30</p>
+                </td>
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 1pt;padding-right: 1pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+               $0.65</p>
+                </td>
+                <td style="width:126pt;">
+                            <p class="s20" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: right;">
+                        <b>$10,000.00</b>
+                    </p>
+                </td>
+                <td style="width:60pt;">
+                            <p class="s38" style="line-height: 10pt;text-align: center;">
+                        <b><span class="s20" style="color: blue; width: 2pt;font-size: 13pt;"> --------------------------> </span></b>
+                    </p>
+                </td>
+                <td style="width:130pt">
+                    <p class="s20" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: left;">
+                        <span class="s38" style="font-size: 9pt;color: red;">
+                            <b>
+               $2,500.00
+               </b>
+                        </span>
+                    </p>
+                </td>
+            </tr>
+            <tr style="height:13pt">
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">45-49</p>
+                </td>
+                <td style="width:68pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+               $0.60</p>
+                </td>
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 1pt;padding-right: 1pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+               $1.30</p>
+                </td>
+                <td style="width:156pt;border-left-style:solid;border-left-width:1pt">
+                    <p style="text-indent: 0pt;text-align: left;">
+                        <br/>
+                    </p>
+                </td>
+                <td style="width:160pt">
+                    <p style="text-indent: 0pt;text-align: left;">
+                        <br/>
+                    </p>
+                </td>
+            </tr>
+            <tr style="height:13pt">
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+               50-54</p>
+                </td>
+                <td style="width:68pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+               $1.00</p>
+                </td>
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 1pt;padding-right: 1pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+               $2.17</p>
+                </td>
+                <td style="width:156pt;border-left-style:solid;border-left-width:1pt">
+                    <p style="text-indent: 0pt;text-align: left;">
+                        <br/>
+                    </p>
+                </td>
+                <td style="width:160pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;color:blue;">
+               <b>Option A Cost:</b>
+                   </p>
+                </td>
+            </tr>
+            <tr style="height:13pt">
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+           55-59</p>
+                </td>
+                <td style="width:68pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+           $1.80</p>
+                </td>
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 1pt;padding-right: 1pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+           $3.90</p>
+                </td>
+                <td style="width:156pt;border-left-style:solid;border-left-width:1pt">
+                    <p style="text-indent: 0pt;text-align: left;">
+                        <br/>
+                    </p>
+                </td>
+                <td style="width:160pt">
+                    <p style="text-indent: 0pt;text-align: left;">
+                        <br/>
+                    </p>
+                </td>
+            </tr>
+            <tr style="height:13pt">
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+           60 Plus</p>
+                </td>
+                <td style="width:68pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+           $6.00</p>
+                </td>
+                <td style="width:58pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 1pt;padding-right: 1pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+           $13.00
+           </p>
+                </td>
+                <td style="width:156pt;border-left-style:solid;border-left-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;text-align: center;">
+                    <b><apex:outputText value="Current Age:" rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && Lead.OptionA__c == true}"/></b>
+                    <b><apex:outputText value="Starting Age:" rendered="{!Lead.FEGLI_Code_Picklist__c == '--' && Lead.OptionA__c == true}"/></b>
+                        <span class="s38" style="font-size: 9pt;color: red;"> 
+                           <u>
+                               <b>
+                                <span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                   <apex:outputField value="{!Lead.Age_Option_A_Manual__c}" style="height:17px;width: 80px;" rendered="{!Lead.FEGLI_Code_Picklist__c == '--' && Lead.OptionA__c == true}">
+                                       <apex:param value="{!Lead.Age_Option_A_Manual__c}"/>
+                                           <apex:actionSupport action="{!save}" event="onchange" reRender="page2,page4,page5,financial"/>
+                                   </apex:outputField>
+                                   <apex:outputField value="{!Lead.Contact_Age__c}" rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && Lead.OptionA__c == true}"/>
+                             </span>  </b>
+                           </u>
+                        </span>
+                    </p>
+                </td>
+                <td style="width:160pt;border-bottom-style:solid;border-bottom-width:2pt">
+                    <p class="s38" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+                            <b>
+                               <apex:outputText value="$0.20" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c <= 34}"/>
+                               <apex:outputText value="$0.24" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 35 && Lead.Contact_Age__c <= 39}"/>
+                               <apex:outputText value="$0.30" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 40 && Lead.Contact_Age__c <= 44}"/>
+                               <apex:outputText value="$0.60" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 45 && Lead.Contact_Age__c <= 49}"/>
+                               <apex:outputText value="$1.00" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 50 && Lead.Contact_Age__c <= 54}"/>
+                               <apex:outputText value="$1.80" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 55 && Lead.Contact_Age__c <= 59}"/>
+                               <apex:outputText value="$6.00" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 60}"/>
+                               <apex:outputText value="$0.20" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Age_Option_A_Manual__c == 'Under 35'}"/>
+                               <apex:outputText value="$0.24" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Age_Option_A_Manual__c == '35-39'}"/>
+                               <apex:outputText value="$0.30" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Age_Option_A_Manual__c == '40-44'}"/>
+                               <apex:outputText value="$0.60" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Age_Option_A_Manual__c == '45-49'}"/>
+                               <apex:outputText value="$1.00" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Age_Option_A_Manual__c == '50-54'}"/>
+                               <apex:outputText value="$1.80" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Age_Option_A_Manual__c == '55-59'}"/>
+                               <apex:outputText value="$6.00" style="color: blue;" rendered="{!Lead.OptionA__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Age_Option_A_Manual__c == '60+'}"/>
+                            </b>
+                    </p>
+                </td>
+            </tr>
+            <tr style="height:9pt">
+                <td style="width:184pt;border-top-style:solid;border-top-width:1pt" colspan="3">
+                    <p class="s38" style="font-size: 8pt;padding-left: 16pt;text-indent: 0pt;text-align: left; color: red;">
+                        <i>* AD&amp;D not available to Retirees</i>
+                    </p>
+                </td>
+                <td style="width:156pt">
+                    <p style="text-indent: 0pt;text-align: left;">
+                        <br/>
+                    </p>
+                </td>
+                <td style="width:160pt;border-top-style:solid;border-top-width:1pt">
+                    <p class="s20" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+           Bi-Weekly</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p style="padding-top: 1pt;padding-bottom: 5pt;padding-left: 0pt;text-indent: 0pt;text-align: left;"/>
+  </apex:pageBlock>   
+</apex:form>
+</center>
+
+<center>
+    <apex:form id="formOptionC" style="width: 100%" rendered="{!IF(Lead.OptionC__c == true || (Lead.FEGLI_Code_Picklist__c != '--' && (CONTAINS(Lead.FEGLI_Code_Picklist__c, '1') || CONTAINS( Lead.FEGLI_Code_Picklist__c, '2') || CONTAINS(Lead.FEGLI_Code_Picklist__c, '3') || CONTAINS( Lead.FEGLI_Code_Picklist__c, '4') || CONTAINS( Lead.FEGLI_Code_Picklist__c, '5' ))), true, false)}">
+           <apex:pageBlock id="page4b" mode="edit">  
+              <table style="width: 100%" align="center" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td colspan="100%">                                           
+                           <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: left;"/>
+                                <apex:image url="{!$Resource.Pg4FedbookMid}" width="100%"/>
+                           <p style="text-indent: 0pt;text-align: left;">
+                           </p>
+                       </td>
+                    </tr>
+                </tbody>
+            </table>   
+                        
+   
+    <table style="width: 100%" align="center" cellspacing="0">
+      <tbody>
+        <tr>
+          <td style="100%">
+                <p class="s38" style="font-size: 9pt;padding-top: 1pt;text-align: justify;">
+                    <b>Option C – </b>Family Optional Insurance – 
+                <span style="color: red;">The employee pays the full cost</span> for optional family coverage. This coverage insures the lives of your spouse and eligible dependent children. You have the option from one to five multiples.   Each multiple is equal to $5,000 for your spouse and $2,500 for each eligible dependent child.
+            </p>
+            <p style="text-indent: 0pt;text-align: left;">
+                <br/>
+                </p>
+                <p class="s38" style="font-size: 9pt;text-align: justify;">"Eligible family members" means your present spouse and your unmarried dependent children, including an adopted child, a stepchild, or a recognized natural child who is living with you, or who is receiving regular and substantial support from you. To be covered a child must be under 22 years of age or, if 22 or over, incapable of self-support because of mental or physical disability which existed before the child became 22 years of age.</p><br/>
+            </td>
+        </tr>
+     </tbody>
+   </table>
+   <table style="width: 100%" align="center" cellspacing="0">
+     <tbody>
+        <tr style="height:23pt">
+            <td colspan="3">
+                <p class="s38" style="font-size: 9pt;padding-left: 13pt;text-indent: 0pt;text-align: center;">
+                   <b><apex:outputText value="Current Age:" rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && Lead.OptionC__c == true}"/></b>
+                   <b><apex:outputText value="Starting Age:" rendered="{!Lead.FEGLI_Code_Picklist__c == '--' && Lead.OptionC__c == true}"/></b>
+               <span class="s20" style="font-size: 9pt;color: red;padding-top: -3pt;padding-right: 9pt;">
+                   <b><span style="background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                       <u>
+                           <apex:outputField value="{!Lead.Age_Option_C_Manual__c}" rendered="{!Lead.FEGLI_Code_Picklist__c == '--' && Lead.OptionC__c == true}"/>
+                           <apex:outputField value="{!Lead.Contact_Age__c}" rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && Lead.OptionC__c == true}"/>
+                       </u>
+                       </span>
+                   </b>
+               </span>
+               </p>
+            </td>
+            <td style="border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#C00000">
+                <p class="s13" style="font-size: 9pt;text-indent: 0pt;text-align: center;">
+               Employee Age Band
+               </p>
+            </td>
+            <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#C00000">
+                <p class="s13" style="font-size: 9pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+               Bi-Weekly Factor
+               </p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#C00000">
+                <p class="s13" style="font-size: 9pt;text-indent: 0pt;text-align: center;">
+               Monthly Factor</p>
+            </td>
+        </tr>
+        <tr style="height:13pt">
+                        <td style="width:103pt" colspan="2">
+                <p class="s38" style="font-size: 9pt;padding-top: 1pt;padding-right: 0pt;text-indent: 0pt;line-height: 10pt;text-align: center;">
+                    Option C Multiples:</p>
+            </td>
+            <td style="width:130pt;border-right-style:solid;border-right-width:1pt">
+                <span class="s38" style="font-size: 9pt;padding-top: 1pt;padding-left: 20pt;text-indent: 0pt;line-height: 10pt;text-align: left;background-color: #e0f7fa; color: #000;border: 1px solid #ccc; display: inline-block;">
+                                    <apex:outputField value="{!Lead.Multiples_C_Manual__c}" style="height:17px;width: 45px;" rendered="{!Lead.FEGLI_Code_Picklist__c == '--' && Lead.OptionC__c == true}">
+                                        <apex:param value="{!Lead.Multiples_C_Manual__c}"/>
+                                            <apex:actionSupport action="{!save}" event="onchange" reRender="page4b"/>
+                                    </apex:outputField>
+                                </span>
+               <p class="s38" style="font-size: 9pt;padding-top: 1pt;padding-left: 20pt;text-indent: 0pt;line-height: 10pt;text-align: left;">
+                            <b><u>__<apex:outputText value="1" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '1')}"/>
+                                    <apex:outputText value="2" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '2')}"/>
+                                    <apex:outputText value="3" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '3')}"/>
+                                    <apex:outputText value="4" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '4')}"/>
+                                    <apex:outputText value="5" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '5')}"/>__</u></b>
+                                
+                       
+                  </p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">Under 35</p>
+            </td>
+            <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$0.20</p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$0.43</p>
+            </td>
+        </tr>
+        <tr style="height:13pt">
+            <td style="width:193pt" colspan="2">
+                <p class="s38" style="font-size: 9pt;padding-top: 1pt;padding-right: 0pt;text-indent: 0pt;line-height: 10pt;text-align: center;"></p>
+            </td>
+            <td style="width:130pt;border-right-style:solid;border-right-width:1pt">
+                <b><p class="s38" style="font-size: 9pt;padding-top: 1pt;padding-left: 23pt;text-indent: 0pt;line-height: 10pt;text-align: left;"></p></b>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">35-39</p>
+            </td>
+            <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$0.24</p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$0.52</p>
+            </td>
+        </tr>
+        <tr style="height:13pt">
+<td style="width:193pt" colspan="2">
+                <p class="s38" style="font-size: 9pt;padding-top: 1pt;padding-left: 0pt;text-indent: 0pt;line-height: 10pt;text-align: center;">Spouse Benefit:</p>
+            </td>
+            <td style="width:130pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 1pt;padding-left: 14pt;text-indent: 0pt;line-height: 10pt;text-align: left;">
+                    <u>
+                        <b>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Multiples_C_Manual__c == '1' }">
+                                    <apex:param value="{!1 * 5000}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Multiples_C_Manual__c == '2' }">
+                                    <apex:param value="{!2 * 5000}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Multiples_C_Manual__c == '3' }">
+                                    <apex:param value="{!3 * 5000}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Multiples_C_Manual__c == '4' }">
+                                    <apex:param value="{!4 * 5000}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Multiples_C_Manual__c == '5' }">
+                                    <apex:param value="{!5 * 5000}"/>
+                             </apex:OutputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '1')}">
+                                    <apex:param value="{!1 * 5000}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '2')}">
+                                    <apex:param value="{!2 * 5000}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '3')}">
+                                    <apex:param value="{!3 * 5000}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '4')}">
+                                    <apex:param value="{!4 * 5000}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '5')}">
+                                    <apex:param value="{!5 * 5000}"/>
+                             </apex:OutputText>
+                        </b>
+                   </u>
+              </p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">40-44</p>
+            </td>
+            <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$0.37</p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$0.80</p>
+            </td>
+        </tr>
+        <tr style="height:13pt">
+            <td style="width:193pt" colspan="2">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br/>
+                </p>
+            </td>
+            <td style="width:106pt;border-right-style:solid;border-right-width:1pt">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br/>
+                </p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">45-49</p>
+            </td>
+            <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$0.53</p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$1.15</p>
+            </td>
+        </tr>
+        <tr style="height:13pt">
+             <td style="width:193pt" colspan="2">
+                <p class="s38" style="font-size: 9pt;padding-top: 1pt;padding-left: 0pt;text-indent: 0pt;line-height: 10pt;text-align: center;">Each Child Benefit:</p>
+            </td>
+            <td style="width:130pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 1pt;padding-left: 14pt;text-indent: 0pt;line-height: 10pt;text-align: left;">
+                    <u>
+                        <b>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Multiples_C_Manual__c == '1' }">
+                                    <apex:param value="{!1 * 2500}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Multiples_C_Manual__c == '2' }">
+                                    <apex:param value="{!2 * 2500}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Multiples_C_Manual__c == '3' }">
+                                    <apex:param value="{!3 * 2500}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Multiples_C_Manual__c == '4' }">
+                                    <apex:param value="{!4 * 2500}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Multiples_C_Manual__c == '5' }">
+                                    <apex:param value="{!5 * 2500}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '1')}">
+                                    <apex:param value="{!1 * 2500}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '2')}">
+                                    <apex:param value="{!2 * 2500}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '3')}">
+                                    <apex:param value="{!3 * 2500}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '4')}">
+                                    <apex:param value="{!4 * 2500}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '5')}">
+                                    <apex:param value="{!5 * 2500}"/>
+                             </apex:OutputText>
+                            </b>
+                       </u>
+                 </p>
+
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">50-54</p>
+            </td>
+            <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$0.83</p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$1.80</p>
+            </td>
+        </tr>
+        <tr style="height:13pt">
+            <td style="width:193pt" colspan="2">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br/>
+                </p>
+            </td>
+            <td style="width:106pt;border-right-style:solid;border-right-width:1pt">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br/>
+                </p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">55-59</p>
+            </td>
+            <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$1.33</p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$2.88</p>
+            </td>
+        </tr>
+        <tr style="height:13pt">
+        <td style="width:268pt" colspan="2">
+                 <p class="s38" style="font-size: 9pt;padding-top: 3pt;text-align: center;">Multiples (#)   
+                      <u>
+                          <b>       
+                              _<apex:outputText value="{!Lead.Multiples_C_Manual__c}" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c == '--' && Lead.Multiples_C_Manual__c != '' }"/>
+                               <apex:outputText value="1" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '1')}"/>
+                               <apex:outputText value="2" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '2')}"/>
+                               <apex:outputText value="3" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '3')}"/>
+                               <apex:outputText value="4" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '4')}"/>
+                               <apex:outputText value="5" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '5')}"/>_ 
+                           </b>
+                       </u>
+                    X   
+                        bi-weekly factor ($) 
+                        
+                     <b>
+                         <u>   
+                             _<apex:outputText value="0.20" style="color: blue;" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c <= 34}"/>
+                             <apex:outputText value="0.24" style="color: blue;" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 35 && Lead.Contact_Age__c <= 39}"/>
+                             <apex:outputText value="0.37" style="color: blue;" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 40 && Lead.Contact_Age__c <= 44}"/>
+                             <apex:outputText value="0.53" style="color: blue;" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 45 && Lead.Contact_Age__c <= 49}"/>
+                             <apex:outputText value="0.83" style="color: blue;" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 50 && Lead.Contact_Age__c <= 54}"/>
+                             <apex:outputText value="1.33" style="color: blue;" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 55 && Lead.Contact_Age__c <= 59}"/>
+                             <apex:outputText value="2.43" style="color: blue;" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 60 && Lead.Contact_Age__c <= 64}"/>
+                             <apex:outputText value="2.83" style="color: blue;" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 65 && Lead.Contact_Age__c <= 69}"/>
+                             <apex:outputText value="3.83" style="color: blue;" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 70 && Lead.Contact_Age__c <= 74}"/>
+                             <apex:outputText value="5.76" style="color: blue;" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 75 && Lead.Contact_Age__c <= 79}"/>
+                             <apex:outputText value="7.80" style="color: blue;" rendered="{!Lead.OptionC__c == true && Lead.FEGLI_Code_Picklist__c != '--' && Lead.Contact_Age__c >= 80}"/>
+                             <apex:outputText value="0.20" style="color: blue;" rendered="{!Lead.Age_Option_C_Manual__c == 'Under 35' && Lead.FEGLI_Code_Picklist__c == '--'}"/>
+                             <apex:outputText value="0.24" style="color: blue;" rendered="{!Lead.Age_Option_C_Manual__c == '35-39' && Lead.FEGLI_Code_Picklist__c == '--'}"/>
+                             <apex:outputText value="0.37" style="color: blue;" rendered="{!Lead.Age_Option_C_Manual__c == '40-44' && Lead.FEGLI_Code_Picklist__c == '--'}"/>
+                             <apex:outputText value="0.53" style="color: blue;" rendered="{!Lead.Age_Option_C_Manual__c == '45-49' && Lead.FEGLI_Code_Picklist__c == '--'}"/>
+                             <apex:outputText value="0.83" style="color: blue;" rendered="{!Lead.Age_Option_C_Manual__c == '50-54' && Lead.FEGLI_Code_Picklist__c == '--'}"/>
+                             <apex:outputText value="1.33" style="color: blue;" rendered="{!Lead.Age_Option_C_Manual__c == '55-59' && Lead.FEGLI_Code_Picklist__c == '--'}"/>
+                             <apex:outputText value="2.43" style="color: blue;" rendered="{!Lead.Age_Option_C_Manual__c == '60-64' && Lead.FEGLI_Code_Picklist__c == '--'}"/>
+                             <apex:outputText value="2.83" style="color: blue;" rendered="{!Lead.Age_Option_C_Manual__c == '65-69' && Lead.FEGLI_Code_Picklist__c == '--'}"/>
+                             <apex:outputText value="3.83" style="color: blue;" rendered="{!Lead.Age_Option_C_Manual__c == '70-74' && Lead.FEGLI_Code_Picklist__c == '--'}"/>
+                             <apex:outputText value="5.76" style="color: blue;" rendered="{!Lead.Age_Option_C_Manual__c == '75-79' && Lead.FEGLI_Code_Picklist__c == '--'}"/>
+                             <apex:outputText value="7.80" style="color: blue;" rendered="{!Lead.Age_Option_C_Manual__c == '80+' && Lead.FEGLI_Code_Picklist__c == '--'}"/>_
+                        </u>
+                     </b>                    
+                 </p>   
+            </td>
+            <td style="width:55pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;padding-left: 12pt;text-indent: 0pt;line-height: 10pt;text-align: left;"> 
+                =
+                <b>
+                    <u>
+                        <span style="color: red;">
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.Age_Option_C_Manual__c == 'Under 35' && Lead.FEGLI_Code_Picklist__c == '--'}">
+                                    <apex:param value="{!0.20 * value(Lead.Multiples_C_Manual__c)}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.Age_Option_C_Manual__c == '35-39' && Lead.FEGLI_Code_Picklist__c == '--'}">
+                                    <apex:param value="{!0.24 * value(Lead.Multiples_C_Manual__c)}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.Age_Option_C_Manual__c == '40-44' && Lead.FEGLI_Code_Picklist__c == '--'}">
+                                    <apex:param value="{!0.37 * value(Lead.Multiples_C_Manual__c)}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.Age_Option_C_Manual__c == '45-49' && Lead.FEGLI_Code_Picklist__c == '--'}">
+                                    <apex:param value="{!0.53 * value(Lead.Multiples_C_Manual__c)}"/>
+                             </apex:OutputText>
+                              <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.Age_Option_C_Manual__c == '50-54' && Lead.FEGLI_Code_Picklist__c == '--'}">
+                                    <apex:param value="{!0.83 * value(Lead.Multiples_C_Manual__c)}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.Age_Option_C_Manual__c == '55-59' && Lead.FEGLI_Code_Picklist__c == '--'}">
+                                    <apex:param value="{!1.33 * value(Lead.Multiples_C_Manual__c)}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.Age_Option_C_Manual__c == '60-64' && Lead.FEGLI_Code_Picklist__c == '--'}">
+                                    <apex:param value="{!2.43 * value(Lead.Multiples_C_Manual__c)}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.Age_Option_C_Manual__c == '65-69' && Lead.FEGLI_Code_Picklist__c == '--'}">
+                                    <apex:param value="{!2.83 * value(Lead.Multiples_C_Manual__c)}"/>
+                             </apex:OutputText>
+                               <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.Age_Option_C_Manual__c == '70-74' && Lead.FEGLI_Code_Picklist__c == '--'}">
+                                    <apex:param value="{!3.83 * value(Lead.Multiples_C_Manual__c)}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.Age_Option_C_Manual__c == '75-79' && Lead.FEGLI_Code_Picklist__c == '--'}">
+                                    <apex:param value="{!5.76 * value(Lead.Multiples_C_Manual__c)}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && Lead.Age_Option_C_Manual__c == '80+' && Lead.FEGLI_Code_Picklist__c == '--'}">
+                                    <apex:param value="{!7.80 * value(Lead.Multiples_C_Manual__c)}"/>
+                             </apex:OutputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '1') && Lead.FEGLI_Code_Picklist__c != '--'}">
+                                    <apex:param value="{!1 * Lead.AgeFactorformula_OptionC__c}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '2') && Lead.FEGLI_Code_Picklist__c != '--'}">
+                                    <apex:param value="{!2 * Lead.AgeFactorformula_OptionC__c}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '3') && Lead.FEGLI_Code_Picklist__c != '--'}">
+                                    <apex:param value="{!3 * Lead.AgeFactorformula_OptionC__c}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '4') && Lead.FEGLI_Code_Picklist__c != '--'}">
+                                    <apex:param value="{!4 * Lead.AgeFactorformula_OptionC__c}"/>
+                             </apex:OutputText>
+                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.OptionC__c == true && CONTAINS(Lead.FEGLI_Code_Picklist__c, '5') && Lead.FEGLI_Code_Picklist__c != '--'}">
+                                    <apex:param value="{!5 * Lead.AgeFactorformula_OptionC__c}"/>
+                             </apex:OutputText>
+                         </span>
+                        </u>
+                     </b>
+                 </p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">60-64</p>
+            </td>
+            <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$2.43</p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$5.27</p>
+            </td>
+        </tr>
+        <tr style="height:13pt">
+            <td style="width:193pt" colspan="2">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br/>
+                </p>
+            </td>
+            <td style="width:106pt;border-right-style:solid;border-right-width:1pt">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br/>
+                </p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">65-69</p>
+            </td>
+            <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$2.83</p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$6.13</p>
+            </td>
+        </tr>
+        <tr style="height:13pt">
+            <td style="width:193pt" colspan="2">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br/>
+                </p>
+            </td>
+            <td style="width:106pt;border-right-style:solid;border-right-width:1pt">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br/>
+                </p>
+            </td>  
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">70-74</p>
+            </td>
+            <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$3.83</p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$8.30</p>
+            </td>
+        </tr>
+        <tr style="height:13pt">
+            <td style="width:193pt" colspan="2">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br/>
+                </p>
+            </td>
+            <td style="width:106pt;border-right-style:solid;border-right-width:1pt">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br/>
+                </p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">75-79</p>
+            </td>
+            <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$5.76</p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$12.48</p>
+            </td>
+        </tr>
+        <tr style="height:13pt">
+            <td style="border-right-style:solid;border-right-width:1pt"  colspan="3">
+                <p class="s38" style="font-size: 9pt;text-align: left;">
+                    <b>Continuation of Option B and C After Retirement</b>
+                    <br/>
+                </p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">80 +</p>
+            </td>
+            <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$7.80</p>
+            </td>
+            <td style="width:63pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                <p class="s38" style="font-size: 9pt;padding-top: 2pt;text-indent: 0pt;line-height: 10pt;text-align: center;">$16.90</p>
+            </td>
+        </tr>
+     </tbody>
+  </table>
+   <table style="width: 100%" align="center" cellspacing="0">
+     <tbody>
+        <tr>
+            <td style="width:100%">
+                <p class="s38" style="font-size: 9pt;padding-top: 5pt;text-align: justify;">Your full reduction Option B and C multiples are free after you reach age 65 or retire (if later), but reductions start. The Full Reduction multiples will reduce by 2% of the pre-retirement amount per month for 50 months, at which time your coverage ends.  Effective April 24, 1999, Option B and C may be continued after retirement at per $1,000 rates. You do have the option to continue paying the monthly premiums and maintain coverage.
+               </p>
+            </td>
+        </tr>
+     </tbody>
+   </table>
+   
+   <table style="width: 100%" align="center" cellspacing="0">
+        <tbody>
+            <tr>
+               <td colspan="100%">         
+                <center>
+                    <p style="text-align: left;"/>
+                        <apex:image url="{!$Resource.Pg4FedbookBottom}" width="100%"/>
+                    <p style="text-indent: 0pt;text-align: left;"></p>
+                </center>
+              </td>
+            </tr>
+        </tbody>
+    </table>    
+   </apex:pageBlock>
+ </apex:form>
+</center> 
+
+        <div style="page-break-after: always"/>
+</apex:page>

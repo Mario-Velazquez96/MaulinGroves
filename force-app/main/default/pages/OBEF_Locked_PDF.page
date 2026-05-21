@@ -1,0 +1,1057 @@
+<apex:page id="OBEF"  showHeader="false" standardController="Lead" extensions="Federal_LeadControllerExtension" tabStyle="Lead" showQuickActionVfHeader="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" renderAs="pdf"> 
+  <apex:stylesheet value="{!$Resource.workbookStyles}"/>  
+  
+
+ <apex:variable var="cnt" value="{!0}" />                         
+    <center>      
+        <apex:form id="obefForm" style="width: 100%"> 
+            <apex:pageBlock id="obefPDF">  
+                 
+        
+     <table style="border-collapse:collapse;" cellspacing="0">
+            <tbody>
+                <tr style="height:24pt">
+                    <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="9" rowspan="4">
+                        <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: center;"/>
+                           <center> <apex:image url="{!$Resource.GrovesLogoPage}" width="85%"/> </center>
+                        <p style="text-indent: 0pt;text-align: left;"></p>
+                    </td>
+                    <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="7" bgcolor="#B4D9F3">
+                        <p class="s13" style="padding-top: 2pt;font-size: 18pt;text-align: center;">OFFICE BENEFIT EVALUATION FORM</p>
+                </td>
+            </tr>
+            <tr style="height:20pt">
+                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="2">
+                    <p class="s20" style="padding-top: 4pt;padding-left: 2pt;font-size: 9pt;text-align: left;">Specialist:
+                        <span style="padding-left: 5pt;">    
+                             <apex:outputText value="{!$User.FirstName + ' ' + $User.LastName}"/>
+                         </span>
+                    </p>
+                </td>
+                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="5">
+                    <p class="s20" style="padding-top: 4pt;padding-left: 3pt;font-size: 9pt;text-align: left;">Appt. Date:
+                        <span style="padding-left: 5pt;">
+                                <apex:outputText value="{0, date, MM/dd/YYYY}">
+                                    <apex:param value="{!Today()}"/>
+                                </apex:outputText>
+                        </span>
+                        <span style="padding-left: 5pt;">
+                            <apex:outputField value="{!Lead.Appointment_Time__c}"/>
+                        </span>
+                    </p>
+                </td>
+                </tr>
+                <tr style="height:20pt">
+                    <td style="width:118pt;border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="2">
+                         <p class="s20" style="padding-top: 2pt;padding-left: 2pt;font-size: 9pt;text-align: left;">Referral:  
+                            <span style="padding-left: 2pt;padding-top:4pt;">
+                                <apex:outputField value="{!Lead.Referral__c}"/>
+                            </span>
+                        </p>
+                    </td>
+                    <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="5">
+                        <p class="s20" style="padding-top: 4pt;padding-left: 3pt;font-size: 9pt;text-align: left;">Referred By:
+                            <span style="padding-left: 2pt;padding-top:4pt;">
+                                <apex:outputText value="{!Lead.Referred_By__c}"/>
+                             </span>
+                        </p>
+                    </td>
+                </tr>
+                <tr style="height:24pt">
+                    <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="9">
+                        <p style="text-indent: 0pt;text-align: left;">
+                            </p>
+                        </td>
+                </tr>
+                <tr style="height:16pt">
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="16" bgcolor="#B4D9F3">
+                            <p class="s13" style="padding-left: 2pt;font-size: 11pt;text-align: left;">FEDERAL EMPLOYEE INFORMATION</p>
+                        </td>
+                    </tr>
+                    <tr style="height:20pt">
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="6">
+                            <p class="s20" style="padding-left: 1pt;padding-top: 2pt;font-size: 9pt;text-align: left;">Name:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Name}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="3">
+                            <p class="s20" style="padding-top: 1pt;padding-left: 2pt;font-size: 9pt;text-align: left;">Agency:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Company}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="3">
+                            <p class="s20" style="padding-top: 1pt;padding-left: 2pt;font-size: 9pt;text-align: left;">Job Title:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Title}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="4">
+                            <p class="s20" style="padding-top: 2pt;padding-left: 2pt;font-size: 9pt;text-align: left;">Federal Employee:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Federal_Employee__c}"/>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:20pt">
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="6">
+                            <p class="s20" style="padding-top: 2pt;padding-left: 2pt;font-size: 9pt;text-align: left;">Email:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Email}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="3">
+                            <p class="s20" style="padding-top: 2pt;padding-left: 2pt;font-size: 9pt;text-align: left;">Best #:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.MobilePhone_Formatted__c}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="7" bgcolor="#B4D9F3">
+                            <p class="s20" style="padding-top: 2pt; padding-left: 2pt;font-size: 9pt;text-align: left;">Marital Status:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Marital_Status__c}"/>
+                                </span>
+                            </p>
+                        </td>
+                        
+                        
+                    </tr>
+                    <tr style="height:20pt">
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="6">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">Best Time:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputText value="{!Lead.Best_Time_to_Contact__c}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="3">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">Best Day:
+                               <span style="padding-left: 2pt;">
+                                    <apex:outputText value="{!Lead.Best_Day_of_the_Week_to_Contact__c}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="7" bgcolor="#B4D9F3">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">Spouse:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputText value="{!Lead.Spouse_Name__r.Name}" rendered="{!Lead.Marital_Status__c == 'Married'}"/>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:20pt">
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="3">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">Age:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Contact_Age__c}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="4">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">DOB:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Date_of_Birth__c}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="2">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">Date of Hire:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Date_of_Hire__c}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="7" bgcolor="#B4D9F3">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">Agency:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Spouse_Name__r.Account.Name}" rendered="{!Lead.Marital_Status__c == 'Married'}"/>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:20pt">
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="9">
+                            <p class="s20" style="padding-top: 2pt;padding-left: 2pt;font-size: 9pt;text-align: left;">Address:
+                                 <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Street}"/>
+                                </span>
+                            </p>
+                        </td>
+                       <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="7" bgcolor="#B4D9F3">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">Job Title:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Spouse_Name__r.Title}" rendered="{!Lead.Marital_Status__c == 'Married'}"/>
+                                </span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr style="height:19pt">
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="3">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">City:
+                                 <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.City}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="3">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">State:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.State}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="3">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">Zip:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.PostalCode}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="4" bgcolor="#B4D9F3">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">DOB:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Spouse_Name__r.Date_of_Birth__c}" rendered="{!Lead.Marital_Status__c == 'Married'}"/>
+                                </span>
+                            </p>
+                        </td>
+                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="3" bgcolor="#B4D9F3">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">Date of Hire:
+                                <span style="padding-left: 2pt;">
+                                    <apex:outputField value="{!Lead.Spouse_Name__r.Date_of_Hire__c}" rendered="{!Lead.Marital_Status__c == 'Married'}"/>
+                                </span>
+                            </p>
+                        </td>
+                        </tr>
+                        <tr style="height:20pt">
+                            <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F" colspan="8">
+                                <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">Retirement System:<br/>
+                                      FERS
+                                     <span style="padding-left: 2pt;">
+                                        <apex:outputField value="{!Lead.FERS__c}"/>
+                                    </span>   
+                                    <span style="padding-left: 2pt;">Special Groups</span>
+                                    <span style="padding-left: 2pt;">
+                                        <apex:outputField value="{!Lead.Special_Group_Member__c}"/>
+                                    </span>
+                                    
+                                </p>
+                            </td>
+                            <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F" colspan="8">
+                            <p class="s20" style="padding-left: 2pt;font-size: 9pt;text-align: left;">FEGLI:
+                                <span style="padding-left: 2pt;">Basic</span>
+                                <span style="padding-left: 2pt;">
+                                        <apex:outputField value="{!Lead.Basic__c}"/>
+                                    </span>   
+                                    <span style="padding-left: 2pt;">Opt. A</span>
+                                    <span style="padding-left: 2pt;">
+                                        <apex:outputField value="{!Lead.OptionA__c}"/>
+                                    </span>   
+                                    <span style="padding-left: 2pt;">Opt. B</span>
+                                    <span style="padding-left: 2pt;">
+                                        <apex:outputField value="{!Lead.OptionB__c}"/>
+                                    </span>   
+                                    <span style="padding-left: 2pt;">Opt. C</span>
+                                    <span style="padding-left: 2pt;">
+                                        <apex:outputField value="{!Lead.OptionC__c}"/>
+                                    </span><br/>
+                                    Code:
+                                    <u><span style="padding-left: 4 pt;">
+                                        <apex:outputField value="{!Lead.FEGLI_Code__c}"/>
+                                    </span></u>      
+                                </p>
+                            </td>
+                            </tr>
+                            <tr style="height:19pt">
+                                
+                                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="4">
+                                    <p class="s20" style="padding-left: 2pt;font-size: 9pt;line-height: 9pt;text-align: left;">Expected Retirement Date:
+                                        <span style="padding-left: 2pt;">
+                                            <apex:outputField value="{!Lead.Expected_Retirement_Date__c}"/>
+                                        </span>
+                                    </p>
+                                </td>
+                                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="6">
+                                    <p class="s20" style="padding-left: 2pt;font-size: 9pt;line-height: 9pt;text-align: left;">Expected Retirement Age:
+                                        <span style="padding-left: 2pt;">
+                                            <apex:outputField value="{!Lead.Expected_Retirement_Age__c}"/>
+                                        </span>
+                                    </p>
+                                </td>
+                                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="6">
+                                    <p class="s20" style="padding-left: 2pt;font-size: 9pt;line-height: 9pt;text-align: left;">Years of Creditable Service:
+                                        <span style="padding-left: 2pt;">
+                                            <apex:outputField value="{!Lead.Years_of_Employment__c}"/>
+                                        </span>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr style="height:19pt">
+                                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="6">
+                                    <p class="s20" style="padding-left: 2pt;font-size: 9pt;line-height: 9pt;text-align: left;">Base Salary:
+                                        <span style="padding-left: 2pt;">
+                                            <apex:outputText value="{0, number, $###,###,##0.00}">
+                                                <apex:param value="{!Lead.Base_Salary__c}"/>
+                                             </apex:outputText>
+                                         </span>
+                                    </p>
+                                </td>
+                                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="3">
+                                    <p class="s20" style="padding-left: 2pt;font-size: 9pt;line-height: 9pt;text-align: left;">TSP Contribution:
+                                        <span style="padding-left: 2pt;">
+                                            <apex:outputText value="{0, number, ###,###,##0}">
+                                                <apex:param value="{!Lead.TSP_Contribution__c}"/>
+                                             </apex:outputText>%
+                                         </span>    
+                                    </p>
+                                </td>
+                                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="7">
+                                    <p class="s20" style="padding-left: 2pt;font-size: 9pt;line-height: 9pt;text-align: left;">TSP Balance:
+                                         <span style="padding-left: 2pt;">
+                                             <apex:outputText value="{0, number, $###,###,##0.00}">
+                                                <!-- OLD Code Change By Bajrang  -->
+                                               <!-- <apex:param value="{!Lead.TSP_Balance__c}"/> -->
+
+                                                <!-- New Code Change By Bajrang  -->
+                                               <apex:param value="{! (BLANKVALUE(Lead.TSP_Total__c, 0) + BLANKVALUE(Lead.ROTH_Total__c, 0)) }"/>
+                                            </apex:outputText>      
+                                        </span>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr style="height:20pt">
+                                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="6">
+                                    <p class="s20" style="padding-left: 2pt;font-size: 9pt;line-height: 8pt;text-align: left;">Pension:
+                                        <span style="padding-left: 2pt;">
+                                           <b>
+                                    <u>
+                                     <!--<i>
+                                            <apex:commandlink value="Calculate" action="{!RerenderPage}" style="color: blue; font-size: 10pt;" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}"/>
+                                     </i>-->
+                                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c = 61 && Lead.Scenario1_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c < 61 && Lead.Scenario1_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c > 61 && Lead.Scenario1_YOS__c < 20 && Lead.Scenario1_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText>  
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c > 61 && Lead.Scenario1_YOS__c > 19 && Lead.Scenario1_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c = 61 && Lead.Scenario2_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c < 61 && Lead.Scenario2_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c > 61 && Lead.Scenario2_YOS__c < 20 && Lead.Scenario2_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText>  
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c > 61 && Lead.Scenario2_YOS__c > 19 && Lead.Scenario2_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Expected_Retirement_Age__c = 61  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Expected_Retirement_Age__c < 61  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Expected_Retirement_Age__c > 61 && Lead.Years_of_Employment__c < 20  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText>  
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Expected_Retirement_Age__c > 61 && Lead.Years_of_Employment__c > 19  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c = 61 && Lead.Scenario1_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)}"/>                                 
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.05)}"/>                                 
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c < 61 && Lead.Scenario1_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.05)}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                              <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c > 61 && Lead.Scenario1_YOS__c < 20 && Lead.Scenario1_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.05)}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText>  
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c > 61 && Lead.Scenario1_YOS__c > 19 && Lead.Scenario1_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) * 0.05)}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c = 61 && Lead.Scenario2_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.05)}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c < 61 && Lead.Scenario2_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.05)}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c > 61 && Lead.Scenario2_YOS__c < 20 && Lead.Scenario2_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)}"/>                                 
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.05)}"/>                                 
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c > 61 && Lead.Scenario2_YOS__c > 19 && Lead.Scenario2_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) * 0.05)}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c = 61 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.05)}"/>
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c < 61 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.05)}"/>
+                                             </apex:outputText>
+                                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c > 61 && Lead.Years_of_Employment__c < 20 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Min__c == true  && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.05)}"/>
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c > 61 && Lead.Years_of_Employment__c > 19 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Min__c == true  && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.011) * Lead.Years_of_Employment__c) / 12) * 0.05)}"/>
+                                            </apex:outputText> 
+                                            
+                                            
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c = 61 && Lead.Scenario1_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)}"/>                                 
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.10)}"/>                                 
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c < 61 && Lead.Scenario1_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.10)}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                              <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c > 61 && Lead.Scenario1_YOS__c < 20 && Lead.Scenario1_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.10)}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText>  
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c > 61 && Lead.Scenario1_YOS__c > 19 && Lead.Scenario1_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) * 0.10)}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c = 61 && Lead.Scenario2_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.10)}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c < 61 && Lead.Scenario2_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.10)}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c > 61 && Lead.Scenario2_YOS__c < 20 && Lead.Scenario2_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)}"/>                                 
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.10)}"/>                                 
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c > 61 && Lead.Scenario2_YOS__c > 19 && Lead.Scenario2_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) * 0.10)}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c = 61 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Max__c == true  && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.10)}"/>
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c < 61 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Max__c == true  && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.10)}"/>
+                                             </apex:outputText>
+                                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c > 61 && Lead.Years_of_Employment__c < 20 && Lead.Scenario1_Primary__c == false && Lead.Max__c == true && Lead.Scenario2_Primary__c == false  && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.10)}"/>
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c > 61 && Lead.Years_of_Employment__c > 19 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.011) * Lead.Years_of_Employment__c) / 12) * 0.10)}"/>
+                                            </apex:outputText> 
+                                            <!-- <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Special_Group_Member__c == true && Lead.Remaining_Years__c != null && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.017) * 20) + ((Lead.High_3_Salary__c * 0.01) * Lead.Remaining_Years__c)) / 12}"/>
+                                            </apex:outputText>  -->
+
+                                             <!-- <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Special_Group_Member__c == true && Lead.Remaining_Years__c != null && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false && Lead.Max__c == true}">
+                                                    <apex:param value="{!(((((Lead.High_3_Salary__c * 0.017) * 20) + ((Lead.High_3_Salary__c * 0.01) * Lead.Remaining_Years__c)) / 12)) - (((((Lead.High_3_Salary__c * 0.017) * 20) + ((Lead.High_3_Salary__c * 0.01) * Lead.Remaining_Years__c)) / 12) * 0.10)}"/>
+                                                </apex:outputText>
+                                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Special_Group_Member__c == true && Lead.Remaining_Years__c != null && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false && Lead.Min__c == true}">
+                                                    <apex:param value="{!(((((Lead.High_3_Salary__c * 0.017) * 20) + ((Lead.High_3_Salary__c * 0.01) * Lead.Remaining_Years__c)) / 12)) - (((((Lead.High_3_Salary__c * 0.017) * 20) + ((Lead.High_3_Salary__c * 0.01) * Lead.Remaining_Years__c)) / 12) * 0.05)}"/>
+                                                </apex:outputText> -->
+
+                                                 <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Special_Group_Member__c == true && Lead.Remaining_Years__c != null && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false && Lead.Max__c == true}">
+                                                    <apex:param value="{!pensionMaxValue}"/>
+                                                </apex:outputText>
+                                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Special_Group_Member__c == true && Lead.Remaining_Years__c != null && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false && Lead.Min__c == true}">
+                                                    <apex:param value="{!pensionMinValue}"/>
+                                                </apex:outputText>
+                                            
+                                        </u>
+                                   </b>
+                            
+                                        </span>
+                                    </p>
+                                </td>
+                                <!-- <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="3">
+                                    <p class="s20" style="padding-left: 2pt;font-size: 9pt;line-height: 9pt;text-align: left;">TSP:
+                                        <span style="padding-left: 2pt;">
+                                             <apex:outputText value="{0, number, $###,###,##0.00}">
+                                               <apex:param value="{!Lead.TSP_Balance_No_Match__c}"/>
+                                            </apex:outputText>      
+                                        </span>
+                                    </p>
+                                </td> -->
+                                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="3">
+                                    <p class="s20" style="padding-left: 2pt;font-size: 9pt;line-height: 9pt;text-align: left;">Social Security:
+                                        <span style="padding-left: 2pt;">
+                                            <span style="padding-left: 4pt;">
+                                        <b>
+                                            <i>
+                                                <u>
+                                                    <apex:outputText value="Not Eligible" rendered="{!(IF(Lead.Scenario1_Primary__c == true && Lead.Scenario1_Retirement_Age__c < 62, true,false) || IF(Lead.Scenario2_Primary__c == true && Lead.Scenario2_Retirement_Age__c < 62,true,false) || IF(Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Expected_Retirement_Age__c < 62,true,false))}"/> 
+                                                </u>
+                                            </i>
+                                        </b>
+                                        <b>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!(IF(Lead.Scenario1_Primary__c == true && Lead.Scenario1_Retirement_Age__c >= 62, true,false) || IF(Lead.Scenario2_Primary__c == true && Lead.Scenario2_Retirement_Age__c >= 62,true,false) || IF(Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Expected_Retirement_Age__c >= 62,true,false))}" >
+                                                <apex:param value="{!Lead.Predicted_Social_Security__c}" />
+                                            </apex:outputText>
+                                        </b>
+                                    </span>    
+                                        </span>
+                                    </p>
+                                </td>
+                                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="4" bgcolor="#00A86B">
+                                    <p class="s13" style="padding-left: 2pt;font-size: 9pt;line-height: 8pt;text-align: left;">Bottom Line:
+                                        <p class="s20" style="font-size:12pt;text-align: left;padding-left: 6pt; color: white;">
+                                            <b>
+                               
+                               <u>
+                                     <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c = 61 && Lead.Scenario1_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c < 61 && Lead.Scenario1_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal  + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c > 61 && Lead.Scenario1_YOS__c < 20 && Lead.Scenario1_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText>  
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c > 61 && Lead.Scenario1_YOS__c > 19 && Lead.Scenario1_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c = 61 && Lead.Scenario2_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c < 61 && Lead.Scenario2_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c > 61 && Lead.Scenario2_YOS__c < 20 && Lead.Scenario2_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText>  
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c > 61 && Lead.Scenario2_YOS__c > 19 && Lead.Scenario2_Primary__c == true  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Expected_Retirement_Age__c = 61  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Expected_Retirement_Age__c < 61  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Expected_Retirement_Age__c > 61 && Lead.Years_of_Employment__c < 20  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText>  
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Expected_Retirement_Age__c > 61 && Lead.Years_of_Employment__c > 19  && (Lead.Marital_Status__c != 'Married' || (Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == true))}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * (((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c = 61 && Lead.Scenario1_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>                            
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>                            
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c < 61 && Lead.Scenario1_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                              <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c > 61 && Lead.Scenario1_YOS__c < 20 && Lead.Scenario1_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText>  
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c > 61 && Lead.Scenario1_YOS__c > 19 && Lead.Scenario1_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c = 61 && Lead.Scenario2_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c < 61 && Lead.Scenario2_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal  + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c > 61 && Lead.Scenario2_YOS__c < 20 && Lead.Scenario2_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>                              
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>                              
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c > 61 && Lead.Scenario2_YOS__c > 19 && Lead.Scenario2_Primary__c == true  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c = 61 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c < 61 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false  && Lead.Min__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                             </apex:outputText>
+                                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c > 61 && Lead.Years_of_Employment__c < 20 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Min__c == true  && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c > 61 && Lead.Years_of_Employment__c > 19 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Min__c == true  && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.011) * Lead.Years_of_Employment__c) / 12) * 0.05) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.011) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.011) * Lead.Years_of_Employment__c) / 12) * 0.05)) + Lead.Total_Health__c + Lead.Additional_Insurance__c) + SpecialAndSupplementVal + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>
+                                            </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c = 61 && Lead.Scenario1_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>                          
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>                          
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c < 61 && Lead.Scenario1_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                              <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c > 61 && Lead.Scenario1_YOS__c < 20 && Lead.Scenario1_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.01) * (scenario1XYOS)) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText>  
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario1_Retirement_Age__c != null && Lead.Scenario1_Retirement_Age__c > 61 && Lead.Scenario1_YOS__c > 19 && Lead.Scenario1_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary__c * 0.011) * (Lead.Scenario1_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) - ((((Lead.High_3_Salary__c * 0.011) * (scenario1XYOS)) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c = 61 && Lead.Scenario2_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c < 61 && Lead.Scenario2_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                             </apex:outputText> 
+                                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c > 61 && Lead.Scenario2_YOS__c < 20 && Lead.Scenario2_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>                               
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.01) * (scenario2XYOS)) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>                               
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Scenario2_Retirement_Age__c != null && Lead.Scenario2_Retirement_Age__c > 61 && Lead.Scenario2_YOS__c > 19 && Lead.Scenario2_Primary__c == true  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <!-- SM OLD STARTS
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) - ((((Lead.High_3_Salary2__c * 0.011) * (Lead.Scenario2_Retirement_Age__c - ABS((FLOOR((Lead.Date_of_Birth__c -  Lead.Date_of_Hire__c ) / 365.25))))) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c}"/>
+                                                SM OLD ENDS -->
+                                                <!-- SM NEW STARTS -->
+                                                <apex:param value="{!(((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) - ((((Lead.High_3_Salary2__c * 0.011) * (scenario2XYOS)) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                                <!-- SM NEW ENDS -->
+                                            </apex:outputText>
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c = 61 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Max__c == true  && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c < 61 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Max__c == true  && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                             </apex:outputText>
+                                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c > 61 && Lead.Years_of_Employment__c < 20 && Lead.Scenario1_Primary__c == false && Lead.Max__c == true && Lead.Scenario2_Primary__c == false  && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.01) * Lead.Years_of_Employment__c) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                             </apex:outputText> 
+                                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.FERS__c == true && Lead.Expected_Retirement_Age__c != null && Lead.Expected_Retirement_Age__c > 61 && Lead.Years_of_Employment__c > 19 && Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false  && Lead.Max__c == true && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false}" style="color: #fff;">
+                                                <apex:param value="{!(((Lead.High_3_Salary__c * 0.011) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.011) * Lead.Years_of_Employment__c) / 12) * 0.10) - ((VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100) * ((((Lead.High_3_Salary__c * 0.011) * Lead.Years_of_Employment__c) / 12) - ((((Lead.High_3_Salary__c * 0.011) * Lead.Years_of_Employment__c) / 12) * 0.10)) + Lead.Total_Health__c + Lead.Additional_Insurance__c)  + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + SpecialAndSupplementVal + TspCalculateValue}"/>
+                                            </apex:outputText>
+                                             <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Special_Group_Member__c == true && Lead.Remaining_Years__c != null && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false && Lead.Max__c == true}" style="color: #fff;">
+                                                    <apex:param value="{!pensionMaxValue - ((pensionMaxValue * (VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100)) + (Lead.Total_Health__c + Lead.Additional_Insurance__c)) + fERSSpecialSupplementValue + SocialSecurityValue + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>
+                                                </apex:outputText>
+                                                <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Special_Group_Member__c == true && Lead.Remaining_Years__c != null && Lead.Marital_Status__c == 'Married' && Lead.Opt_Out__c == false && Lead.Min__c == true}" style="color: #fff;">
+                                                    <apex:param value="{!pensionMinValue -  ((pensionMinValue * (VALUE(LEFT(Lead.taxRate3_Picklist__c, 2)) / 100)) + (Lead.Total_Health__c + Lead.Additional_Insurance__c))  + fERSSpecialSupplementValue + SocialSecurityValue + Lead.Spouse_Social_Security__c + Lead.Military_Retirement__c + Lead.Disability_in_Retirement__c + Lead.Additional_Income1__c + Lead.Additional_Income2__c + TspCalculateValue}"/>
+                                                </apex:outputText>
+                                         </u>
+                                            </b>
+                                        </p>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr style="height:12pt">
+                                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="16" bgcolor="#B4D9F3">
+                            <p class="s13" style="padding-left: 2pt;font-size: 11pt;text-align: left;">HOW DID YOU HEAR ABOUT US?</p>
+                                </td>
+                            </tr>
+                            <tr style="height:21pt">
+                                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F" colspan="16">
+                                    <p class="s20" style="padding-top:4pt;padding-left:2pt;font-size: 9pt;text-align: left;">
+                                         <apex:outputText value="{!Lead.How_Did_You_Hear__c}"/>
+                                    </p>
+                                </td>
+                                            </tr>
+                                                        <tr style="height:16pt">
+                                                            <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="16" bgcolor="#B4D9F3">
+                                                                <p class="s13" style="padding-left: 2pt;font-size: 11pt;text-align: left;">UNION OR ASSOCIATIONS</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="height:20pt">
+                                                            <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="8">
+                                                                <p class="s20" style="padding-top: 2pt;padding-left: 2pt;font-size: 9pt;text-align: left;">Union/Association:
+                                                                    <span style="padding-left: 5pt;">
+                                                                        <apex:outputText value="{!Lead.Union_Association__c}"/>  
+                                                                    </span>
+                                                                </p>
+                                                            </td>
+                                                            <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="8">
+                                                                <p class="s20" style="padding-top: 1pt;padding-left: 2pt;font-size: 9pt;text-align: left;">
+                                                                Local
+                                                                    <apex:outputField value="{!Lead.Local__c}"/>
+                                                                Chapter
+                                                                    <apex:outputField value="{!Lead.Chapter__c}"/>  
+                                                                 Branch
+                                                                     <apex:outputField value="{!Lead.Branch__c}"/>
+                                                                         <span style="padding-left:2pt;">
+                                                                             #:
+                                                                                <apex:outputField value="{!Lead.Branch_No__c}"/>
+                                                                        </span>
+                                                                 </p>
+                                                            </td>
+                                                                    </tr>
+                                                                    <tr style="height:19pt">
+                                                                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="8">
+                                                                            <p class="s20" style="padding-top: 1pt;padding-left: 2pt;font-size: 9pt;text-align: left;">
+                                                                                President:
+                                                                                     <span style="padding-left: 5pt;">
+                                                                                        <apex:outputField value="{!Lead.President__c}"/>
+                                                                                    </span>
+                                                                            </p>
+                                                                        </td>
+                                                                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="8">
+                                                                            <p class="s20" style="padding-top: 1pt;padding-left: 2pt;font-size: 9pt;text-align: left;">
+                                                                                Phone:
+                                                                                    <span style="padding-left: 5pt;">
+                                                                                        <apex:outputField value="{!Lead.President_Phone__c}"/>
+                                                                                    </span>
+                                                                            </p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr style="height:18pt">
+                                                                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="8">
+                                                                            <p class="s20" style="padding-top: 1pt;padding-left: 2pt;font-size: 9pt;text-align: left;">
+                                                                                Email:
+                                                                                    <span style="padding-left: 5pt;">
+                                                                                        <apex:outputField value="{!Lead.President_Email__c}"/>
+                                                                                    </span>
+                                                                            </p>
+                                                                        </td>
+                                                                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="8">
+                                                                            <p class="s20" style="padding-top: 1pt;padding-left: 2pt;font-size: 9pt;text-align: left;">
+                                                                                Website:
+                                                                                    <span style="padding-left: 5pt;">
+                                                                                        <apex:outputField value="{!Lead.Union_Website__c}"/>
+                                                                                    </span>
+                                                                            </p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr style="height:16pt">
+                                                                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="3" bgcolor="#B4D9F3">
+                                                                            <p class="s13" style="padding-left: 2pt;font-size: 11pt;text-align: left;">APPOINTMENT RESULTS</p>
+                                                                        </td>
+                                                                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="6" bgcolor="#B4D9F3">
+                                                                            <p class="s13" style="padding-left: 2pt;font-size: 11pt;text-align: left;">RESET</p>
+                                                                        </td>
+                                                                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="7" bgcolor="#B4D9F3">
+                                                                            <p class="s13" style="padding-left: 2pt;font-size: 11pt;text-align: left;">CALL BACK</p>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr style="height:20pt">
+                                                                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F" colspan="3">
+                                                                            <p class="s20" style="padding-top: 4pt;padding-left: 13pt;font-size: 9pt;text-align: left;">
+                                                                                <apex:outputField value="{!Lead.Appointment_Results__c}"/>
+                                                                            </p>
+                                                                        </td>
+                                                                            <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F" colspan="6">
+                                                                                <p class="s20" style="padding-top: 4pt;padding-left: 5pt;font-size: 9pt;text-align: left;">
+                                                                                    Reset Date:
+                                                                                        <span style="padding-left: 1pt;">
+                                                                                            <apex:outputField value="{!Lead.Reset_Date__c}"/>
+                                                                                        </span> 
+                                                                                        <span style="padding-left: 5pt;">
+                                                                                            <apex:outputField value="{!Lead.Reset_Time__c}"/>
+                                                                                        </span>    
+                                                                                    </p>
+                                                                                </td>
+                                                                                <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F" colspan="7">
+                                                                                    <p class="s20" style="padding-top: 1pt;padding-left: 1pt;font-size: 9pt;text-align: left;">
+                                                                                        Office
+                                                                                            <apex:outputField value="{!Lead.Office__c}"/>
+                                                                                     <span style="padding-left: 1pt;"> 
+                                                                                        Specialist
+                                                                                            <apex:outputField value="{!Lead.Specialist__c}"/>
+                                                                                      </span>
+                                                                                    <span style="padding-left: 2pt;">
+                                                                                        Date:
+                                                                                    </span>
+                                                                                            <span style="padding-left: 1pt;">
+                                                                                                <apex:outputField value="{!Lead.Call_Back_Date__c}"/>
+                                                                                            </span>  
+                                                                                            <span style="padding-left: 5pt;">
+                                                                                                <apex:outputField value="{!Lead.Call_Back_Time__c}"/>
+                                                                                            </span> 
+                                                                                            
+                                                                                    </p>
+                                                                                </td>
+                                                                                    </tr>
+                                                                                    <tr style="height:16pt">
+                                                                                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="16" bgcolor="#B4D9F3">
+                                                                                            <p class="s13" style="padding-left: 2pt;font-size: 11pt;text-align: left;">NOTES</p>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr style="height:125pt">
+                                                                                        <td style="border-top-style:solid;border-top-width:1pt;border-top-color:#221F1F;border-left-style:solid;border-left-width:1pt;border-left-color:#221F1F;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#221F1F;border-right-style:solid;border-right-width:1pt;border-right-color:#221F1F" colspan="16">
+                                                                                            <p style="font-size: 9pt;text-align: left;">
+                                                                                                <br/>
+                                                                                                    <apex:outputField value="{!Lead.OBEF_Notes__c}"/>
+                                                                                                </p>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            
+                                                                                    
+     </apex:pageBlock>
+</apex:form>
+</center>
+            
+<div style="{!if(cnt < 1, 'page-break-before:avoid;','page-break-before:always;')}">
+     <apex:variable var="cnt" value="{!cnt+1}"/>
+</div>
+
+</apex:page>

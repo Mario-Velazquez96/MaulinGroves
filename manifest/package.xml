@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
+		<members>CSRS_Section</members>
+		<members>FERS_System</members>
 		<members>Federal_FinancialSnapshot_Insert</members>
-		<members>Federal_FinancialSnapshot_Insert_PDF</members>
-		<members>GPIS_Federal_Workbook</members>
 		<members>obefForm</members>
 		<name>ApexPage</name>
 	</types>
-	<version>66.0</version>
+	<types>
+		<members>TSP_Contribution.X2025</members>
+		<members>TSP_Contribution.X2026</members>
+		<name>CustomMetadata</name>
+	</types>
+	<types>
+		<members>TSP_Contribution__mdt</members>
+		<name>CustomObject</name>
+	</types>
+	<types>
+		<members>modal</members>
+		<members>workbookStyles</members>
+		<name>StaticResource</name>
+	</types>
+	<version>67.0</version>
 </Package>

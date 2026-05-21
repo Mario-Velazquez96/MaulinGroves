@@ -1,0 +1,1027 @@
+<apex:page id="CSRSitems" showHeader="false" standardController="Lead" extensions="Federal_LeadControllerExtension" tabStyle="Lead" showQuickActionVfHeader="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" rendered="{!IF( Lead.CSRS__c == true, true, false)}"> 
+  <apex:stylesheet value="{!$Resource.workbookStyles}"/>  
+
+    <apex:form >
+
+            
+                        <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: left;"/>
+                            <apex:image url="{!$Resource.Pg7FedbookTop}" width="100%"/>
+                        <p style="text-indent: 0pt;text-align: left;"></p>
+
+  <apex:pageBlock id="page7" mode="edit"> 
+  
+                    
+             <p style="padding-top: 1pt;text-indent: 0pt;text-align: left;"><br/></p>     
+
+
+           <p class="s38" style="padding-bottom: 1pt;margin-left: 5pt;margin-right: 5pt;text-indent: 0pt;text-align: justify;">The Civil Service Retirement Act, which became effective on August 1, 1920, established a retirement system for certain Federal employees. It was replaced by the Federal Employees Retirement System (FERS) for Federal employees who first entered covered service on and after January 1, 1987. The Civil Service Retirement System (CSRS) is a defined benefit, contributory retirement system. Employees share in the expense of the annuities to which they become entitled. CSRS-covered employees contribute 7, 7 1/2, or 8 percent of pay to CSRS and, while they generally pay no Social Security retirement, survivor, and disability (OASDI) tax, they must pay the Medicare tax (currently 1.45 percent of pay). The employing agency matches the employee’s CSRS contributions.</p>
+        <p style="padding-top: 1pt;text-indent: 0pt;text-align: left;"><br/></p>
+        <center>
+        <table style="border-collapse:collapse;margin-left:5pt;margin-right: 5pt;" cellspacing="0">
+    <tbody>
+        <tr style="height:133pt">
+            <td style="width:252pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                <p class="s6" style="font-size: 16pt;color: red;padding-top: 2pt;text-indent: 0pt;text-align: center;">Computation</p>
+                <p class="s38" style="font-size: 10pt;padding-top: 9pt;padding-left: 2pt;padding-right: 2pt;text-indent: 0pt;text-align: center;">Your basic annuity is computed based on your 
+                    <span class="s38" style="font-size: 10pt; color:red;">length of service and "high-3" average salary</span>.  You also receive credit for 
+                    <span class="s38" style="font-size: 10pt; color:red;">unused sick leave </span>if you retire on an immediate annuity. The maximum benefit you can receive from CSRS is 80% of your high-3 average salary, plus credit for your sick leave. This limit generally affects only those who have more than 41 years and 11 months of service when they retire.</p>
+            </td>
+            <td style="width:252pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                <p class="s6" style="font-size: 16pt;padding-top: 2pt;text-indent: 0pt;text-align: center;">High-3 Average Salary</p>
+                <p class="s38" style="font-size: 10pt;padding-top: 9pt;padding-left: 2pt;padding-right: 2pt;text-indent: 0pt;text-align: center;">Your "high-3" average pay is the highest average basic pay you earnedduring any 3 consecutive years of service.  Your basic pay is the basic salary you earn for your position and includes increases to your salary for which retirement deductions are withheld, such as shift rates. It does not include payments for overtime, bonuses, etc.</p>
+            </td>
+        </tr>
+        <tr style="height:95pt">
+            <td style="width:252pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                <p class="s6" style="font-size: 16pt;padding-top: 2pt;text-indent: 0pt;text-align: center;">Cost of Living Adjustments</p>
+                <p class="s38" style="font-size: 10pt;padding-top: 9pt;padding-left: 2pt;padding-right: 2pt;text-indent: 0pt;text-align: center;">Your annuity will be adjusted periodically by cost-of-living increases that occur after you retire. Your initial cost-of-living increase will be prorated based on how long you have been retired when that cost-of-living increase is granted.</p>
+            </td>
+            <td style="width:252pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                <p class="s6" style="font-size: 16pt;color: red;padding-top: 2pt;text-indent: 0pt;text-align: center;">Eligibility to Retire</p>
+                <p class="s38" style="font-size: 10pt;padding-top: 9pt;padding-left: 2pt;padding-right: 2pt;text-indent: 0pt;text-align: center;">Benefits under CSRS are payable to workers at least:<br/> 
+                    <span class="s38" style="font-size: 10pt; color:red;">Age 55 with 30 years of service</span><br/>
+                    <span class="s38" style="font-size: 10pt; color:red;">Age 60 with 20 years of service </span><br/>
+                    <span class="s38" style="font-size: 10pt; color:red;">Age 62 with 5 years of service</span><br/></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</center>
+<p style="padding-top: 1pt;text-indent: 0pt;text-align: left;">
+    <br/>
+    </p>
+    <p class="s38" style="padding-bottom: 1pt;margin-left: 5pt;margin-right: 5pt;text-indent: 0pt;text-align: justify;"><b>Reductions in Annuity – </b>  Your annuity will be reduced if: You retire before age 55 (unless you retire for disability or under the special provisions for law enforcement officers, air traffic controllers, and firefighters); your annual annuity will be reduced by one-sixth of 1 percent for each full month you are under age 55.
+        <span class="s38" style="font-size: 10pt; color:red;">You provide for a survivor annuity:</span>  Depending on your survivor benefit election, your survivor will be entitled to up to a 
+        <span class="s38" style="font-size: 10pt; color:red;">maximum of 55 percent</span> of your unreduced annual annuity.
+    </p>
+   <center>
+        <p style="padding-top: 1pt;text-indent: 0pt;text-align: left;"><br/></p>   
+        <table style="border-collapse:collapse;margin-left:5pt;margin-right: 5pt;" cellspacing="0">
+        <tbody>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#2E5395">
+                    <p class="s13" style="padding-right: 3pt;text-indent: 0pt;line-height: 10pt;text-align: center;">Years</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#2E5395">
+                    <p class="s13" style="padding-right: 3pt;text-indent: 0pt;line-height: 10pt;text-align: center;">Percentage</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#2E5395">
+                    <p class="s13" style="padding-right: 3pt;text-indent: 0pt;line-height: 10pt;text-align: center;">Years</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#2E5395">
+                    <p class="s13" style="padding-right: 3pt;text-indent: 0pt;line-height: 10pt;text-align: center;">Percentage</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#2E5395">
+                    <p class="s13" style="padding-right: 3pt;text-indent: 0pt;line-height: 10pt;text-align: center;">Years</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt" bgcolor="#2E5395">
+                    <p class="s13" style="padding-right: 3pt;text-indent: 0pt;line-height: 10pt;text-align: center;">Percentage</p>
+                </td>
+            </tr>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">5</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 4pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">7.50%</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-right: 35pt;text-indent: 0pt;line-height: 11pt;text-align: right;">18</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">32.25%</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">31</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">58.25%</p>
+                </td>
+            </tr>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">6</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 4pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">9.25%</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-right: 35pt;text-indent: 0pt;line-height: 11pt;text-align: right;">19</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">34.25%</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">32</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">60.25%</p>
+                </td>
+            </tr>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">7</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 4pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">11.00%</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-right: 35pt;text-indent: 0pt;line-height: 11pt;text-align: right;">20</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">36.25%</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">33</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">62.25%</p>
+                </td>
+            </tr>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">8</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 4pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">12.75%</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-right: 35pt;text-indent: 0pt;line-height: 11pt;text-align: right;">21</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">38.25%</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">34</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">64.25%</p>
+                </td>
+            </tr>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">9</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 4pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">14.50%</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-right: 35pt;text-indent: 0pt;line-height: 11pt;text-align: right;">22</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">40.25%</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">35</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">66.25%</p>
+                </td>
+            </tr>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">10</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 4pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">16.25%</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-right: 35pt;text-indent: 0pt;line-height: 11pt;text-align: right;">23</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">42.25%</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">36</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">68.25%</p>
+                </td>
+            </tr>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">11</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 4pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">18.25%</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-right: 35pt;text-indent: 0pt;line-height: 11pt;text-align: right;">24</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">44.25%</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">37</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">70.25%</p>
+                </td>
+            </tr>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">12</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 4pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">20.25%</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-right: 35pt;text-indent: 0pt;line-height: 11pt;text-align: right;">25</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">46.25%</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">38</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">72.25%</p>
+                </td>
+            </tr>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">13</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 4pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">22.25%</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-right: 35pt;text-indent: 0pt;line-height: 11pt;text-align: right;">26</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">48.25%</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">39</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">74.25%</p>
+                </td>
+            </tr>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">14</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 4pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">24.25%</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-right: 35pt;text-indent: 0pt;line-height: 11pt;text-align: right;">27</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">50.25%</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">40</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">76.25%</p>
+                </td>
+            </tr>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">15</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 4pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">26.25%</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-right: 35pt;text-indent: 0pt;line-height: 11pt;text-align: right;">28</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">52.25%</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">41</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">78.25%</p>
+                </td>
+            </tr>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">16</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 4pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">28.25%</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-right: 35pt;text-indent: 0pt;line-height: 11pt;text-align: right;">29</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">54.25%</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">42</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">80.00%</p>
+                </td>
+            </tr>
+            <tr style="height:15pt">
+                <td style="width:85pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">17</p>
+                </td>
+                <td style="width:98pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 4pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">30.25%</p>
+                </td>
+                <td style="width:82pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-right: 35pt;text-indent: 0pt;line-height: 11pt;text-align: right;">30</p>
+                </td>
+                <td style="width:81pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 3pt;padding-right: 2pt;text-indent: 0pt;line-height: 11pt;text-align: center;">56.25%</p>
+                </td>
+                <td style="width:74pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">43</p>
+                </td>
+                <td style="width:84pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
+                    <p class="s38" style="font-size: 9pt;padding-left: 2pt;padding-right: 3pt;text-indent: 0pt;line-height: 11pt;text-align: center;">80.00%</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</center>
+
+
+      <p style="padding-top: 4pt;text-indent: 0pt;text-align: left;">
+            <br/>
+        </p>
+       <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: left;"/>
+        <apex:image url="{!$Resource.Pg7FedbookBottom}" width="100%"/>
+        <p style="text-indent: 0pt;text-align: left;"></p> 
+
+
+    </apex:pageBlock>
+</apex:form>
+
+        <div style="page-break-after: always"/>
+            
+
+
+<!-- PAGE 8 BEGIN --> 
+
+<apex:form >
+
+            
+                        <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: left;"/>
+                            <apex:image url="{!$Resource.Pg8FedbookTop}" width="100%"/>
+                        <p style="text-indent: 0pt;text-align: left;"></p>
+
+  
+  
+        <center> <apex:commandButton onclick="window.location.top.reload();" action="{!RerenderPage}" value="Calculate" style="color: green;"/>  </center> <br/>                 
+ 
+ <apex:pageBlock id="page8" mode="edit">
+
+           <p class="s38" style="padding-bottom: 5pt;margin-left: 5pt;margin-right: 5pt;text-indent: 0pt;text-align: justify;">Retiring federal employees under both the CSRS and FERS retirement systems have the opportunity to ensure the continuation of benefits to survivors with an insurable interest. A person with an insurable interest is an insurance term, applying to a person who would benefit financially by your continuing to be alive. Such persons would include, but are not limited to a widow, widower, former spouse, and children.</p>
+             
+           <p class="s38" style="padding-bottom: 5pt;margin-left: 5pt;margin-right: 5pt;text-indent: 0pt;text-align: center;font-size: 14pt;color: #2E5395;"><b>CSRS Employees</b></p>
+             
+           <p class="s38" style="padding-bottom: 3pt;margin-left: 5pt;margin-right: 5pt;text-indent: 0pt;text-align: center;">
+                        <span class="s38" style="color: red;">• 
+                               </span>
+                                 May elect a Survivor Benefit up to 55% of their retirement annuity or as little as $1.00.</p>
+
+   
+        <p class="s38" style="padding-bottom: 3pt;margin-left: 5pt;margin-right: 5pt;text-indent: 0pt;text-align: center;">
+                        <span class="s38" style="color: red;">• 
+                               </span>
+                                   Retirement annuity will be reduced depending on the benefit elected.</p>
+  
+    
+        <p class="s38" style="padding-bottom: 3pt;margin-left: 5pt;margin-right: 5pt;text-indent: 0pt;text-align: center;">
+                        <span class="s38" style="color: red;">• 
+                               </span>
+                                   Cost of first $3,600 (annually) is 2.5% or $90.00.</p>
+   
+    
+        <p class="s38" style="padding-bottom: 15pt;margin-left: 5pt;margin-right: 5pt;text-indent: 0pt;text-align: center;">
+                        <span class="s38" style="color: red;">• 
+                               </span>
+                                   Plus 10% of any amount over $3,600 used as a base</p>
+        
+        <p class="s38" style="padding-bottom: 5pt;margin-left: 5pt;margin-right: 5pt;text-indent: 0pt;text-align: justify;">To provide a full survivor benefit for your current or former spouse, your annual annuity will be reduced by 2.5 percent of the first $3,600 = $90.00 plus 10 percent of the annuity over $3,600.</p>
+        <p style="text-indent: 0pt;text-align: left;">
+            <br/>
+            </p>
+  <center>        
+   <table style="border-collapse:collapse;margin-left:5pt;margin-right: 5pt;" cellspacing="0">
+      <tbody>
+        <tr style="height:133pt">
+            <td style="width:252pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                <p class="s38" style="padding-bottom: 8pt;padding-top: 5pt; font-size: 12pt;text-align: center;color: red;"><b><u>Benefit</u></b></p>
+                <p class="s38" style="padding-left: 5pt;text-align: left;color: red;">Basic Annuity Amount:          
+                    <span class="s20" style="color: red;padding-left: 70pt;">
+                        $<apex:inputField value="{!Lead.CSRS_Annuity_Retirement__c}" style="width: 60px;background-color: #00daff0f;border: none;border: 1px solid #ccc;">
+                                  <apex:actionSupport action="{!save}" event="onchange" reRender="page8"/> 
+                             </apex:inputField> 
+                               </span></p>
+                <p class="s20" style="padding-top: 15pt;padding-left: 181pt;text-indent: 0pt;text-align: left;color: red;">55%</p>
+                <p class="s38" style="padding-top: 15pt;padding-left: 5pt;text-align: left;color: red;">Annual Survivor Annuity:
+                    <span class="s20" style="color: black;padding-left: 69pt;">
+                        <i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>                             
+                        <u><apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                                <apex:param value="{!Lead.CSRS_Annuity_Retirement__c * 0.55}"/>
+                        </apex:outputText></u> 
+                               </span></p>
+                <p class="s38" style="padding-top: 15pt;padding-left: 5pt;text-align: left;color: red;">Monthly Survivor Annuity:
+                    <span class="s20" style="color: black;padding-left: 63pt;">
+                    <i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>
+                    <u><apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                            <apex:param value="{!(Lead.CSRS_Annuity_Retirement__c * 0.55) / 12}"/>
+                        </apex:outputText></u> 
+                               </span></p>
+           
+            </td>
+            <td style="width:252pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
+                <p class="s38" style="padding-bottom: 8pt;padding-top: 5pt; font-size: 12pt;text-align: center;color: #2E5395;"><b><u>Benefit-Cost</u></b></p>
+                <p class="s38" style="padding-left: 5pt;text-align: left;color: #2E5395;">Basic Annuity Amount Elected:          
+                    <span class="s20" style="color: red;padding-left: 51pt;">
+                        $<apex:inputField value="{!Lead.CSRS_Annuity_Retirement__c}" style="width: 60px;background-color: #00daff0f;border: none;border: 1px solid #ccc;">
+                                  <apex:actionSupport action="{!save}" event="onchange" reRender="page8"/> 
+                             </apex:inputField> 
+                               </span></p>
+                <p class="s38" style="padding-top: 15pt;padding-left: 75pt;text-indent: 0pt;text-align: left;color: #2E5395;">Less First:
+                    <span class="s20" style="color: red;"><u>$3,600.00</u> 
+                               </span>
+                              = 
+                               <span class="s20" style="color: red;padding-left: 31pt;">
+                                   <i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>                             
+                                   <u><apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                                        <apex:param value="{!Lead.CSRS_Annuity_Retirement__c - 3600}"/>
+                                    </apex:outputText></u> 
+                               </span>
+                </p>
+                <p class="s20" style="padding-top: 15pt;padding-left: 5pt;text-align: left;color: red;">
+                                    <i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>                             
+                                    <u><apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                                        <apex:param value="{!Lead.CSRS_Annuity_Retirement__c - 3600}"/>
+                                    </apex:outputText></u> 
+                    <span class="s38" style="color: #2E5395;"> x 10% = 
+                               </span> 
+                                   <i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>                             
+                                   <u><apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                                        <apex:param value="{!(Lead.CSRS_Annuity_Retirement__c - 3600) * 0.10}"/>
+                                    </apex:outputText></u> 
+                    <span class="s38" style="color: #2E5395;"> + 90 = 
+                               </span>
+                               <span class="s20" style="color: red;padding-left: 45pt;">
+                               <i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="padding-left: 10pt;color: blue;font-size: 8pt;"/></i>                             
+                               <u><apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                                    <apex:param value="{!((Lead.CSRS_Annuity_Retirement__c - 3600) * 0.10) + 90}"/>
+                                </apex:outputText></u>
+                               </span>
+                </p>
+                <p class="s38" style="padding-top: 15pt;padding-left: 5pt;text-align: left;color: #2E5395;">Monthly Annuity Deduction:
+                    <span class="s20" style="color: red;padding-left: 74pt;">
+                        <i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>
+                            <u><apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                                <apex:param value="{!(((Lead.CSRS_Annuity_Retirement__c - 3600) * 0.10) + 90) / 12}"/>
+                            </apex:outputText></u> 
+                               </span>
+                </p>
+            </td>
+        </tr>
+    </tbody>
+ </table>
+ </center>
+                <p style="padding-top: 1pt;text-indent: 0pt;text-align: left;">
+                    <br/>
+                    </p>
+                <p class="s38" style="padding-bottom: 5pt;margin-left: 5pt;margin-right: 5pt;text-indent: 0pt;text-align: justify;">If you opt out of the survivor benefit, your spouse or any other family member covered under FEHB will lose that coverage, if you predecease them in retirement unless they are otherwise eligible for coverage. In addition, they will lose the ability to initially enroll in FLTCIP coverage, unless otherwise eligible, although they could continue coverage if already enrolled.</p>
+                    <p style="text-indent: 0pt;text-align: left;">
+                        <br/>
+                        </p>
+   <center>                     
+    <table style="border-collapse:collapse;margin-left:5pt;margin-right: 5pt;" cellspacing="0">
+        <tbody> 
+            <tr style="height:21pt">
+            <td style="width:203pt;border-right-style:solid;border-right-width:2pt;color:red;border-bottom-style:solid;border-bottom-width:2pt;color: red;">
+                   <p class="s38" style="padding-bottom: 8pt;padding-top: 5pt; font-size: 12pt;text-align: center;color: red;"><b><u>CSRS ANNUITY</u></b></p>
+                   <p class="s38" style="padding-left: 9pt;text-align: left;">Retirement Age:          
+                        <span class="s20" style="color: red;padding-left: 79pt;">
+                           <b><apex:outputField value="{!Lead.Expected_Retirement_Age__c}"/></b>
+                        </span></p>
+                    <p class="s38" style="padding-top: 15pt;padding-left: 5pt;text-align: left;">"High-3" Average Salary:          
+                        <span class="s20" style="padding-left: 17pt;">
+                            $<apex:inputField value="{!Lead.High_3_Salary__c}" style="height:20px;width:65px;background-color: #00daff0f;border: none;border: 1px solid #ccc;">
+                                  <apex:actionSupport action="{!save}" event="onchange" reRender="page8"/> 
+                             </apex:inputField> 
+                                   </span></p>
+                    <p class="s38" style="padding-top: 15pt;padding-left: 7pt;text-align: left;">% of Years of Service:
+                        <span class="s20" style="color: black;padding-left: 52pt;">
+                            <u><apex:outputText value="7.50" rendered="{!Lead.Years_of_Employment__c = 5}"/>
+                                <apex:outputText value="9.25" rendered="{!Lead.Years_of_Employment__c = 6}"/>
+                                <apex:outputText value="11.00" rendered="{!Lead.Years_of_Employment__c = 7}"/>
+                                <apex:outputText value="12.75" rendered="{!Lead.Years_of_Employment__c = 8}"/>
+                                <apex:outputText value="14.50" rendered="{!Lead.Years_of_Employment__c = 9}"/>
+                                <apex:outputText value="16.25" rendered="{!Lead.Years_of_Employment__c = 10}"/>
+                                <apex:outputText value="18.25" rendered="{!Lead.Years_of_Employment__c = 11}"/>
+                                <apex:outputText value="20.25" rendered="{!Lead.Years_of_Employment__c = 12}"/>
+                                <apex:outputText value="22.25" rendered="{!Lead.Years_of_Employment__c = 13}"/>
+                                <apex:outputText value="24.25" rendered="{!Lead.Years_of_Employment__c = 14}"/>
+                                <apex:outputText value="26.25" rendered="{!Lead.Years_of_Employment__c = 15}"/>
+                                <apex:outputText value="28.25" rendered="{!Lead.Years_of_Employment__c = 16}"/>
+                                <apex:outputText value="30.25" rendered="{!Lead.Years_of_Employment__c = 17}"/>
+                                <apex:outputText value="32.25" rendered="{!Lead.Years_of_Employment__c = 18}"/>
+                                <apex:outputText value="34.25" rendered="{!Lead.Years_of_Employment__c = 19}"/>
+                                <apex:outputText value="36.25" rendered="{!Lead.Years_of_Employment__c = 20}"/>
+                                <apex:outputText value="38.25" rendered="{!Lead.Years_of_Employment__c = 21}"/>
+                                <apex:outputText value="40.25" rendered="{!Lead.Years_of_Employment__c = 22}"/>
+                                <apex:outputText value="42.25" rendered="{!Lead.Years_of_Employment__c = 23}"/>
+                                <apex:outputText value="44.25" rendered="{!Lead.Years_of_Employment__c = 24}"/>
+                                <apex:outputText value="46.25" rendered="{!Lead.Years_of_Employment__c = 25}"/>
+                                <apex:outputText value="48.25" rendered="{!Lead.Years_of_Employment__c = 26}"/>
+                                <apex:outputText value="50.25" rendered="{!Lead.Years_of_Employment__c = 27}"/>
+                                <apex:outputText value="52.25" rendered="{!Lead.Years_of_Employment__c = 28}"/>
+                                <apex:outputText value="54.25" rendered="{!Lead.Years_of_Employment__c = 29}"/>
+                                <apex:outputText value="56.25" rendered="{!Lead.Years_of_Employment__c = 30}"/>
+                                <apex:outputText value="58.25" rendered="{!Lead.Years_of_Employment__c = 31}"/>
+                                <apex:outputText value="60.25" rendered="{!Lead.Years_of_Employment__c = 32}"/>
+                                <apex:outputText value="62.25" rendered="{!Lead.Years_of_Employment__c = 33}"/>
+                                <apex:outputText value="64.25" rendered="{!Lead.Years_of_Employment__c = 34}"/>
+                                <apex:outputText value="66.25" rendered="{!Lead.Years_of_Employment__c = 35}"/>
+                                <apex:outputText value="68.25" rendered="{!Lead.Years_of_Employment__c = 36}"/>
+                                <apex:outputText value="70.25" rendered="{!Lead.Years_of_Employment__c = 37}"/>
+                                <apex:outputText value="72.25" rendered="{!Lead.Years_of_Employment__c = 38}"/>
+                                <apex:outputText value="74.25" rendered="{!Lead.Years_of_Employment__c = 39}"/>
+                                <apex:outputText value="76.25" rendered="{!Lead.Years_of_Employment__c = 40}"/>
+                                <apex:outputText value="78.25" rendered="{!Lead.Years_of_Employment__c = 41}"/>
+                                <apex:outputText value="80.00" rendered="{!Lead.Years_of_Employment__c = 42}"/>
+                                <apex:outputText value="80.00" rendered="{!Lead.Years_of_Employment__c = 43}"/>%</u> 
+                                                               </span></p>
+                    <p class="s38" style="padding-top: 15pt;padding-left: 7pt;text-align: left;">Retirement Annuity:
+                        <span class="s20" style="color: black;padding-left: 40pt;">
+                            <b><u><i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 5}">
+                                <apex:param value="{!Lead.High_3_Salary__c * 0.075}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 6}">
+                                <apex:param value="{!Lead.High_3_Salary__c * 0.0925}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 7}">
+                                <apex:param value="{!Lead.High_3_Salary__c * 0.11}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 8}">
+                                <apex:param value="{!Lead.High_3_Salary__c * 0.1275}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 9}">
+                                <apex:param value="{!Lead.High_3_Salary__c * 0.145}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 10}">
+                                <apex:param value="{!Lead.High_3_Salary__c * 0.1625}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 11}">
+                                <apex:param value="{!Lead.High_3_Salary__c * 0.1825}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 12}">
+                                <apex:param value="{!Lead.High_3_Salary__c * 0.2025}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 13}"><apex:param value="{!Lead.High_3_Salary__c * 0.2225}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 14}"><apex:param value="{!Lead.High_3_Salary__c * 0.2425}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 15}"><apex:param value="{!Lead.High_3_Salary__c * 0.2625}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 16}"><apex:param value="{!Lead.High_3_Salary__c * 0.2825}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 17}"><apex:param value="{!Lead.High_3_Salary__c * 0.3025}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 18}"><apex:param value="{!Lead.High_3_Salary__c * 0.3225}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 19}"><apex:param value="{!Lead.High_3_Salary__c * 0.3425}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 20}"><apex:param value="{!Lead.High_3_Salary__c * 0.3625}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 21}"><apex:param value="{!Lead.High_3_Salary__c * 0.3825}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 22}"><apex:param value="{!Lead.High_3_Salary__c * 0.4025}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 23}"><apex:param value="{!Lead.High_3_Salary__c * 0.4225}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 24}"><apex:param value="{!Lead.High_3_Salary__c * 0.4425}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 25}"><apex:param value="{!Lead.High_3_Salary__c * 0.4625}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 26}"><apex:param value="{!Lead.High_3_Salary__c * 0.4825}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 27}"><apex:param value="{!Lead.High_3_Salary__c * 0.5025}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 28}"><apex:param value="{!Lead.High_3_Salary__c * 0.5225}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 29}"><apex:param value="{!Lead.High_3_Salary__c * 0.5425}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 30}"><apex:param value="{!Lead.High_3_Salary__c * 0.5625}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 31}"><apex:param value="{!Lead.High_3_Salary__c * 0.5825}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 32}"><apex:param value="{!Lead.High_3_Salary__c * 0.6025}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 33}"><apex:param value="{!Lead.High_3_Salary__c * 0.6225}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 34}"><apex:param value="{!Lead.High_3_Salary__c * 0.6425}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 35}"><apex:param value="{!Lead.High_3_Salary__c * 0.6625}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 36}"><apex:param value="{!Lead.High_3_Salary__c * 0.6825}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 37}"><apex:param value="{!Lead.High_3_Salary__c * 0.7025}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 38}"><apex:param value="{!Lead.High_3_Salary__c * 0.7225}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 39}"><apex:param value="{!Lead.High_3_Salary__c * 0.7425}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 40}"><apex:param value="{!Lead.High_3_Salary__c * 0.7625}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 41}"><apex:param value="{!Lead.High_3_Salary__c * 0.7825}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 42}"><apex:param value="{!Lead.High_3_Salary__c * 0.8}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 43}"><apex:param value="{!Lead.High_3_Salary__c * 0.8}"/>
+                            </apex:outputText></u></b>  
+                                   </span></p>
+                    <p class="s38" style="padding-top: 15pt;padding-left: 5pt;text-align: left;color: red;"><b>Current Monthly Income:</b>
+                        <span class="s20" style="color: red;padding-left: 21pt;">
+                            <b><u><i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                                <apex:param value="{!Lead.Base_Salary__c / 12}"/>
+                            </apex:outputText></u></b> 
+                                   </span></p>
+                    <p class="s38" style="padding-top: 15pt;padding-bottom: 5pt;padding-left: 7pt;text-align: left;color: red;"><b>Retirement Annuity:</b>
+                        <span class="s20" style="color: red;padding-left: 40pt;">
+                            <b><u><i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 5}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.075) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 6}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.0925) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 7}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.11) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 8}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.1275) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 9}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.145) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 10}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.1625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 11}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.1825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 12}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.2025) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 13}"><apex:param value="{!(Lead.High_3_Salary__c * 0.2225) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 14}"><apex:param value="{!(Lead.High_3_Salary__c * 0.2425) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 15}"><apex:param value="{!(Lead.High_3_Salary__c * 0.2625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 16}"><apex:param value="{!(Lead.High_3_Salary__c * 0.2825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 17}"><apex:param value="{!(Lead.High_3_Salary__c * 0.3025) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 18}"><apex:param value="{!(Lead.High_3_Salary__c * 0.3225) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 19}"><apex:param value="{!(Lead.High_3_Salary__c * 0.3425) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 20}"><apex:param value="{!(Lead.High_3_Salary__c * 0.3625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 21}"><apex:param value="{!(Lead.High_3_Salary__c * 0.3825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 22}"><apex:param value="{!(Lead.High_3_Salary__c * 0.4025) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 23}"><apex:param value="{!(Lead.High_3_Salary__c * 0.4225) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 24}"><apex:param value="{!(Lead.High_3_Salary__c * 0.4425) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 25}"><apex:param value="{!(Lead.High_3_Salary__c * 0.4625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 26}"><apex:param value="{!(Lead.High_3_Salary__c * 0.4825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 27}"><apex:param value="{!(Lead.High_3_Salary__c * 0.5025) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 28}"><apex:param value="{!(Lead.High_3_Salary__c * 0.5225) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 29}"><apex:param value="{!(Lead.High_3_Salary__c * 0.5425) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 30}"><apex:param value="{!(Lead.High_3_Salary__c * 0.5625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 31}"><apex:param value="{!(Lead.High_3_Salary__c * 0.5825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 32}"><apex:param value="{!(Lead.High_3_Salary__c * 0.6025) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 33}"><apex:param value="{!(Lead.High_3_Salary__c * 0.6225) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 34}"><apex:param value="{!(Lead.High_3_Salary__c * 0.6425) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 35}"><apex:param value="{!(Lead.High_3_Salary__c * 0.6625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 36}"><apex:param value="{!(Lead.High_3_Salary__c * 0.6825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 37}"><apex:param value="{!(Lead.High_3_Salary__c * 0.7025) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 38}"><apex:param value="{!(Lead.High_3_Salary__c * 0.7225) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 39}"><apex:param value="{!(Lead.High_3_Salary__c * 0.7425) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 40}"><apex:param value="{!(Lead.High_3_Salary__c * 0.7625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 41}"><apex:param value="{!(Lead.High_3_Salary__c * 0.7825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 42}"><apex:param value="{!(Lead.High_3_Salary__c * 0.8) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 43}"><apex:param value="{!(Lead.High_3_Salary__c * 0.8) / 12}"/>
+                            </apex:outputText></u></b> 
+                                   </span></p>
+               </td>
+            <td style="width:352pt;border-top-style:solid;border-top-width:2pt;color:red;border-left-style:solid;border-left-width:2pt;color: red;" colspan="2">
+                   <p class="s38" style="padding-bottom: 8pt;padding-top: 5pt; font-size: 10pt;text-align: center;color: red;"><b>CSRS Law Enforcement and Firefighters</b></p>
+                   <p class="s38" style="padding-bottom: 1pt;margin-left: 11pt;text-indent: 0pt;text-align: justify;">
+                        <span class="s38" style="font-size: 9pt;color: red;">• 
+                               </span>You can retire at age 50 with at least 20 years of creditable service.</p>
+                   <p class="s38" style="padding-bottom: 1pt;margin-left: 11pt;text-indent: 0pt;text-align: justify;">
+                        <span class="s38" style="font-size: 9pt;color: red;">• 
+                               </span>Must retire at 57.</p>
+                   <p class="s38" style="padding-bottom: 1pt;margin-left: 11pt;text-indent: 0pt;text-align: justify;">
+                        <span class="s38" style="font-size: 9pt;color: red;">• 
+                               </span>In some cases, age may be extended to 60.</p>
+                   <p class="s38" style="padding-bottom: 3pt;padding-top: 3pt; font-size: 10pt;text-align: center;color: red;"><b>CSRS Retirement Formula</b></p>
+                   <p class="s38" style="padding-bottom: 1pt;margin-left: 11pt;text-indent: 0pt;text-align: justify;">
+                        <span class="s38" style="font-size: 9pt;color: red;">• 
+                               </span>First 20 years – High- 3 X years (up to 20) X 2.5%.</p>
+                   <p class="s38" style="padding-bottom: 1pt;margin-left: 11pt;text-indent: 0pt;text-align: justify;">
+                        <span class="s38" style="font-size: 9pt;color: red;">• 
+                               </span>Years over 20 – High -3 X years X 2%.</p>
+                   <p class="s38" style="padding-bottom: 3pt;padding-top: 3pt; font-size: 10pt;text-align: center;color: red;"><b>CSRS Air Traffic Controllers</b></p>
+                   <p class="s38" style="padding-bottom: 1pt;margin-left: 11pt;text-indent: 0pt;text-align: justify;">
+                        <span class="s38" style="font-size: 9pt;color: red;">• 
+                               </span>You can retire with unreduced benefits at 50 with at least 20 years of creditable service.</p>
+                   <p class="s38" style="padding-bottom: 1pt;margin-left: 11pt;text-indent: 0pt;text-align: justify;">
+                        <span class="s38" style="font-size: 9pt;color: red;">• 
+                               </span>At any age with at least 25 years of creditable service without any reduction.</p>
+                   <p class="s38" style="padding-bottom: 1pt;margin-left: 11pt;text-indent: 0pt;text-align: justify;">
+                        <span class="s38" style="font-size: 9pt;color: red;">• 
+                               </span>Must retire by age 56.</p>
+                   <p class="s38" style="padding-bottom: 1pt;margin-left: 11pt;text-indent: 0pt;text-align: justify;">
+                        <span class="s38" style="font-size: 9pt;color: red;">• 
+                               </span>Does not apply to ATC with the DOT hired prior to 5/6/72.</p>
+                   <p class="s38" style="padding-bottom: 1pt;margin-left: 11pt;text-indent: 0pt;text-align: justify;">
+                        <span class="s38" style="font-size: 9pt;color: red;">• 
+                               </span>Does not apply to DOD personnel hired prior to 9/12/80.</p>
+               </td>
+            </tr>   
+         </tbody>
+     </table>
+ </center>        
+                        
+                   <p class="s20" style="padding-bottom: 5pt;margin-left: 5pt;margin-right: 5pt;padding-top: 18pt; text-align: center;font-size: 12pt;color: red;"><b>CSRS SPECIAL GROUPS ANNUITY</b></p>  
+                   
+                    <p class="s20" style="padding-bottom: 5pt;margin-left: 5pt;margin-right: 5pt;padding-top: 10pt; text-align: center;font-size: 10pt;">
+                     2.5% X (High-3) 
+                        <span class="s20"> 
+                            <b><u> _<i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>
+                        <apex:outputText value="{0, number, $###,###,##0}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                            <apex:param value="{!Lead.High_3_Salary__c}"/>
+                        </apex:outputText>_</u></b> 
+                            </span>
+                     = 
+                        <span class="s20" style="padding-left:22pt;">
+                            <b><u> _<i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>
+                        <apex:outputText value="{0, number, $###,###,##0}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                            <apex:param value="{!Lead.High_3_Salary__c* 0.025}"/>
+                        </apex:outputText>_</u></b> 
+                            </span>
+                     X 20 Years =
+                           <span class="s20" style="color: red;padding-left: 22pt;"> 
+                        <b><u> _<i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>
+                        <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                            <apex:param value="{!(Lead.High_3_Salary__c* 0.025) * 20}"/>
+                        </apex:outputText>_</u></b>
+                            </span>
+                   </p>
+                   <p class="s38" style="padding-bottom: 5pt;margin-left: 5pt;margin-right: 5pt;padding-top: 10pt; text-align: center;font-size: 10pt;">
+                     2% X (High-3) 
+                        <span class="s20"> 
+                            <b><u> _<i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>
+                        <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                            <apex:param value="{!Lead.High_3_Salary__c}"/>
+                        </apex:outputText>_</u></b> 
+                            </span>                    
+                    = 
+                        <b><u> _<i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>
+                        <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                            <apex:param value="{!Lead.High_3_Salary__c* 0.02}"/>
+                        </apex:outputText>_</u></b> 
+                     X 
+                        <u><b>_<apex:outputField value="{!Lead.Years_of_Employment__c}"/>_</b></u> 
+                    Years of Service (%)  =
+                           <span class="s20" style="color: red;padding-left: 22pt;"> 
+                        <b><u> _<i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>
+                        <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true}">
+                            <apex:param value="{!(Lead.High_3_Salary__c* 0.02) * Lead.Years_of_Employment__c}"/>
+                        </apex:outputText>_</u></b>
+                            </span>
+                   </p> 
+                   
+                   <p class="s38" style="padding-bottom: 5pt;margin-left: 5pt;margin-right: 5pt;padding-top: 10pt; text-align: center;font-size: 11pt;">
+                     Total Annual Annuity:
+                        <span class="s20"> 
+                            <b><u><i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 5}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.075) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 6}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.0925) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 7}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.11) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 8}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.1275) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 9}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.145) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 10}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.1625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 11}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.1825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 12}">
+                                <apex:param value="{!(Lead.High_3_Salary__c * 0.2025) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 13}"><apex:param value="{!(Lead.High_3_Salary__c * 0.2225) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 14}"><apex:param value="{!(Lead.High_3_Salary__c * 0.2425) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 15}"><apex:param value="{!(Lead.High_3_Salary__c * 0.2625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 16}"><apex:param value="{!(Lead.High_3_Salary__c * 0.2825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 17}"><apex:param value="{!(Lead.High_3_Salary__c * 0.3025) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 18}"><apex:param value="{!(Lead.High_3_Salary__c * 0.3225) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 19}"><apex:param value="{!(Lead.High_3_Salary__c * 0.3425) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 20}"><apex:param value="{!(Lead.High_3_Salary__c * 0.3625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 21}"><apex:param value="{!(Lead.High_3_Salary__c * 0.3825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 22}"><apex:param value="{!(Lead.High_3_Salary__c * 0.4025) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 23}"><apex:param value="{!(Lead.High_3_Salary__c * 0.4225) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 24}"><apex:param value="{!(Lead.High_3_Salary__c * 0.4425) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 25}"><apex:param value="{!(Lead.High_3_Salary__c * 0.4625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 26}"><apex:param value="{!(Lead.High_3_Salary__c * 0.4825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 27}"><apex:param value="{!(Lead.High_3_Salary__c * 0.5025) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 28}"><apex:param value="{!(Lead.High_3_Salary__c * 0.5225) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 29}"><apex:param value="{!(Lead.High_3_Salary__c * 0.5425) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 30}"><apex:param value="{!(Lead.High_3_Salary__c * 0.5625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 31}"><apex:param value="{!(Lead.High_3_Salary__c * 0.5825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 32}"><apex:param value="{!(Lead.High_3_Salary__c * 0.6025) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 33}"><apex:param value="{!(Lead.High_3_Salary__c * 0.6225) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 34}"><apex:param value="{!(Lead.High_3_Salary__c * 0.6425) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 35}"><apex:param value="{!(Lead.High_3_Salary__c * 0.6625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 36}"><apex:param value="{!(Lead.High_3_Salary__c * 0.6825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 37}"><apex:param value="{!(Lead.High_3_Salary__c * 0.7025) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 38}"><apex:param value="{!(Lead.High_3_Salary__c * 0.7225) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 39}"><apex:param value="{!(Lead.High_3_Salary__c * 0.7425) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 40}"><apex:param value="{!(Lead.High_3_Salary__c * 0.7625) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 41}"><apex:param value="{!(Lead.High_3_Salary__c * 0.7825) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 42}"><apex:param value="{!(Lead.High_3_Salary__c * 0.8) / 12}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 43}"><apex:param value="{!(Lead.High_3_Salary__c * 0.8) / 12}"/>
+                            </apex:outputText></u></b> 
+                                   </span>                   
+                    / (divided by) 12 =  
+                        <span class="s20" style="color: red;padding-left: 22pt;"> 
+                            <b><u> _<i><apex:outputText value="Calculate" rendered="{!IF( Lead.Snapshot_Flow_Completed__c == false, true, false)}" style="color: blue;font-size: 8pt;"/></i>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 5}">
+                                <apex:param value="{!((Lead.High_3_Salary__c * 0.075) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 6}">
+                                <apex:param value="{!((Lead.High_3_Salary__c * 0.0925) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 7}">
+                                <apex:param value="{!((Lead.High_3_Salary__c * 0.11) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 8}">
+                                <apex:param value="{!((Lead.High_3_Salary__c * 0.1275) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 9}">
+                                <apex:param value="{!((Lead.High_3_Salary__c * 0.145) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 10}">
+                                <apex:param value="{!((Lead.High_3_Salary__c * 0.1625) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 11}">
+                                <apex:param value="{!((Lead.High_3_Salary__c * 0.1825) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 12}">
+                                <apex:param value="{!((Lead.High_3_Salary__c * 0.2025) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 13}"><apex:param value="{!((Lead.High_3_Salary__c * 0.2225) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 14}"><apex:param value="{!((Lead.High_3_Salary__c * 0.2425) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 15}"><apex:param value="{!((Lead.High_3_Salary__c * 0.2625) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 16}"><apex:param value="{!((Lead.High_3_Salary__c * 0.2825) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 17}"><apex:param value="{!((Lead.High_3_Salary__c * 0.3025) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 18}"><apex:param value="{!((Lead.High_3_Salary__c * 0.3225) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 19}"><apex:param value="{!((Lead.High_3_Salary__c * 0.3425) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 20}"><apex:param value="{!((Lead.High_3_Salary__c * 0.3625) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 21}"><apex:param value="{!((Lead.High_3_Salary__c * 0.3825) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 22}"><apex:param value="{!((Lead.High_3_Salary__c * 0.4025) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 23}"><apex:param value="{!((Lead.High_3_Salary__c * 0.4225) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 24}"><apex:param value="{!((Lead.High_3_Salary__c * 0.4425) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 25}"><apex:param value="{!((Lead.High_3_Salary__c * 0.4625) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 26}"><apex:param value="{!((Lead.High_3_Salary__c * 0.4825) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 27}"><apex:param value="{!((Lead.High_3_Salary__c * 0.5025) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 28}"><apex:param value="{!((Lead.High_3_Salary__c * 0.5225) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 29}"><apex:param value="{!((Lead.High_3_Salary__c * 0.5425) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 30}"><apex:param value="{!((Lead.High_3_Salary__c * 0.5625) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 31}"><apex:param value="{!((Lead.High_3_Salary__c * 0.5825) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 32}"><apex:param value="{!((Lead.High_3_Salary__c * 0.6025) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 33}"><apex:param value="{!((Lead.High_3_Salary__c * 0.6225) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 34}"><apex:param value="{!((Lead.High_3_Salary__c * 0.6425) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 35}"><apex:param value="{!((Lead.High_3_Salary__c * 0.6625) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 36}"><apex:param value="{!((Lead.High_3_Salary__c * 0.6825) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 37}"><apex:param value="{!((Lead.High_3_Salary__c * 0.7025) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 38}"><apex:param value="{!((Lead.High_3_Salary__c * 0.7225) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 39}"><apex:param value="{!((Lead.High_3_Salary__c * 0.7425) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 40}"><apex:param value="{!((Lead.High_3_Salary__c * 0.7625) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 41}"><apex:param value="{!((Lead.High_3_Salary__c * 0.7825) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 42}"><apex:param value="{!((Lead.High_3_Salary__c * 0.8) / 12) / 2}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Snapshot_Flow_Completed__c == true && Lead.Years_of_Employment__c = 43}"><apex:param value="{!((Lead.High_3_Salary__c * 0.8) / 12) / 2}"/>
+                            </apex:outputText>_</u></b>
+                                   </span> 
+                           <b> Monthly</b>
+                   </p>                     
+             
+             
+             <p style="padding-top: 4pt;text-indent: 0pt;text-align: left;">
+            <br/>
+        </p>
+       <p style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: left;"/>
+        <apex:image url="{!$Resource.Pg8FedbookBottom}" width="100%"/>
+        <p style="text-indent: 0pt;text-align: left;"></p> 
+
+
+    </apex:pageBlock>
+</apex:form>
+
+        <div style="page-break-after: always"/>
+</apex:page>
