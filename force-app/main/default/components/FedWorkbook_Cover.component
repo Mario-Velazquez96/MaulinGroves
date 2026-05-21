@@ -1,0 +1,37 @@
+<apex:component layout="none">
+    <!--
+      ============================================================
+      FedWorkbook_Cover
+      Rebranded cover page (Page 1) for the Groves Federal Workbook.
+      Self-contained: renders the Pg1GrovesFedForm cover graphic on the
+      brand background. Safe for both interactive pages and renderAs="pdf".
+      Does NOT modify any existing page or static resource.
+      ============================================================
+    -->
+    <apex:attribute name="maxWidth" type="String" default="760px"
+        description="Maximum rendered width of the cover graphic." />
+
+    <style type="text/css">
+        /* PDF-safe: no flexbox, no vh units, no CSS variables */
+        .gfg-cover {
+            background-color: #3A5754;
+            text-align: center;
+            padding: 48px 24px;
+            margin: 0;
+            page-break-after: always;
+        }
+        .gfg-cover__img {
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+            height: auto;
+        }
+    </style>
+
+    <div class="gfg-cover">
+        <apex:image url="{!$Resource.Pg1GrovesFedForm}"
+            styleClass="gfg-cover__img"
+            style="max-width: {!maxWidth};"
+            alt="Groves Financial Group - Federal Employee Benefits and Retirement Workbook" />
+    </div>
+</apex:component>

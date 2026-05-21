@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- Manifest for the Federal Workbook rebrand. Lists only the new
+     components created for the rebrand; does not include any existing
+     production metadata. -->
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+	<types>
+		<members>FedWorkbook_Cover</members>
+		<name>ApexComponent</name>
+	</types>
+	<types>
+		<members>FedWorkbook_Preview</members>
+		<name>ApexPage</name>
+	</types>
+	<types>
+		<members>Pg1GrovesFedForm</members>
+		<name>StaticResource</name>
+	</types>
+	<types>
+		<members>Lead.Federal_Form_Preview</members>
+		<name>WebLink</name>
+	</types>
+	<version>67.0</version>
+</Package>

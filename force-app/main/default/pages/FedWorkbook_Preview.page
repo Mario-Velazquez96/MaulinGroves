@@ -1,0 +1,25 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false"
+    applyHtmlTag="false" applyBodyTag="false" docType="html-5.0"
+    title="Federal Workbook - Preview">
+    <!--
+      Preview harness for the rebranded Federal Workbook components.
+      As each section component is built, add it here to review the result.
+      This page is for preview only and is not wired into the live workbook.
+    -->
+    <html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Federal Workbook - Preview</title>
+        <style type="text/css">
+            html, body { margin: 0; padding: 0; }
+        </style>
+    </head>
+
+    <body>
+        <!-- Page 1: Cover -->
+        <c:FedWorkbook_Cover />
+    </body>
+
+    </html>
+</apex:page>
