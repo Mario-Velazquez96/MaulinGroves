@@ -1,0 +1,410 @@
+<apex:page standardController="Lead" extensions="FedWorkbook_EmployeeInfoExt"
+    showHeader="false" sidebar="false"
+    standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false"
+    docType="html-5.0" title="Federal Employee Information">
+    <!--
+      ============================================================
+      FedWorkbook_EmployeeInfo  (Page 2)
+      Rebranded "Federal Benefits & Retirement Analysis" employee form.
+      Uses the Lead standard controller (quicksave) so all fields,
+      including the new Apt__c / Sick_Leave__c / Annual_Leave__c /
+      FEHB_PSHB__c fields, bind without modifying existing Apex.
+      Designed to render standalone or via apex:include.
+      ============================================================
+    -->
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=PT+Serif:wght@400;700&amp;display=swap');
+
+        .gfg2-doc {
+            position: relative;
+            background: #ffffff;
+            color: #2b2b2b;
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 0 auto;
+            max-width: 1000px;
+        }
+        .gfg2-sidebar {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 54px;
+            background: #3A5754;
+        }
+        .gfg2-pagenum {
+            position: absolute;
+            bottom: 18px; left: 0;
+            width: 54px;
+            text-align: center;
+            color: #ffffff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+        }
+        .gfg2-main { margin-left: 54px; padding: 26px 38px 46px; }
+
+        .gfg2-title {
+            margin: 0 0 8px;
+            color: #3A5754;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 33px;
+            font-weight: 800;
+            letter-spacing: .2px;
+        }
+        .gfg2-accent { height: 9px; background: #8FA68C; margin: 0 0 18px; }
+
+        .gfg2-row { margin: 7px 0; }
+        .gfg2-field {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 6px;
+            margin: 5px 22px 5px 0;
+        }
+        .gfg2-field label { font-weight: 700; white-space: nowrap; }
+
+        /* Editable inputs styled as fill-in underlines */
+        .gfg2-input {
+            border: 0;
+            border-bottom: 1px solid #9aa6a3;
+            background: transparent;
+            font: inherit;
+            color: #1f3b38;
+            padding: 1px 4px;
+            min-width: 130px;
+        }
+        .gfg2-input:focus { outline: none; border-bottom: 2px solid #3A5754; }
+        select.gfg2-input { min-width: 150px; }
+
+        /* Currency / percent symbols shown next to editable inputs */
+        .gfg2-affix { display: inline-flex; align-items: baseline; gap: 2px; }
+        .gfg2-sym { font-weight: 700; color: #1f3b38; }
+
+        /* Read-only values shown as a filled blank */
+        .gfg2-ro {
+            display: inline-block;
+            min-width: 130px;
+            border-bottom: 1px solid #cdd5d3;
+            padding: 1px 4px;
+            color: #555;
+        }
+        .gfg2-check { margin: 0 4px 0 0; vertical-align: middle; }
+        .gfg2-ml { margin-left: 14px; }
+        .gfg2-link { color: #3A5754; font-weight: 700; text-decoration: underline; cursor: pointer; }
+
+        .gfg2-disclaimer {
+            text-align: center;
+            font-style: italic;
+            margin: 16px 0 18px;
+        }
+        .gfg2-section-rule { border: 0; border-top: 2px solid #8FA68C; margin: 18px 0; }
+
+        .gfg2-body { margin: 16px 0; text-indent: 28px; text-align: justify; }
+        .gfg2-h2 {
+            text-align: center;
+            color: #2b2b2b;
+            font-weight: 700;
+            font-size: 21px;
+            margin: 22px 0 10px;
+        }
+        .gfg2-cols {
+            column-count: 2;
+            column-gap: 48px;
+            max-width: 760px;
+            margin: 0 auto;
+            padding-left: 26px;
+        }
+        .gfg2-cols li { margin: 6px 0; break-inside: avoid; }
+
+        .gfg2-savebar {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 12px;
+            color: #3A5754;
+            font-weight: 600;
+        }
+        @media (max-width: 640px) {
+            .gfg2-cols { column-count: 1; }
+            .gfg2-main { padding: 20px; }
+        }
+    </style>
+
+    <div class="gfg2-doc">
+        <div class="gfg2-sidebar"><span class="gfg2-pagenum">2</span></div>
+
+        <div class="gfg2-main">
+            <h1 class="gfg2-title">Federal Benefits &amp; Retirement Analysis</h1>
+            <div class="gfg2-accent"></div>
+
+            <apex:form id="gfg2form">
+                <!-- Every editable field calls this onchange to auto-save silently -->
+                <apex:actionFunction name="gfg2Save" action="{!saveLead}" reRender="gfg2msgs,gfg2spouse" />
+                <!-- AJAX target: silent on success; displays any save/validation error -->
+                <apex:outputPanel id="gfg2msgs"><apex:pageMessages /></apex:outputPanel>
+                <!-- <apex:actionStatus id="gfg2status"
+                    startText=" Saving..." stopText=" Saved &#10003;"
+                    styleClass="gfg2-savebar" />-->
+
+                <!-- Specialist header -->
+                <div class="gfg2-row">
+                    <span class="gfg2-field">
+                        <label>Date:</label>
+                        <span class="gfg2-ro">
+                            <apex:outputText value="{0,date,MM/dd/yyyy}">
+                                <apex:param value="{!TODAY()}" />
+                            </apex:outputText>
+                        </span>
+                    </span>
+                    <span class="gfg2-field">
+                        <label>Specialist Name:</label>
+                        <span class="gfg2-ro">{!$User.FirstName} {!$User.LastName}</span>
+                    </span>
+                    <span class="gfg2-field">
+                        <label>Phone:</label>
+                        <span class="gfg2-ro">{!$User.Phone}</span>
+                    </span>
+                </div>
+                <div class="gfg2-row">
+                    <span class="gfg2-field">
+                        <label>Email:</label>
+                        <span class="gfg2-ro">{!$User.Email}</span>
+                    </span>
+                </div>
+
+                <p class="gfg2-disclaimer">
+                    Information used in this analysis is provided by the federal employee
+                </p>
+
+                <!-- Identity (read-only) -->
+                <div class="gfg2-row">
+                    <span class="gfg2-field">
+                        <label>Name:</label>
+                        <apex:outputField value="{!Lead.Name}" styleClass="gfg2-ro" />
+                    </span>
+                    <span class="gfg2-field">
+                        <label>Email:</label>
+                        <apex:outputField value="{!Lead.Email}" styleClass="gfg2-ro" />
+                    </span>
+                    <span class="gfg2-field">
+                        <label>Phone:</label>
+                        <apex:outputField value="{!Lead.MobilePhone_Formatted__c}" styleClass="gfg2-ro" />
+                    </span>
+                </div>
+
+                <!-- Address (read-only) -->
+                <div class="gfg2-row">
+                    <span class="gfg2-field">
+                        <label>Address:</label>
+                        <apex:outputField value="{!Lead.Street}" styleClass="gfg2-ro" />
+                    </span>
+                    <span class="gfg2-field">
+                        <label>City:</label>
+                        <apex:outputField value="{!Lead.City}" styleClass="gfg2-ro" />
+                    </span>
+                    <span class="gfg2-field">
+                        <label>State:</label>
+                        <apex:outputField value="{!Lead.State}" styleClass="gfg2-ro" />
+                    </span>
+                    <span class="gfg2-field">
+                        <label>Zip:</label>
+                        <apex:outputField value="{!Lead.PostalCode}" styleClass="gfg2-ro" />
+                    </span>
+                </div>
+
+                <!-- Employment (editable) -->
+                <div class="gfg2-row">
+                    <span class="gfg2-field">
+                        <label>Job Title:</label>
+                        <apex:inputField value="{!Lead.Title}" styleClass="gfg2-input" onchange="gfg2Save();" />
+                    </span>
+                    <span class="gfg2-field">
+                        <label>Agency:</label>
+                        <apex:inputField value="{!Lead.Company}" styleClass="gfg2-input" onchange="gfg2Save();" />
+                    </span>
+                    <span class="gfg2-field">
+                        <label>Date of Hire:</label>
+                        <apex:input value="{!hireDate}" type="date" styleClass="gfg2-input" onchange="gfg2Save();" />
+                    </span>
+                    <span class="gfg2-field">
+                        <label>Exp. Retirement Date:</label>
+                        <apex:input value="{!retireDate}" type="date" styleClass="gfg2-input" onchange="gfg2Save();" />
+                    </span>
+                </div>
+
+                <!-- DOB (editable) + derived read-only fields -->
+                <div class="gfg2-row">
+                    <span class="gfg2-field">
+                        <label>DOB:</label>
+                        <apex:input value="{!birthDate}" type="date" styleClass="gfg2-input" onchange="gfg2Save();" />
+                    </span>
+                    <span class="gfg2-field">
+                        <label>Current Age:</label>
+                        <apex:outputField value="{!Lead.Contact_Age__c}" styleClass="gfg2-ro" />
+                    </span>
+                    <span class="gfg2-field">
+                        <label>Years of Creditable Service:</label>
+                        <apex:outputField value="{!Lead.Years_of_Employment__c}" styleClass="gfg2-ro" />
+                    </span>
+                    <span class="gfg2-field">
+                        <label>Expected Retirement Age:</label>
+                        <apex:outputField value="{!Lead.Expected_Retirement_Age__c}" styleClass="gfg2-ro" />
+                    </span>
+                </div>
+
+                <!-- Marital / Spouse / Federal Employee -->
+                <div class="gfg2-row">
+                    <span class="gfg2-field">
+                        <label>Marital Status:</label>
+                        <apex:inputField value="{!Lead.Marital_Status__c}" styleClass="gfg2-input" onchange="gfg2Save();" />
+                    </span>
+                    <apex:outputPanel id="gfg2spouse">
+                        <apex:outputPanel layout="none"
+                            rendered="{!OR(Lead.Marital_Status__c == 'Married', Lead.Marital_Status__c == 'Registered Partnership')}">
+                            <span class="gfg2-field">
+                                <apex:outputLink value="/flow/contact_create_update_spouse?recordId={!Lead.Id}"
+                                    target="_blank" styleClass="gfg2-link">Spouse Name:</apex:outputLink>
+                                <apex:outputText value="{!Lead.Spouse_Name__r.Name}" styleClass="gfg2-ro" />
+                            </span>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                    <span class="gfg2-field">
+                        <label>Federal Employee:</label>
+                        <apex:inputField value="{!Lead.Federal_Employee__c}" styleClass="gfg2-check" onchange="gfg2Save();" />
+                    </span>
+                </div>
+
+                <!-- Base Salary + Retirement System -->
+                <div class="gfg2-row">
+                    <span class="gfg2-field">
+                        <label>Base Salary:</label>
+                        <span class="gfg2-affix">
+                            <span class="gfg2-sym">$</span>
+                            <apex:inputField value="{!Lead.Base_Salary__c}" styleClass="gfg2-input" onchange="gfg2Save();" />
+                        </span>
+                    </span>
+                    <span class="gfg2-field" id="gfg2-retsys-group">
+                        <label>Retirement System:</label>
+                        <apex:inputField value="{!Lead.CSRS__c}" styleClass="gfg2-check" onchange="gfg2RetSys(this); gfg2Save();" /> CSRS
+                        <apex:inputField value="{!Lead.CSRS_Offset__c}" styleClass="gfg2-check" style="margin-left:14px" onchange="gfg2RetSys(this); gfg2Save();" /> CSRS Offset
+                        <apex:inputField value="{!Lead.FERS__c}" styleClass="gfg2-check" style="margin-left:14px" onchange="gfg2RetSys(this); gfg2Save();" /> FERS
+                    </span>
+                </div>
+
+                <!-- TSP -->
+                <div class="gfg2-row">
+                    <span class="gfg2-field">
+                        <label>TSP Contribution:</label>
+                        <span class="gfg2-affix">
+                            <apex:inputField value="{!Lead.TSP_Contribution__c}" styleClass="gfg2-input" style="min-width:90px" onchange="gfg2Save();" />
+                            <span class="gfg2-sym">%</span>
+                        </span>
+                    </span>
+                    <span class="gfg2-field">
+                        <label>TSP Balance:</label>
+                        <span class="gfg2-affix">
+                            <span class="gfg2-sym">$</span>
+                            <apex:inputField value="{!Lead.TSP_Total__c}" styleClass="gfg2-input" onchange="gfg2Save();" />
+                        </span>
+                    </span>
+                </div>
+
+                <!-- FEGLI Code + FEHB/PSHB (new field) -->
+                <div class="gfg2-row">
+                    <span class="gfg2-field">
+                        <label>FEGLI Code:</label>
+                        <apex:inputField value="{!Lead.FEGLI_Code_Picklist__c}" styleClass="gfg2-input" onchange="gfg2Save();" />
+                    </span>
+                    <span class="gfg2-field">
+                        <label>FEHB/PSHB:</label>
+                        <span class="gfg2-affix">
+                            <span class="gfg2-sym">$</span>
+                            <apex:inputField value="{!Lead.FEHB_PSHB__c}" styleClass="gfg2-input" onchange="gfg2Save();" />
+                        </span>
+                    </span>
+                </div>
+
+                <!-- FEGLI Plan: read-only (per client request) -->
+                <div class="gfg2-row">
+                    <span class="gfg2-field">
+                        <label>FEGLI Plan:</label>
+                        <apex:inputCheckbox value="{!planBasic}" styleClass="gfg2-check" disabled="true" /> Basic
+                        <apex:inputCheckbox value="{!planOptionA}" styleClass="gfg2-check gfg2-ml" disabled="true" /> Option A
+                        <apex:inputCheckbox value="{!planOptionB}" styleClass="gfg2-check gfg2-ml" disabled="true" /> Option B
+                        <apex:outputField value="{!Lead.Option_B_Choice_Selection__c}" styleClass="gfg2-ro" />
+                        <apex:inputCheckbox value="{!planOptionC}" styleClass="gfg2-check gfg2-ml" disabled="true" /> Option C
+                        <apex:outputField value="{!Lead.Option_C_Choice_Selection__c}" styleClass="gfg2-ro" />
+                    </span>
+                </div>
+
+                <!-- Leave balances (new fields) -->
+                <div class="gfg2-row" style="text-align:center">
+                    <span class="gfg2-field">
+                        <label>Sick Leave:</label>
+                        <apex:inputField value="{!Lead.Sick_Leave__c}" styleClass="gfg2-input" style="min-width:90px" onchange="gfg2Save();" />
+                    </span>
+                    <span class="gfg2-field">
+                        <label>Annual Leave:</label>
+                        <apex:inputField value="{!Lead.Annual_Leave__c}" styleClass="gfg2-input" style="min-width:90px" onchange="gfg2Save();" />
+                    </span>
+                </div>
+            </apex:form>
+
+            <hr class="gfg2-section-rule" />
+
+            <!-- Static workbook intro content -->
+            <p class="gfg2-body">
+                The objective of this workbook is to give the Federal Employee a working
+                knowledge of their current core benefits. It is not intended to offer tax
+                or investing advice. Understanding how the federal retirement system works
+                will offer you invaluable insight and the ability to make an informed
+                decision when the time comes to plan for your retirement. Your retirement
+                income is based on the system you are employed under, either CSRS, CSRS
+                Offset, or FERS. While it is important to understand how this works, it is
+                equally important to understand your other core benefits, what they are,
+                how they affect your income during your working years, and how to maximize
+                your pension into retirement.
+            </p>
+
+            <h2 class="gfg2-h2">
+                The first steps in developing a financial strategy involve understanding:
+            </h2>
+            <ul class="gfg2-cols">
+                <li>What you have</li>
+                <li>What you want</li>
+                <li>What your costs will be</li>
+                <li>What you need</li>
+                <li>What your income will be</li>
+                <li>What your options are</li>
+            </ul>
+
+            <h2 class="gfg2-h2">
+                During this review we will cover the following core benefits that apply to you:
+            </h2>
+            <ul class="gfg2-cols">
+                <li>Your Federal Retirement System</li>
+                <li>Retirement Annuity</li>
+                <li>FERS Supplement Annuity</li>
+                <li>Thrift Savings Plan</li>
+                <li>Social Security Annuity</li>
+                <li>Federal Employee Group Life Insurance</li>
+                <li>Survivor Benefits Plan</li>
+            </ul>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // Retirement System: CSRS / CSRS Offset / FERS are mutually exclusive.
+        // Invoked inline from each checkbox's onchange BEFORE gfg2Save(), so the
+        // other boxes are un-checked before the auto-save posts the form.
+        function gfg2RetSys(clicked) {
+            if (!clicked || !clicked.checked) { return; }
+            var group = document.getElementById('gfg2-retsys-group');
+            if (!group) { return; }
+            var inputs = group.getElementsByTagName('input');
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].type === 'checkbox' && inputs[i] !== clicked) {
+                    inputs[i].checked = false;
+                }
+            }
+        }
+    </script>
+</apex:page>

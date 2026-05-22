@@ -19,6 +19,9 @@
     <body>
         <!-- Page 1: Cover -->
         <c:FedWorkbook_Cover />
+
+        <!-- Page 2: Federal Employee Information -->
+        <apex:include pageName="FedWorkbook_EmployeeInfo" />
     </body>
 
     </html>

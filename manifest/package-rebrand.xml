@@ -4,12 +4,23 @@
      production metadata. -->
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
+		<members>FedWorkbook_EmployeeInfoExt</members>
+		<name>ApexClass</name>
+	</types>
+	<types>
 		<members>FedWorkbook_Cover</members>
 		<name>ApexComponent</name>
 	</types>
 	<types>
+		<members>FedWorkbook_EmployeeInfo</members>
 		<members>FedWorkbook_Preview</members>
 		<name>ApexPage</name>
+	</types>
+	<types>
+		<members>Lead.Annual_Leave__c</members>
+		<members>Lead.FEHB_PSHB__c</members>
+		<members>Lead.Sick_Leave__c</members>
+		<name>CustomField</name>
 	</types>
 	<types>
 		<members>Pg1GrovesFedForm</members>
