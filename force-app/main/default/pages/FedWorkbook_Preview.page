@@ -12,16 +12,24 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Federal Workbook - Preview</title>
         <style type="text/css">
-            html, body { margin: 0; padding: 0; }
+            html, body {
+                margin: 0;
+                padding: 0;
+                background: #e6e8e6;
+            }
+            /* Backdrop around the pages so each section looks like a sheet of paper */
+            .gfg-pageframe { padding: 32px; }
         </style>
     </head>
 
     <body>
-        <!-- Page 1: Cover -->
-        <c:FedWorkbook_Cover />
+        <div class="gfg-pageframe">
+            <!-- Page 1: Cover -->
+            <c:FedWorkbook_Cover />
 
-        <!-- Page 2: Federal Employee Information -->
-        <apex:include pageName="FedWorkbook_EmployeeInfo" />
+            <!-- Page 2: Federal Employee Information -->
+            <apex:include pageName="FedWorkbook_EmployeeInfo" />
+        </div>
     </body>
 
     </html>

@@ -23,8 +23,11 @@
             font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
             font-size: 15px;
             line-height: 1.5;
-            margin: 0 auto;
-            max-width: 1000px;
+            margin: 0 auto 24px;
+            width: 850px;
+            max-width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
         }
         .gfg2-sidebar {
             position: absolute;
