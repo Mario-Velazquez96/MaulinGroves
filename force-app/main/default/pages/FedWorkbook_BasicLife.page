@@ -1,0 +1,396 @@
+<apex:page id="basicForm3" standardController="Lead"
+    showHeader="false" sidebar="false" standardStylesheets="false"
+    applyHtmlTag="false" applyBodyTag="false"
+    docType="html-5.0" title="Federal Employee Group Life Insurance"
+    rendered="{!IF(Lead.Basic__c == true || (Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != 'Ao' && Lead.FEGLI_Code_Picklist__c != 'Bo'), true, false)}">
+    <!--
+      ============================================================
+      FedWorkbook_BasicLife  (Page 3)
+      Rebranded FEGLI Basic Life section.
+      Uses the same Lead fields as the original BasicLife.page, but
+      replaces Total_Basic_Benefit__c with Total_Basic_Benefit__c
+      (a new formula field that correctly handles BOTH the FEGLI-code
+      and the manual-age paths):
+        formula_basePay__c, Total_Basic_Benefit__c, Contact_Age__c,
+        Age_Option_Basic_Manual__c, Base_Salary__c, Basic__c,
+        FEGLI_Code_Picklist__c
+      ============================================================
+    -->
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=PT+Serif:wght@400;700&amp;display=swap');
+
+        .gfg3-doc {
+            position: relative;
+            background: #ffffff;
+            color: #2b2b2b;
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.55;
+            margin: 0 auto 24px;
+            width: 850px;
+            max-width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        }
+        /* Right-side sidebar (mirror of page 2's left sidebar) */
+        .gfg3-sidebar {
+            position: absolute;
+            right: 0; top: 0; bottom: 0;
+            width: 54px;
+            background: #3A5754;
+        }
+        .gfg3-pagenum {
+            position: absolute;
+            bottom: 18px; right: 0;
+            width: 54px;
+            text-align: center;
+            color: #ffffff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+        }
+        .gfg3-main { margin-right: 54px; padding: 0 36px 40px; }
+
+        /* Sage title band */
+        .gfg3-header {
+            background: #8FA68C;
+            padding: 14px 24px;
+            margin: 0 -36px 18px -36px;
+        }
+        .gfg3-title {
+            margin: 0;
+            color: #3A5754;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .gfg3-body { margin: 8px 0; text-align: justify; }
+        .gfg3-link { color: #1d4ed8; text-decoration: underline; word-break: break-all; }
+
+        /* Calculation grid: labels/blanks on the left, factor table on the right */
+        .gfg3-calc {
+            display: flex;
+            gap: 28px;
+            margin: 22px 0;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .gfg3-calc__rows { flex: 1 1 360px; }
+        .gfg3-calc__row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin: 10px 0;
+        }
+        .gfg3-calc__row > .gfg3-label { flex: 0 0 auto; }
+        .gfg3-calc__row > .gfg3-blank {
+            flex: 1 1 auto;
+            min-width: 110px;
+            border-bottom: 1px solid #9aa6a3;
+            text-align: right;
+            padding: 0 6px;
+            color: #1f3b38;
+            font-weight: 700;
+        }
+
+        .gfg3-calc__table { flex: 0 0 auto; text-align: center; }
+        .gfg3-table-title { font-size: 18px; color: #2b2b2b; margin: 0 0 6px; }
+        .gfg3-table { border-collapse: separate; border-spacing: 1px; margin: 0 auto; }
+        .gfg3-table th, .gfg3-table td {
+            padding: 5px 14px;
+            font-size: 13px;
+            text-align: center;
+            border: none;
+        }
+        .gfg3-table th { background: #B91C1C; color: #ffffff; font-weight: 700; }
+        .gfg3-table td { background: #4B5563; color: #ffffff; }
+
+        /* Retirement options block */
+        .gfg3-retire-h {
+            text-align: center;
+            color: #2b2b2b;
+            font-weight: 700;
+            margin: 18px 0 4px;
+            font-size: 16px;
+        }
+        .gfg3-retire-sub {
+            text-align: center;
+            font-style: italic;
+            margin: 0 0 14px;
+            font-size: 13px;
+        }
+        .gfg3-bullets { list-style: disc; padding-left: 32px; margin: 0; }
+        .gfg3-bullets > li { margin: 10px 0; }
+        .gfg3-bullets ul { list-style: disc; padding-left: 32px; margin: 4px 0; }
+        .gfg3-bullets ul li { margin: 4px 0; }
+        .gfg3-cost { color: #B91C1C; font-weight: 700; }
+        .gfg3-amount { font-weight: 700; text-decoration: underline; }
+
+        .gfg3-footer {
+            text-align: center;
+            font-weight: 700;
+            font-size: 12px;
+            margin: 16px 0 0;
+        }
+
+        @media (max-width: 700px) {
+            .gfg3-calc { flex-direction: column; }
+        }
+    </style>
+
+    <div class="gfg3-doc">
+        <div class="gfg3-sidebar"><span class="gfg3-pagenum">3</span></div>
+
+        <div class="gfg3-main">
+            <div class="gfg3-header">
+                <h1 class="gfg3-title">Federal Employee Group Life Insurance</h1>
+            </div>
+
+            <p class="gfg3-body">
+                FEGLI is a Group Term Life Insurance offered to most federal employees,
+                administered by the Office of Federal Employees' Group Life Insurance
+                (OFEGLI), the administrative unit of Metropolitan Life Insurance Company,
+                which is under contract with the Office of Personnel Management (OPM).
+                A complete FEGLI Program Handbook can be downloaded at:
+            </p>
+            <p style="text-align:center;margin:6px 0">
+                <a class="gfg3-link"
+                    href="http://www.opm.gov/healthcare-insurance/life-insurance/reference-materials/handbook.pdf"
+                    target="_blank">http://www.opm.gov/healthcare-insurance/life-insurance/reference-materials/handbook.pdf</a>
+            </p>
+            <p class="gfg3-body">
+                It is understood that neither OPM nor OFEGLI endorses any kind of
+                privately-sponsored insurance plan. Employees are free to purchase
+                whatever life insurance they choose. Comparison shopping is encouraged.
+                GFG is an independent company offering alternatives to FEGLI and not
+                affiliated with OPM or OFEGLI.
+            </p>
+
+            <p class="gfg3-body">
+                <b>Basic -</b> As an eligible employee, you were automatically enrolled
+                in Basic Life Insurance upon hiring, unless you waived this coverage.
+                Under Basic Life Insurance you have three components:
+            </p>
+            <p class="gfg3-body">
+                <b>I. Basic Life -</b> The cost of Basic is shared between the employee
+                and the Government. The employee pays two-thirds and the Government pays
+                one-third. <u>The USPS pays the full cost of Basic for postal employees.</u>
+                <b>The cost of basic is $0.16 biweekly and $0.3467 monthly per $1,000 of
+                coverage.</b> There is no extra charge for the Extra Benefit or AD&amp;D.
+            </p>
+            <p class="gfg3-body">
+                <b>II. Extra Benefit</b> - (age Multiplication Factor) If you are under
+                the age of 45 and covered by Basic, you automatically have extra
+                coverage. (See chart)
+            </p>
+            <p class="gfg3-body">
+                <b>III. Accidental Death and Dismemberment</b> - (AD&amp;D) Accidental
+                death benefits are equal to your Basic Life Insurance coverage.
+                Accidental dismemberment benefits for the loss of a hand, foot, or eye
+                are equal to half of the Basic Life Insurance Amount; however if you
+                lose any two of these, the full amount is payable. There is no
+                additional cost for this coverage.
+            </p>
+
+            <!-- Calculation grid: left fields + right Extra Benefit Factor table -->
+            <div class="gfg3-calc">
+                <div class="gfg3-calc__rows">
+                    <div class="gfg3-calc__row">
+                        <span class="gfg3-label">Base Pay Round Up:</span>
+                        <span class="gfg3-blank">
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                                <apex:param value="{!Lead.formula_basePay__c}" />
+                            </apex:outputText>
+                        </span>
+                    </div>
+                    <div class="gfg3-calc__row">
+                        <span class="gfg3-label">Add $2000 = BIA Amount:</span>
+                        <span class="gfg3-blank">
+                            <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                                <apex:param value="{!Lead.formula_basePay__c + 2000}" />
+                            </apex:outputText>
+                        </span>
+                    </div>
+                    <div class="gfg3-calc__row">
+                        <span class="gfg3-label">Extra Benefit Factor<br/>(Age 45 &amp; under):</span>
+                        <span class="gfg3-blank">
+                            <!-- Show the dollar amount when EITHER age source applies:
+                                 the manual picklist is set, OR Contact_Age is 1..44 -->
+                            <apex:outputText value="{0, number, $###,###,##0.00}"
+                                rendered="{!Lead.Base_Salary__c >= 0 && (NOT(ISBLANK(Lead.Age_Option_Basic_Manual__c)) || (Lead.Contact_Age__c > 0 && Lead.Contact_Age__c <= 44))}">
+                                <apex:param value="{!Lead.Total_Basic_Benefit__c - (Lead.formula_basePay__c + 2000)}" />
+                            </apex:outputText>
+                            <!-- "--" only when NEITHER age source is usable -->
+                            <apex:outputText value="--"
+                                rendered="{!ISBLANK(Lead.Age_Option_Basic_Manual__c) && (ISBLANK(Lead.Contact_Age__c) || Lead.Contact_Age__c <= 0 || Lead.Contact_Age__c > 44)}" />
+                        </span>
+                    </div>
+                    <div class="gfg3-calc__row">
+                        <span class="gfg3-label">Total Current Benefit:</span>
+                        <span class="gfg3-blank">
+                            <!-- Prefer the formula field; fall back to BIA if it returns blank
+                                 (e.g. field not yet deployed or no age info -> no extra benefit) -->
+                            <apex:outputText value="{0, number, $###,###,##0.00}"
+                                rendered="{!Lead.Base_Salary__c >= 0 && NOT(ISBLANK(Lead.Total_Basic_Benefit__c)) && Lead.Total_Basic_Benefit__c > 0}">
+                                <apex:param value="{!Lead.Total_Basic_Benefit__c}" />
+                            </apex:outputText>
+                            <apex:outputText value="{0, number, $###,###,##0.00}"
+                                rendered="{!Lead.Base_Salary__c >= 0 && (ISBLANK(Lead.Total_Basic_Benefit__c) || Lead.Total_Basic_Benefit__c <= 0)}">
+                                <apex:param value="{!Lead.formula_basePay__c + 2000}" />
+                            </apex:outputText>
+                        </span>
+                    </div>
+                    <div class="gfg3-calc__row">
+                        <span class="gfg3-label">Extra Benefit Years Remaining:</span>
+                        <span class="gfg3-blank">
+                            <!-- Prefer Contact_Age when it's in 1..44 -->
+                            <apex:outputText value="{0, number, ###,###,##0}"
+                                rendered="{!Lead.Contact_Age__c > 0 && Lead.Contact_Age__c <= 44}">
+                                <apex:param value="{!45 - Lead.Contact_Age__c}" />
+                            </apex:outputText>
+                            <!-- Otherwise fall back to manual numeric age (36-44) -->
+                            <apex:outputText value="{0, number, ###,###,##0}"
+                                rendered="{!(ISBLANK(Lead.Contact_Age__c) || Lead.Contact_Age__c <= 0 || Lead.Contact_Age__c > 44) && NOT(ISBLANK(Lead.Age_Option_Basic_Manual__c)) && ISNUMBER(Lead.Age_Option_Basic_Manual__c) && value(Lead.Age_Option_Basic_Manual__c) >= 36 && value(Lead.Age_Option_Basic_Manual__c) <= 44}">
+                                <apex:param value="{!45 - value(Lead.Age_Option_Basic_Manual__c)}" />
+                            </apex:outputText>
+                            <!-- "--" when neither source is in range -->
+                            <apex:outputText value="--"
+                                rendered="{!(ISBLANK(Lead.Contact_Age__c) || Lead.Contact_Age__c <= 0 || Lead.Contact_Age__c > 44) && (ISBLANK(Lead.Age_Option_Basic_Manual__c) || NOT(ISNUMBER(Lead.Age_Option_Basic_Manual__c)) || value(Lead.Age_Option_Basic_Manual__c) < 36 || value(Lead.Age_Option_Basic_Manual__c) > 44)}" />
+                        </span>
+                    </div>
+                </div>
+
+                <div class="gfg3-calc__table">
+                    <div class="gfg3-table-title">Extra Benefit Factor</div>
+                    <table class="gfg3-table">
+                        <thead>
+                            <tr>
+                                <th>AGE</th><th>FACTOR</th><th>AGE</th><th>FACTOR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Under 35</td><td>1</td><td>40</td><td>0.5</td></tr>
+                            <tr><td>36</td><td>0.9</td><td>41</td><td>0.4</td></tr>
+                            <tr><td>37</td><td>0.8</td><td>42</td><td>0.3</td></tr>
+                            <tr><td>38</td><td>0.7</td><td>43</td><td>0.2</td></tr>
+                            <tr><td>39</td><td>0.6</td><td>44</td><td>0.1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <h2 class="gfg3-retire-h">Your Basic coverage, costs and options in retirement</h2>
+            <p class="gfg3-retire-sub">
+                For illustration purposes, your FEGLI coverage reflects a salary increase
+                of 1% annually from your current income. We advise that you reevaluate
+                retirement costs when salary increases occur.
+            </p>
+
+            <ul class="gfg3-bullets">
+                <li>
+                    No Reduction - Coverage Amount
+                    <span class="gfg3-amount">
+                        <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                            <apex:param value="{!Lead.formula_basePay__c + 2000}" />
+                        </apex:outputText>
+                    </span>
+                    <ul>
+                        <li>
+                            Cost Prior to age 65 <span class="gfg3-cost">$2.5967</span> X
+                            <span class="gfg3-amount">
+                                <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                                    <apex:param value="{!(Lead.formula_basePay__c + 2000) / 1000}" />
+                                </apex:outputText>
+                            </span> =
+                            <span class="gfg3-amount">
+                                <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                                    <apex:param value="{!((Lead.formula_basePay__c + 2000) / 1000) * 2.5967}" />
+                                </apex:outputText>
+                            </span>
+                            &nbsp;&nbsp;&nbsp;After age 65 <span class="gfg3-cost">$2.25</span> X
+                            <span class="gfg3-amount">
+                                <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                                    <apex:param value="{!(Lead.formula_basePay__c + 2000) / 1000}" />
+                                </apex:outputText>
+                            </span> =
+                            <span class="gfg3-amount">
+                                <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                                    <apex:param value="{!((Lead.formula_basePay__c + 2000) / 1000) * 2.25}" />
+                                </apex:outputText>
+                            </span>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    50% Reduction <span class="gfg3-cost">(Reduces 1% per month starting at age 65)</span>
+                    Coverage after reduction
+                    <span class="gfg3-amount">
+                        <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                            <apex:param value="{!Lead.hiddenTotalBenefitformula__c / 2}" />
+                        </apex:outputText>
+                    </span>
+                    <ul>
+                        <li>
+                            Cost Prior to age 65 <span class="gfg3-cost">$1.0967</span> X
+                            <span class="gfg3-amount">
+                                <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                                    <apex:param value="{!(Lead.formula_basePay__c + 2000) / 1000}" />
+                                </apex:outputText>
+                            </span> =
+                            <span class="gfg3-amount">
+                                <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                                    <apex:param value="{!((Lead.formula_basePay__c + 2000) / 1000) * 1.0967}" />
+                                </apex:outputText>
+                            </span>
+                            &nbsp;&nbsp;&nbsp;After age 65 <span class="gfg3-cost">$0.75</span> X
+                            <span class="gfg3-amount">
+                                <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                                    <apex:param value="{!(Lead.formula_basePay__c + 2000) / 1000}" />
+                                </apex:outputText>
+                            </span> =
+                            <span class="gfg3-amount">
+                                <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                                    <apex:param value="{!((Lead.formula_basePay__c + 2000) / 1000) * 0.75}" />
+                                </apex:outputText>
+                            </span>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    75% Reduction <span class="gfg3-cost">(Reduces 2% per month starting at age 65)</span>
+                    Coverage after reduction
+                    <span class="gfg3-amount">
+                        <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                            <apex:param value="{!(Lead.hiddenTotalBenefitformula__c / 2) / 2}" />
+                        </apex:outputText>
+                    </span>
+                    <ul>
+                        <li>
+                            Cost Prior to age 65 <span class="gfg3-cost">$0.3467</span> X
+                            <span class="gfg3-amount">
+                                <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                                    <apex:param value="{!(Lead.formula_basePay__c + 2000) / 1000}" />
+                                </apex:outputText>
+                            </span> =
+                            <span class="gfg3-amount">
+                                <apex:outputText value="{0, number, $###,###,##0.00}" rendered="{!Lead.Base_Salary__c >= 0}">
+                                    <apex:param value="{!((Lead.formula_basePay__c + 2000) / 1000) * 0.3467}" />
+                                </apex:outputText>
+                            </span>
+                            &nbsp;&nbsp;&nbsp;<span class="gfg3-cost">After age 65 =</span> <b><u>NO COST</u></b>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p class="gfg3-footer">
+                **Rates are based on current FEGLI rates. Rates are subject to change.
+            </p>
+        </div>
+    </div>
+</apex:page>

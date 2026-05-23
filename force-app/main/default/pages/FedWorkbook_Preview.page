@@ -29,6 +29,9 @@
 
             <!-- Page 2: Federal Employee Information -->
             <apex:include pageName="FedWorkbook_EmployeeInfo" />
+
+            <!-- Page 3: FEGLI Basic Life (renders only when Basic or a relevant FEGLI code is set) -->
+            <apex:include pageName="FedWorkbook_BasicLife" />
         </div>
     </body>
 

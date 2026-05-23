@@ -12,6 +12,7 @@
 		<name>ApexComponent</name>
 	</types>
 	<types>
+		<members>FedWorkbook_BasicLife</members>
 		<members>FedWorkbook_EmployeeInfo</members>
 		<members>FedWorkbook_Preview</members>
 		<name>ApexPage</name>
@@ -20,6 +21,7 @@
 		<members>Lead.Annual_Leave__c</members>
 		<members>Lead.FEHB_PSHB__c</members>
 		<members>Lead.Sick_Leave__c</members>
+		<members>Lead.Total_Basic_Benefit__c</members>
 		<name>CustomField</name>
 	</types>
 	<types>
