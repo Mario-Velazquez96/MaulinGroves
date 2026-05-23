@@ -35,6 +35,9 @@
 
             <!-- Page 4: FEGLI Option A and Option C (renders when either option is active) -->
             <apex:include pageName="FedWorkbook_FegliAC" />
+
+            <!-- Page 5: FEGLI Option B (renders when Option B is active) -->
+            <apex:include pageName="FedWorkbook_OptionB" />
         </div>
     </body>
 
