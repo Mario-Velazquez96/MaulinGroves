@@ -32,6 +32,9 @@
 
             <!-- Page 3: FEGLI Basic Life (renders only when Basic or a relevant FEGLI code is set) -->
             <apex:include pageName="FedWorkbook_BasicLife" />
+
+            <!-- Page 4: FEGLI Option A and Option C (renders when either option is active) -->
+            <apex:include pageName="FedWorkbook_FegliAC" />
         </div>
     </body>
 
