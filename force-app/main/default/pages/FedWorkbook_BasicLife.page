@@ -50,22 +50,17 @@
             font-size: 30px;
             font-weight: 800;
         }
-        .gfg3-main { margin-right: 54px; padding: 0 36px 40px; }
+        .gfg3-main { margin-right: 54px; padding: 26px 38px 40px; }
 
-        /* Sage title band */
-        .gfg3-header {
-            background: #8FA68C;
-            padding: 14px 24px;
-            margin: 0 -36px 18px -36px;
-        }
         .gfg3-title {
-            margin: 0;
+            margin: 0 0 8px;
             color: #3A5754;
             font-family: 'Montserrat', Arial, sans-serif;
-            font-size: 28px;
+            font-size: 33px;
             font-weight: 800;
-            line-height: 1.1;
+            letter-spacing: .2px;
         }
+        .gfg3-accent { height: 9px; background: #8FA68C; margin: 0 0 18px; }
 
         .gfg3-body { margin: 8px 0; text-align: justify; }
         .gfg3-link { color: #1d4ed8; text-decoration: underline; word-break: break-all; }
@@ -145,9 +140,8 @@
         <div class="gfg3-sidebar"><span class="gfg3-pagenum">3</span></div>
 
         <div class="gfg3-main">
-            <div class="gfg3-header">
-                <h1 class="gfg3-title">Federal Employee Group Life Insurance</h1>
-            </div>
+            <h1 class="gfg3-title">Federal Employee Group Life Insurance</h1>
+            <div class="gfg3-accent"></div>
 
             <p class="gfg3-body">
                 FEGLI is a Group Term Life Insurance offered to most federal employees,

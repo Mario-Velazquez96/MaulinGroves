@@ -38,18 +38,17 @@
             font-family: 'Montserrat', Arial, sans-serif;
             font-size: 30px; font-weight: 800;
         }
-        .gfg4-main { margin-left: 54px; padding: 0 36px 30px; }
+        .gfg4-main { margin-left: 54px; padding: 26px 38px 30px; }
 
-        .gfg4-header {
-            background: #8FA68C;
-            padding: 14px 24px;
-            margin: 0 -36px 18px -36px;
-        }
         .gfg4-title {
-            margin: 0; color: #3A5754;
+            margin: 0 0 8px;
+            color: #3A5754;
             font-family: 'Montserrat', Arial, sans-serif;
-            font-size: 26px; font-weight: 800; line-height: 1.1;
+            font-size: 33px;
+            font-weight: 800;
+            letter-spacing: .2px;
         }
+        .gfg4-accent { height: 9px; background: #8FA68C; margin: 0 0 18px; }
 
         .gfg4-body { margin: 8px 0; text-align: justify; }
         .gfg4-cost { color: #B91C1C; font-weight: 700; }
@@ -101,9 +100,8 @@
             <apex:outputPanel layout="block"
                 rendered="{!Lead.OptionA__c == true || CONTAINS(Lead.FEGLI_Plan__c, 'Option A')}">
 
-                <div class="gfg4-header">
-                    <h1 class="gfg4-title">FEGLI- Option A</h1>
-                </div>
+                <h1 class="gfg4-title">FEGLI- Option A</h1>
+                <div class="gfg4-accent"></div>
 
                 <p class="gfg4-body">
                     Optional Life Insurance - Federal employees who are covered under
@@ -166,9 +164,8 @@
             <apex:outputPanel layout="block"
                 rendered="{!Lead.OptionC__c == true || CONTAINS(Lead.FEGLI_Plan__c, 'Option C')}">
 
-                <div class="gfg4-header">
-                    <h1 class="gfg4-title">FEGLI- Option C</h1>
-                </div>
+                <h1 class="gfg4-title" style="margin-top:26px">FEGLI- Option C</h1>
+                <div class="gfg4-accent"></div>
 
                 <p class="gfg4-body">
                     Option C - Family Optional Insurance -
