@@ -38,6 +38,9 @@
 
             <!-- Page 5: FEGLI Option B (renders when Option B is active) -->
             <apex:include pageName="FedWorkbook_OptionB" />
+
+            <!-- Page 6: CSRS Offset (renders when CSRS_Offset__c is true) -->
+            <apex:include pageName="FedWorkbook_CsrsOffset" />
         </div>
     </body>
 
