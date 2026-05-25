@@ -41,6 +41,9 @@
 
             <!-- Page 6: CSRS Offset (renders when CSRS_Offset__c is true) -->
             <apex:include pageName="FedWorkbook_CsrsOffset" />
+
+            <!-- Page 7: FERS - Federal Employee Retirement System (renders when FERS__c is true) -->
+            <apex:include pageName="FedWorkbook_FERS" />
         </div>
     </body>
 

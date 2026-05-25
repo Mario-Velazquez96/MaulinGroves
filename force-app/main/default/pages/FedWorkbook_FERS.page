@@ -1,0 +1,187 @@
+<apex:page id="fers7" standardController="Lead"
+    showHeader="false" sidebar="false" standardStylesheets="false"
+    applyHtmlTag="false" applyBodyTag="false"
+    docType="html-5.0" title="FERS - Federal Employee Retirement System"
+    rendered="{!Lead.FERS__c == true}">
+    <!--
+      ============================================================
+      FedWorkbook_FERS  (Page 7)
+      FERS - Federal Employee Retirement System (overview / first FERS page).
+      Static informational content; no Lead-derived calculations.
+      Renders only when Lead.FERS__c is true.
+      ============================================================
+    -->
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=PT+Serif:wght@400;700&amp;display=swap');
+
+        .gfg7-doc {
+            position: relative;
+            background: #ffffff;
+            color: #2b2b2b;
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.55;
+            margin: 0 auto 24px;
+            width: 850px;
+            max-width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        }
+        /* Right-side sidebar */
+        .gfg7-sidebar { position: absolute; right: 0; top: 0; bottom: 0; width: 54px; background: #3A5754; }
+        .gfg7-pagenum {
+            position: absolute; bottom: 18px; right: 0; width: 54px;
+            text-align: center; color: #ffffff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 30px; font-weight: 800;
+        }
+        .gfg7-main { margin-right: 54px; padding: 26px 38px 36px; }
+
+        .gfg7-title {
+            margin: 0 0 8px;
+            color: #3A5754;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 33px;
+            font-weight: 800;
+            letter-spacing: .2px;
+            line-height: 1.1;
+        }
+        .gfg7-accent { height: 9px; background: #8FA68C; margin: 0 0 18px; }
+
+        .gfg7-body { margin: 10px 0; text-align: justify; }
+        .gfg7-note { color: #B91C1C; }
+
+        .gfg7-section-h {
+            text-align: center;
+            color: #2b2b2b;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 18px 0 8px;
+        }
+
+        /* Lists */
+        .gfg7-tiers { padding-left: 50px; margin: 8px 0; color: #3A5754; }
+        .gfg7-tiers li { margin: 4px 0; }
+
+        .gfg7-bullets { list-style: disc; padding-left: 32px; margin: 6px 0; }
+        .gfg7-bullets li { margin: 8px 0; }
+        .gfg7-bullets--bold li { font-weight: 700; color: #3A5754; }
+        .gfg7-bullets--bold .gfg7-normal { font-weight: 400; }
+
+        .gfg7-nested-ol { padding-left: 64px; margin: 4px 0 10px; }
+        .gfg7-nested-ol li { margin: 4px 0; }
+    </style>
+
+    <div class="gfg7-doc">
+        <div class="gfg7-sidebar"><span class="gfg7-pagenum">7</span></div>
+
+        <div class="gfg7-main">
+
+            <h1 class="gfg7-title">FERS - Federal Employee Retirement System</h1>
+            <div class="gfg7-accent"></div>
+
+            <p class="gfg7-body">
+                The Federal Employees Retirement System, or FERS, became effective
+                January 1, 1987. Almost all new employees hired after December 31, 1983,
+                are automatically covered by FERS. Certain other Federal employees not
+                covered by FERS have the option to transfer into the plan. The FERS
+                retirement system is composed of three tiers:
+            </p>
+
+            <ol class="gfg7-tiers">
+                <li>The Basic Benefit Plan -FERS Retirement Annuity</li>
+                <li>Social Security</li>
+                <li>Thrift Savings Plan</li>
+            </ol>
+
+            <h2 class="gfg7-section-h">Basic Benefit Plan - FERS Retirement Annuity</h2>
+
+            <ul class="gfg7-bullets">
+                <li>
+                    <b>Eligibility</b> - If you were automatically covered by FERS, or you
+                    elected to transfer from CSRS, you will participate in the Basic
+                    Benefit plan. To be vested and receive retirement benefits from this
+                    plan, you must have at least 5 years of creditable civilian service.
+                    Survivor and disability benefits are available after 18 months of
+                    service.
+                </li>
+                <li><b>Contributions by employees into FERS</b></li>
+            </ul>
+
+            <ol class="gfg7-nested-ol" start="4">
+                <li>FERS - Hired on/after 1/1/1987 - Code K - Contribution 0.8%</li>
+                <li>FERS-RAE - Hired on/after 1/1/2013 - Code KR - Contribution 3.1%</li>
+                <li>FERS-FRAE - Hired on/after 1/1/2014 - Code KF - Contribution 4.4%</li>
+                <li>Special Groups contributions are always .5% higher</li>
+            </ol>
+
+            <ul class="gfg7-bullets">
+                <li>
+                    <b>Refunds</b> - You may withdraw your basic benefit contributions,
+                    if you leave Federal employment. However, if you do, you will not be
+                    eligible to receive benefits based on service covered by the refund.
+                    Rules regarding redeposits of refunded FERS contributions can vary
+                    based on service dates and individual circumstances. Employees should
+                    consult OPM or a qualified retirement specialist regarding redeposit
+                    eligibility
+                </li>
+            </ul>
+
+            <p class="gfg7-body">
+                Retirement Options - There are three categories of retirement benefits in
+                the Basic Benefit Plan:
+            </p>
+
+            <p class="gfg7-body" style="margin-left:18px">
+                <b>1. Immediate or Postponed:</b> If you meet one of the following sets of
+                age and service requirements, you are entitled to an immediate retirement
+                benefit:
+            </p>
+            <ul class="gfg7-bullets gfg7-bullets--bold">
+                <li>Age 62 with at least 5 years of creditable service (unreduced benefit)</li>
+                <li>Age 60 with at least 20 years of creditable service (unreduced benefit)</li>
+                <li>MRA 30 (Minimum Retirement Age) with at least 30 years of service.
+                    <span class="gfg7-normal">See chart (pg. 8)</span>
+                </li>
+                <li>MRA 10 (Minimum Retirement Age) with at least 10 years of service.
+                    <span class="gfg7-normal">See note below</span>
+                </li>
+            </ul>
+
+            <p class="gfg7-body">
+                <span class="gfg7-note">Note: MRA 10 - If you retire under MRA 10 (at
+                least 10 years of service but less than 30 years) <b>your FERS Annuity
+                will be reduced by 5% for every year you are under the age of 62.</b></span>
+                Unless you have 20 years of service and your annuity begins at age 60 or
+                later, you can avoid part, or all of the reduction by postponing the
+                commencing date of your annuity.
+            </p>
+
+            <p class="gfg7-body" style="margin-left:18px">
+                <b>2. Early Retirement</b> - An early retirement benefit is available in
+                certain involuntary separation cases and in cases of voluntary
+                separations, during a major reorganization, or reduction in force. To be
+                eligible, you must meet the following requirements:
+            </p>
+            <ul class="gfg7-bullets gfg7-bullets--bold">
+                <li>Age 50 with 20 years of service</li>
+                <li>Any age with 25 years of service</li>
+            </ul>
+
+            <p class="gfg7-body" style="margin-left:18px">
+                <b>3. Deferred Retirement</b> - If you leave Federal service before you
+                meet the age and service requirements for an immediate retirement
+                benefit, you may be eligible for deferred retirement benefits. To be
+                eligible, you must have completed at least 5 years of creditable civilian
+                service. You may receive benefits when you meet one of the following sets
+                of age and service requirements:
+            </p>
+            <ul class="gfg7-bullets gfg7-bullets--bold">
+                <li>Age 62 with 5 years of service &#8226; Age 60 with 20 years of service &#8226; MRA 30</li>
+                <li>MRA 10 (Reduced benefit unless receipt is delayed to lessen or avoid age reduction)</li>
+            </ul>
+
+        </div>
+    </div>
+</apex:page>

@@ -19,6 +19,7 @@
 		<members>FedWorkbook_CsrsOffset</members>
 		<members>FedWorkbook_EmployeeInfo</members>
 		<members>FedWorkbook_FegliAC</members>
+		<members>FedWorkbook_FERS</members>
 		<members>FedWorkbook_OptionB</members>
 		<members>FedWorkbook_Preview</members>
 		<name>ApexPage</name>
