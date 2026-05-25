@@ -1,0 +1,354 @@
+<apex:page id="fersCalc8" standardController="Lead" extensions="FedWorkbook_FersCalcExt"
+    showHeader="false" sidebar="false" standardStylesheets="false"
+    applyHtmlTag="false" applyBodyTag="false"
+    docType="html-5.0" title="FERS - Calculating FERS Retirement"
+    rendered="{!Lead.FERS__c == true}">
+    <!--
+      ============================================================
+      FedWorkbook_FersCalc  (Page 8)
+      FERS - Calculating FERS Retirement.
+      Uses the same Lead fields as FERS_System.page:
+        Scenario1/2_Retirement_Age__c, Scenario1/2_YOS__c,
+        High_3_Salary__c, High_3_Salary2__c, Contact_Age__c,
+        Sick_Leave__c
+      Renders only when Lead.FERS__c is true.
+      ============================================================
+    -->
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=PT+Serif:wght@400;700&amp;display=swap');
+
+        .gfg8-doc {
+            position: relative;
+            background: #ffffff;
+            color: #2b2b2b;
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.55;
+            margin: 0 auto 24px;
+            width: 850px;
+            max-width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        }
+        /* Left sidebar */
+        .gfg8-sidebar { position: absolute; left: 0; top: 0; bottom: 0; width: 54px; background: #3A5754; }
+        .gfg8-pagenum {
+            position: absolute; bottom: 18px; left: 0; width: 54px;
+            text-align: center; color: #ffffff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 30px; font-weight: 800;
+        }
+        .gfg8-main { margin-left: 54px; padding: 26px 30px 36px; }
+
+        .gfg8-title {
+            margin: 0 0 8px;
+            color: #3A5754;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 33px;
+            font-weight: 800;
+            letter-spacing: .2px;
+            line-height: 1.1;
+        }
+        .gfg8-accent { height: 9px; background: #8FA68C; margin: 0 0 18px; }
+
+        .gfg8-body { margin: 8px 0; text-align: justify; }
+
+        .gfg8-red-bullets { list-style: disc; padding-left: 38px; margin: 8px 0; color: #B91C1C; }
+        .gfg8-red-bullets li { margin: 4px 0; font-weight: 700; }
+
+        /* ----- Eligibility table ----- */
+        .gfg8-tab { border-collapse: collapse; font-size: 12px; width: 100%; margin: 18px 0 6px; }
+        .gfg8-tab th {
+            background: #3A5754; color: #ffffff;
+            padding: 6px 8px; text-align: center;
+            border: 1px solid #ffffff; font-weight: 700;
+        }
+        .gfg8-tab td {
+            background: #A5BFA1; color: #ffffff;
+            padding: 4px 10px; text-align: center;
+            border: 1px solid #ffffff; vertical-align: middle;
+        }
+        .gfg8-tab .gfg8-cell-vol { font-weight: 700; }
+        .gfg8-tab .gfg8-row-mra10 td { background: #4B5563; }
+        .gfg8-tab .gfg8-row-mra10 .gfg8-note {
+            display: block; font-size: 11px; font-style: italic; margin-top: 4px;
+        }
+        .gfg8-tab .gfg8-row-red td { background: #B91C1C; }
+        .gfg8-tab .gfg8-row-green td { background: #A5BFA1; }
+        /* Keep the left two columns (birth year + MRA) sage green even on colored rows */
+        .gfg8-tab tbody tr > td:nth-child(1),
+        .gfg8-tab tbody tr > td:nth-child(2) { background: #A5BFA1; }
+
+        /* ----- Scenario calculation grid ----- */
+        .gfg8-calc {
+            display: grid;
+            grid-template-columns: 1.2fr 1.4fr 1.4fr;
+            gap: 6px 18px;
+            margin: 28px 18px 0;
+            align-items: baseline;
+        }
+        .gfg8-calc__head {
+            font-weight: 700; font-size: 16px; text-align: center; padding: 0 0 6px;
+        }
+        .gfg8-calc__label { padding: 4px 0; }
+        .gfg8-calc__row {
+            display: flex; align-items: baseline; gap: 6px;
+        }
+        .gfg8-calc__row > .gfg8-calc__rlabel { flex: 0 0 auto; white-space: nowrap; }
+        .gfg8-calc__row > .gfg8-blank {
+            flex: 1 1 auto; min-width: 90px;
+            border-bottom: 1px solid #2b2b2b;
+            text-align: center; padding: 0 6px;
+            font-weight: 700; color: #1f3b38;
+        }
+        .gfg8-calc__row > .gfg8-blank--sm { flex: 0 0 60px; min-width: 60px; }
+        .gfg8-calc__op { flex: 0 0 auto; }
+    </style>
+
+    <div class="gfg8-doc">
+        <div class="gfg8-sidebar"><span class="gfg8-pagenum">8</span></div>
+
+        <div class="gfg8-main">
+
+            <h1 class="gfg8-title">FERS - Calculating FERS Retirement</h1>
+            <div class="gfg8-accent"></div>
+
+            <p class="gfg8-body">
+                <b>Benefit Formula</b> - How your benefit is calculated: Your benefit is
+                based on your "high-three average pay." This is figured by averaging your
+                highest basic pay over any 3 consecutive years of creditable service. In
+                addition to your high-three, your years of creditable service and age at
+                retirement are key factors. Calculating your FERS Annuity:
+            </p>
+            <ul class="gfg8-red-bullets">
+                <li>If under age 62, your factor is 1% X High-Three X Years of Service</li>
+                <li>At age 62 or older (20 plus years of service), your factor is 1.1% X High-Three X Years of Service</li>
+            </ul>
+
+            <!-- ===== Unified eligibility table ===== -->
+            <table class="gfg8-tab">
+                <thead>
+                    <tr>
+                        <th>If your year of birth is...</th>
+                        <th>Your minimum retirement age is...</th>
+                        <th>Retirement</th>
+                        <th>Minimum Age</th>
+                        <th>Minimum Service</th>
+                        <th>Special Requirements</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Row 1: birth + Voluntary / 62 / 5 / None  (Voluntary spans rows 1-8) -->
+                    <tr>
+                        <td>Before 1948</td><td>55 years</td>
+                        <td rowspan="8" class="gfg8-cell-vol">Voluntary<br/>(Optional)</td>
+                        <td>62</td><td>5</td><td>None</td>
+                    </tr>
+                    <!-- Row 2: birth + 60 / 20 / None -->
+                    <tr>
+                        <td>1948</td><td>55 years, 2 mo.</td>
+                        <td>60</td><td>20</td><td>None</td>
+                    </tr>
+                    <!-- Row 3: birth + MRA* / 30 / None -->
+                    <tr>
+                        <td>1949</td><td>55 years, 4 mo.</td>
+                        <td>MRA*</td><td>30</td><td>None</td>
+                    </tr>
+                    <!-- Rows 4-8: MRA* / 10 row spans 5 left rows to fill the Voluntary block -->
+                    <tr class="gfg8-row-mra10">
+                        <td>1950</td><td>55 years, 6 mo.</td>
+                        <td rowspan="5">MRA*</td>
+                        <td rowspan="5">10</td>
+                        <td rowspan="5">None
+                            <span class="gfg8-note">Note: Annuity is reduced by 5% for each year that the employee is under the age of 62.</span>
+                        </td>
+                    </tr>
+                    <tr class="gfg8-row-mra10">
+                        <td>1951</td><td>55 years, 8 mo.</td>
+                    </tr>
+                    <tr class="gfg8-row-mra10">
+                        <td>1952</td><td>55 years, 10 mo.</td>
+                    </tr>
+                    <tr class="gfg8-row-mra10">
+                        <td>1953 to 1964</td><td>56 years</td>
+                    </tr>
+                    <tr class="gfg8-row-mra10">
+                        <td>1965</td><td>56 years, 2 mo.</td>
+                    </tr>
+                    <!-- Rows 9-11: red row spans 3 left rows -->
+                    <tr class="gfg8-row-red">
+                        <td>1966</td><td>56 years, 4 mo.</td>
+                        <td rowspan="3"></td>
+                        <td rowspan="3">Any Age<br/>50</td>
+                        <td rowspan="3">25<br/>20</td>
+                        <td rowspan="3">You must retire under special provisions for air traffic controller, law enforcement, firefighter, or military reserve technician personnel.</td>
+                    </tr>
+                    <tr class="gfg8-row-red">
+                        <td>1967</td><td>56 years, 6 mo.</td>
+                    </tr>
+                    <tr class="gfg8-row-red">
+                        <td>1968</td><td>56 years, 8 mo.</td>
+                    </tr>
+                    <!-- Rows 12-13: green row spans 2 left rows -->
+                    <tr class="gfg8-row-green">
+                        <td>1969</td><td>56 years, 10 mo.</td>
+                        <td rowspan="2"></td>
+                        <td rowspan="2">Any Age</td>
+                        <td rowspan="2">25</td>
+                        <td rowspan="2">OPM must have determined that your agency is undergoing a major reorganization, reduction-in-force, or transfer of function.</td>
+                    </tr>
+                    <tr class="gfg8-row-green">
+                        <td>After 1969</td><td>57 Years</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- ===== Scenario calculation grid ===== -->
+            <div class="gfg8-calc">
+                <!-- Row 1: headers -->
+                <div></div>
+                <div class="gfg8-calc__head">Scenario 1</div>
+                <div class="gfg8-calc__head">Scenario 2</div>
+
+                <!-- Row 2: Current Age -->
+                <div></div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__rlabel">Current Age:</span>
+                    <span class="gfg8-blank gfg8-blank--sm">
+                        <apex:outputText value="{0, number, #0}"><apex:param value="{!currentAge}" /></apex:outputText>
+                    </span>
+                </div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__rlabel">Current Age:</span>
+                    <span class="gfg8-blank gfg8-blank--sm">
+                        <apex:outputText value="{0, number, #0}"><apex:param value="{!currentAge}" /></apex:outputText>
+                    </span>
+                </div>
+
+                <!-- Row 3: Sick Leave (left) + Retirement Age (both scenarios) -->
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__rlabel">Sick Leave:</span>
+                    <span class="gfg8-blank gfg8-blank--sm">
+                        <apex:outputText value="{0, number, #0.##}"><apex:param value="{!sickLeave}" /></apex:outputText>
+                    </span>
+                </div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__rlabel">Retirement Age:</span>
+                    <span class="gfg8-blank gfg8-blank--sm">
+                        <apex:outputText value="{0, number, #0}"><apex:param value="{!s1RetirementAge}" /></apex:outputText>
+                    </span>
+                </div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__rlabel">Retirement Age:</span>
+                    <span class="gfg8-blank gfg8-blank--sm">
+                        <apex:outputText value="{0, number, #0}"><apex:param value="{!s2RetirementAge}" /></apex:outputText>
+                    </span>
+                </div>
+
+                <!-- Row 4: empty + Years of Service -->
+                <div></div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__rlabel">Years of Service:</span>
+                    <span class="gfg8-blank gfg8-blank--sm">
+                        <apex:outputText value="{0, number, #0.##}"><apex:param value="{!s1YearsOfService}" /></apex:outputText>
+                    </span>
+                </div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__rlabel">Years of Service:</span>
+                    <span class="gfg8-blank gfg8-blank--sm">
+                        <apex:outputText value="{0, number, #0.##}"><apex:param value="{!s2YearsOfService}" /></apex:outputText>
+                    </span>
+                </div>
+
+                <!-- Row 5: Annual Rate High-3 Average -->
+                <div class="gfg8-calc__label">Annual Rate High-3 Average:</div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__op">$</span>
+                    <span class="gfg8-blank">
+                        <apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!s1HighThree}" /></apex:outputText>
+                    </span>
+                </div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__op">$</span>
+                    <span class="gfg8-blank">
+                        <apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!s2HighThree}" /></apex:outputText>
+                    </span>
+                </div>
+
+                <!-- Row 6: Time Your Factor: 1% / 1.1% -->
+                <div class="gfg8-calc__label">Time Your Factor: 1% 1.1%:</div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-blank">
+                        <apex:outputText value="{0, number, #0.0}"><apex:param value="{!s1Factor}" /></apex:outputText>%
+                    </span>
+                </div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__op">1% 1.1%</span>
+                    <span class="gfg8-blank">
+                        <apex:outputText value="{0, number, #0.0}"><apex:param value="{!s2Factor}" /></apex:outputText>%
+                    </span>
+                </div>
+
+                <!-- Row 7: = intermediate (Factor x High-3) -->
+                <div></div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__op">=</span>
+                    <span class="gfg8-blank">
+                        <apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!s1FactorTimesHighThree}" /></apex:outputText>
+                    </span>
+                </div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__op">=</span>
+                    <span class="gfg8-blank">
+                        <apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!s2FactorTimesHighThree}" /></apex:outputText>
+                    </span>
+                </div>
+
+                <!-- Row 8: Times Years of Service -->
+                <div class="gfg8-calc__label">Times Years of Service:</div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-blank">
+                        <apex:outputText value="{0, number, #0.##}"><apex:param value="{!s1YearsOfService}" /></apex:outputText>
+                    </span>
+                </div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-blank">
+                        <apex:outputText value="{0, number, #0.##}"><apex:param value="{!s2YearsOfService}" /></apex:outputText>
+                    </span>
+                </div>
+
+                <!-- Row 9: Annual Retirement Annuity -->
+                <div class="gfg8-calc__label">Annual Retirement Annuity:</div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__op">$</span>
+                    <span class="gfg8-blank">
+                        <apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!s1AnnualAnnuity}" /></apex:outputText>
+                    </span>
+                </div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__op">$</span>
+                    <span class="gfg8-blank">
+                        <apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!s2AnnualAnnuity}" /></apex:outputText>
+                    </span>
+                </div>
+
+                <!-- Row 10: Monthly Retirement Annuity -->
+                <div class="gfg8-calc__label">Monthly Retirement Annuity:</div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__op">$</span>
+                    <span class="gfg8-blank">
+                        <apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!s1MonthlyAnnuity}" /></apex:outputText>
+                    </span>
+                </div>
+                <div class="gfg8-calc__row">
+                    <span class="gfg8-calc__op">$</span>
+                    <span class="gfg8-blank">
+                        <apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!s2MonthlyAnnuity}" /></apex:outputText>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</apex:page>
