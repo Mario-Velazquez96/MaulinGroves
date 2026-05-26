@@ -1,0 +1,415 @@
+<apex:page id="specialGroups10" standardController="Lead" extensions="FedWorkbook_SpecialGroupsExt"
+    showHeader="false" sidebar="false" standardStylesheets="false"
+    applyHtmlTag="false" applyBodyTag="false"
+    docType="html-5.0" title="FERS - Special Groups"
+    rendered="{!Lead.Special_Group_Member__c == true}">
+    <!--
+      ============================================================
+      FedWorkbook_SpecialGroups  (Page 10)
+      FERS - Special Groups.
+      Lead fields used:
+        Special_Group_Member__c  (render gate)
+        High_3_Salary__c         (editable, drives calculation row)
+        Remaining_Years__c       (editable, drives calculation row)
+      Renders only when Lead.Special_Group_Member__c is true.
+      Even page => left sidebar.
+      ============================================================
+    -->
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=PT+Serif:wght@400;700&amp;display=swap');
+
+        .gfg10-doc {
+            position: relative;
+            background: #ffffff;
+            color: #2b2b2b;
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.55;
+            margin: 0 auto 24px;
+            width: 850px;
+            max-width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Left sidebar (even page = left) */
+        .gfg10-sidebar {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 54px;
+            background: #3A5754;
+        }
+        .gfg10-pagenum {
+            position: absolute;
+            bottom: 18px; left: 0;
+            width: 54px;
+            text-align: center;
+            color: #ffffff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+        }
+        .gfg10-main {
+            margin-left: 54px;
+            padding: 26px 30px 36px;
+        }
+
+        /* Title + accent bar */
+        .gfg10-title {
+            margin: 0 0 8px;
+            color: #3A5754;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 33px;
+            font-weight: 800;
+            letter-spacing: .2px;
+            line-height: 1.1;
+        }
+        .gfg10-accent { height: 9px; background: #8FA68C; margin: 0 0 18px; }
+
+        /* Body text */
+        .gfg10-body { margin: 10px 0; text-align: justify; }
+
+        /* Two-column block */
+        .gfg10-cols {
+            display: flex;
+            gap: 24px;
+            margin: 18px 0;
+            align-items: flex-start;
+        }
+        .gfg10-col {
+            flex: 1 1 0;
+        }
+        .gfg10-col-head {
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            margin: 0 0 8px;
+            color: #2b2b2b;
+        }
+        .gfg10-col-head-red {
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            margin: 0 0 8px;
+            color: #B91C1C;
+        }
+
+        /* Left column bullets */
+        .gfg10-bullets {
+            list-style: disc;
+            padding-left: 22px;
+            margin: 6px 0;
+        }
+        .gfg10-bullets li {
+            margin: 5px 0;
+            font-size: 13px;
+        }
+        .gfg10-li-red {
+            color: #B91C1C;
+        }
+
+        /* Right column example paragraphs */
+        .gfg10-eg {
+            text-align: center;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+        .gfg10-eg-total {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #B91C1C;
+            margin: 5px 0;
+        }
+
+        /* Calculation row */
+        .gfg10-calc-section {
+            margin-top: 20px;
+            border-top: 1px solid #d0d0d0;
+            padding-top: 16px;
+        }
+        .gfg10-calc-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: center;
+            gap: 6px 10px;
+            font-size: 13px;
+            margin: 6px 0;
+        }
+        .gfg10-calc-op {
+            white-space: nowrap;
+            font-weight: 400;
+        }
+        .gfg10-blank {
+            display: inline-block;
+            min-width: 80px;
+            border-bottom: 1px solid #2b2b2b;
+            text-align: center;
+            font-weight: 400;
+            color: #1f3b38;
+            padding: 0 4px;
+            vertical-align: bottom;
+        }
+
+        /* Editable input styled to match the underline-blank cells */
+        .gfg10-blank input.gfg10-num-input {
+            border: 0;
+            border-bottom: 0;
+            background: transparent;
+            font: inherit;
+            font-weight: 400;
+            color: #1f3b38;
+            width: 100%;
+            min-width: 50px;
+            text-align: center;
+            padding: 0;
+            outline: none;
+            box-shadow: none;
+        }
+        .gfg10-blank input.gfg10-num-input:focus {
+            border-bottom: 1px solid #3A5754;
+        }
+
+        .gfg10-calc-sublabel {
+            font-size: 11px;
+            font-style: italic;
+            color: #2b2b2b;
+            text-align: center;
+            display: block;
+        }
+        .gfg10-calc-cell {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .gfg10-calc-total-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: center;
+            gap: 6px 10px;
+            font-size: 13px;
+            margin: 10px 0 0;
+            font-weight: 400;
+            color: #1f3b38;
+        }
+
+        /* ATC section */
+        .gfg10-atc {
+            margin-top: 22px;
+        }
+        .gfg10-atc-head {
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+            color: #2b2b2b;
+            margin: 0 0 8px;
+        }
+        .gfg10-atc-subhead {
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            color: #000000;
+            margin: 14px 0 8px;
+        }
+        .gfg10-atc-highlights {
+            font-size: 13px;
+            font-weight: 700;
+            color: #2b2b2b;
+            margin: 8px 0 4px;
+        }
+        .gfg10-atc-bullets {
+            list-style: disc;
+            padding-left: 22px;
+            margin: 4px 0;
+        }
+        .gfg10-atc-bullets li {
+            margin: 4px 0;
+            font-size: 13px;
+            color: #2b2b2b;
+        }
+        .gfg10-atc-body {
+            margin: 6px 0;
+            font-size: 13px;
+            text-align: justify;
+        }
+        .gfg10-atc-centered {
+            margin: 6px 0;
+            font-size: 13px;
+            text-align: center;
+        }
+    </style>
+
+    <div class="gfg10-doc">
+        <div class="gfg10-sidebar"><span class="gfg10-pagenum">10</span></div>
+
+        <div class="gfg10-main">
+
+            <!-- Title row -->
+            <h1 class="gfg10-title">FERS - Special Groups</h1>
+            <div class="gfg10-accent"></div>
+
+            <!-- Two intro paragraphs -->
+            <p class="gfg10-body">
+                Members of special groups, such as <u>law enforcement officers, firefighters and air traffic controllers</u>,
+                pay different levels of employee contributions toward retirement and are eligible for retirement under
+                age and service combinations that differ from those that apply for the standard retirement.
+            </p>
+            <p class="gfg10-body">
+                Law enforcement officers and firefighters under the FERS system are defined to be classified as special
+                group employees if the position held is limited to &quot;young and vigorous&quot; personnel. In addition,
+                they must have occupied a primary, first-line law enforcement, or firefighter position for at least 3
+                years before moving to a secondary (administrative or supervisory) position.
+            </p>
+
+            <!-- Two-column block -->
+            <div class="gfg10-cols">
+
+                <!-- Left column: FERS Special Groups bullets -->
+                <div class="gfg10-col">
+                    <p class="gfg10-col-head">FERS Special Groups</p>
+                    <ul class="gfg10-bullets">
+                        <li>You can retire with unreduced benefits at age 50, with at least 20 years of creditable service</li>
+                        <li>At any age, with at least 25 years of creditable service</li>
+                        <li class="gfg10-li-red">Age 50 with at least 20 years of service (unreduced benefit)</li>
+                        <li class="gfg10-li-red">Any age, with at least 25 years of creditable service (unreduced benefit)</li>
+                    </ul>
+                </div>
+
+                <!-- Right column: Formula for Special Groups (static example) -->
+                <div class="gfg10-col">
+                    <p class="gfg10-col-head-red">The formula for Special Groups is:</p>
+                    <p class="gfg10-eg">1.7% X high-three X (first) 20 years and 1% X high-three for any amount over 20 years</p>
+                    <p class="gfg10-eg">Example: A 53 year old with 23 years of service and a high-three of $115,000</p>
+                    <p class="gfg10-eg">
+                        1.7% X <b><u>$115,000</u></b> = <b><u>$1,955.00</u></b> X (first) 20 years of service = <b><u>$39,100</u></b>
+                    </p>
+                    <p class="gfg10-eg">
+                        1% X <b><u>$115,000</u></b> high-three = <b><u>$1,150.00</u></b> X (remaining) three years = <b><u>$3,450</u></b>
+                    </p>
+                    <p class="gfg10-eg-total" style="color: #000000;">Total FERS Annuity ($39,100+$3,450) = $42,550.00 Annually</p>
+                </div>
+
+            </div><!-- /gfg10-cols -->
+
+            <!-- Calculation row (editable + live-computed) -->
+            <apex:form id="gfg10form">
+                <apex:actionFunction name="gfg10Save" action="{!saveLead}" reRender="gfg10calc,gfg10msgs" />
+                <apex:outputPanel id="gfg10msgs"><apex:pageMessages /></apex:outputPanel>
+
+                <div class="gfg10-calc-section">
+                    <apex:outputPanel id="gfg10calc" layout="block">
+
+                        <!-- Row 1: 1.7% block -->
+                        <div class="gfg10-calc-row">
+                            <span class="gfg10-calc-op">1.7% X</span>
+                            <span class="gfg10-calc-cell">
+                                <span class="gfg10-blank">
+                                    <apex:inputField value="{!lead.High_3_Salary__c}"
+                                        styleClass="gfg10-num-input"
+                                        onchange="gfg10Save();" />
+                                </span>
+                                <em class="gfg10-calc-sublabel">High-Three</em>
+                            </span>
+                            <span class="gfg10-calc-op">=</span>
+                            <span class="gfg10-calc-cell">
+                                <span class="gfg10-blank">
+                                    <apex:outputText value="{0, number, $#,##0.00}">
+                                        <apex:param value="{!factor17xHigh3}" />
+                                    </apex:outputText>
+                                </span>
+                                <em class="gfg10-calc-sublabel">High-Three</em>
+                            </span>
+                            <span class="gfg10-calc-op">X 20 Years =</span>
+                            <span class="gfg10-blank">
+                                <apex:outputText value="{0, number, $#,##0.00}">
+                                    <apex:param value="{!block20YearAnnuity}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+
+                        <!-- Row 2: 1% block -->
+                        <div class="gfg10-calc-row">
+                            <span class="gfg10-calc-op">1% X</span>
+                            <span class="gfg10-blank">
+                                <apex:outputText value="{0, number, $#,##0.00}">
+                                    <apex:param value="{!lead.High_3_Salary__c}" />
+                                </apex:outputText>
+                            </span>
+                            <span class="gfg10-calc-op">=</span>
+                            <span class="gfg10-blank">
+                                <apex:outputText value="{0, number, $#,##0.00}">
+                                    <apex:param value="{!factor01xHigh3}" />
+                                </apex:outputText>
+                            </span>
+                            <span class="gfg10-calc-op">X</span>
+                            <span class="gfg10-blank" style="min-width:60px;">
+                                <apex:inputField value="{!lead.Remaining_Years__c}"
+                                    styleClass="gfg10-num-input"
+                                    onchange="gfg10Save();" />
+                            </span>
+                            <span class="gfg10-calc-op">Years =</span>
+                            <span class="gfg10-blank">
+                                <apex:outputText value="{0, number, $#,##0.00}">
+                                    <apex:param value="{!factor01xRemainingAnnuity}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+
+                        <!-- Total row -->
+                        <div class="gfg10-calc-total-row">
+                            <span style="color:#000000;">Total Annual Annuity:</span>
+                            <span class="gfg10-blank" style="color:#000000; border-bottom-color:#000000;">
+                                <apex:outputText value="{0, number, $#,##0.00}">
+                                    <apex:param value="{!totalAnnual}" />
+                                </apex:outputText>
+                            </span>
+                            <span style="color:#000000;">&#247; 12 =</span>
+                            <span class="gfg10-blank" style="color:#000000; border-bottom-color:#000000;">
+                                <apex:outputText value="{0, number, $#,##0.00}">
+                                    <apex:param value="{!totalMonthly}" />
+                                </apex:outputText>
+                            </span>
+                            <span style="color:#000000;">Monthly</span>
+                        </div>
+
+                    </apex:outputPanel>
+                </div>
+            </apex:form>
+
+            <!-- Air Traffic Controllers section -->
+            <div class="gfg10-atc">
+                <p class="gfg10-atc-head">Air Traffic Controllers</p>
+
+                <p class="gfg10-atc-body">
+                    Special Provisions: Vision 100 - Century Reauthorization Act was adopted February 10, 2004 and will
+                    impact the mandatory retirement calculation under CSRS and FERS.
+                </p>
+
+                <p class="gfg10-atc-highlights">Highlights:</p>
+                <ul class="gfg10-atc-bullets">
+                    <li>Second-level supervisor will not be subject to mandatory retirement</li>
+                    <li>Applies to active ATC with a date of birth prior to January 1, 1965</li>
+                    <li>Retires on MRA (MRA is between 55 and 57, depending on date of birth)</li>
+                    <li>With 30 years of service</li>
+                    <li>At least 5 years of service as an ATC</li>
+                    <li>Second-level supervisors under FERS will make additional deposits</li>
+                </ul>
+
+                <p class="gfg10-atc-subhead">Calculating FERS Annuity Under Vision 100</p>
+
+                <p class="gfg10-atc-centered">1.7% for all years of service (even those over 20 years) except military buyback</p>
+                <p class="gfg10-atc-centered">Military buy back years will be calculated at 1%</p>
+                <p class="gfg10-atc-centered">If a FERS ATC at 1.7% COLA will not start until age 62</p>
+            </div>
+
+        </div><!-- /gfg10-main -->
+    </div><!-- /gfg10-doc -->
+
+</apex:page>

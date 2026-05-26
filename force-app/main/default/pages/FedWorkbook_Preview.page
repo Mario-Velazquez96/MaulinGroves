@@ -50,6 +50,9 @@
 
             <!-- Page 9: FERS - Survivor Benefit Annuity (renders when FERS__c is true) -->
             <apex:include pageName="FedWorkbook_FersSurvivor" />
+
+            <!-- Page 10: FERS Special Groups (renders when Special_Group_Member__c is true) -->
+            <apex:include pageName="FedWorkbook_SpecialGroups" />
         </div>
     </body>
 
