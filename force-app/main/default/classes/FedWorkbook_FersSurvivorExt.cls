@@ -54,6 +54,7 @@ public with sharing class FedWorkbook_FersSurvivorExt {
         if (this.leadId == null) { return new Lead(); }
         return [
             SELECT FERS__c,
+                   Marital_Status__c,
                    Scenario1_Retirement_Age__c,
                    Scenario1_YOS__c,
                    Scenario1_Primary__c,

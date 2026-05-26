@@ -329,7 +329,11 @@
 
             <!-- ================================================================
                  SECTION B: FERS - Survivor Benefit Annuity
+                 Renders only for Married or Registered Partnership leads
+                 (matches the gate in legacy FERS_System.page line 1784).
                  ================================================================ -->
+            <apex:outputPanel layout="none"
+                rendered="{!lead.Marital_Status__c == 'Married' || lead.Marital_Status__c == 'Registered Partnership'}">
             <div class="gfg9-section">
                 <h1 class="gfg9-title">FERS - Survivor Benefit Annuity</h1>
                 <div class="gfg9-accent"></div>
@@ -474,6 +478,7 @@
                 </div><!-- /gfg9-boxes -->
 
             </div><!-- /gfg9-section -->
+            </apex:outputPanel>
 
         </div><!-- /gfg9-main -->
     </div><!-- /gfg9-doc -->
