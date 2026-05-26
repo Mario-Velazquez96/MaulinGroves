@@ -1,0 +1,481 @@
+<apex:page id="fersSurv9" standardController="Lead" extensions="FedWorkbook_FersSurvivorExt"
+    showHeader="false" sidebar="false" standardStylesheets="false"
+    applyHtmlTag="false" applyBodyTag="false"
+    docType="html-5.0" title="FERS - Survivor Benefit Annuity"
+    rendered="{!Lead.FERS__c == true}">
+    <!--
+      ============================================================
+      FedWorkbook_FersSurvivor  (Page 9)
+      Two stacked sections on one sheet:
+        Section A - FERS Calculating FERS Retirement (continued)
+                    4-column comparison grid (2 scenario rows)
+        Section B - FERS Survivor Benefit Annuity
+                    Informational copy + Points to Consider callout +
+                    Minimum / Maximum Survivor Benefit boxes
+
+      Lead fields used:
+        Scenario1_Retirement_Age__c, Scenario1_YOS__c, Scenario1_Primary__c
+        Scenario2_Retirement_Age__c, Scenario2_YOS__c, Scenario2_Primary__c
+        High_3_Salary__c, High_3_Salary2__c
+        Base_Salary__c
+        Expected_Retirement_Age__c, Years_of_Employment__c
+
+      Renders only when Lead.FERS__c is true.
+      Odd page => right sidebar.
+      ============================================================
+    -->
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=PT+Serif:wght@400;700&amp;display=swap');
+
+        .gfg9-doc {
+            position: relative;
+            background: #ffffff;
+            color: #2b2b2b;
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.55;
+            margin: 0 auto 24px;
+            width: 850px;
+            max-width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Right sidebar (odd page) */
+        .gfg9-sidebar {
+            position: absolute;
+            right: 0; top: 0; bottom: 0;
+            width: 54px;
+            background: #3A5754;
+        }
+        .gfg9-pagenum {
+            position: absolute;
+            bottom: 18px; right: 0;
+            width: 54px;
+            text-align: center;
+            color: #ffffff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+        }
+        .gfg9-main {
+            margin-right: 54px;
+            padding: 26px 38px 36px;
+        }
+
+        /* Titles + accent bars */
+        .gfg9-title {
+            margin: 0 0 8px;
+            color: #3A5754;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 33px;
+            font-weight: 800;
+            letter-spacing: .2px;
+            line-height: 1.1;
+        }
+        .gfg9-accent { height: 9px; background: #8FA68C; margin: 0 0 18px; }
+
+        .gfg9-body { margin: 10px 0; text-align: justify; }
+
+        /* Section spacing */
+        .gfg9-section { margin-top: 28px; }
+
+        /* ---- Section A: 4-column comparison grid ---- */
+        .gfg9-grid {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 4px;
+            font-size: 13px;
+        }
+        .gfg9-grid th {
+            color: #2E5395;
+            font-weight: 700;
+            text-align: center;
+            padding: 6px 8px;
+            border-top: 1px solid #2b2b2b;
+            font-size: 12px;
+        }
+        .gfg9-grid th:first-child { text-align: left; }
+        .gfg9-grid td {
+            text-align: center;
+            padding: 8px 8px 2px;
+            border-bottom: 1px solid #2b2b2b;
+            vertical-align: bottom;
+        }
+        .gfg9-grid td:first-child { text-align: left; }
+        .gfg9-grid .gfg9-blank {
+            display: inline-block;
+            min-width: 110px;
+            border-bottom: 1px solid #2b2b2b;
+            text-align: center;
+            font-weight: 700;
+            color: #1f3b38;
+            padding: 0 6px;
+        }
+
+        /* Editable age input styled to match the underline-blank cells */
+        .gfg9-grid .gfg9-blank input.gfg9-age-input {
+            border: 0;
+            border-bottom: 0;
+            background: transparent;
+            font: inherit;
+            font-weight: 700;
+            color: #1f3b38;
+            width: 100%;
+            min-width: 90px;
+            text-align: center;
+            padding: 0;
+            outline: none;
+            box-shadow: none;
+        }
+        .gfg9-grid .gfg9-blank input.gfg9-age-input:focus {
+            border-bottom: 1px solid #3A5754;
+        }
+
+        /* ---- Red bullets ---- */
+        .gfg9-red-bullets { list-style: disc; padding-left: 38px; margin: 8px 0; color: #B91C1C; }
+        .gfg9-red-bullets li { margin: 4px 0; font-weight: 700; }
+
+        /* ---- Black bullets ---- */
+        .gfg9-bullets { list-style: disc; padding-left: 38px; margin: 8px 0; }
+        .gfg9-bullets li { margin: 3px 0; }
+
+        /* ---- Points to Consider callout ---- */
+        .gfg9-callout {
+            float: right;
+            margin: 0 0 12px 18px;
+            width: 280px;
+            background: #3A5754;
+            color: #ffffff;
+            padding: 16px 20px;
+            box-sizing: border-box;
+            border-radius: 2px;
+        }
+        .gfg9-callout__title {
+            text-align: center;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0 0 10px;
+        }
+        .gfg9-callout__body {
+            font-size: 12px;
+            line-height: 1.5;
+            color: #ffffff;
+            text-align: center;
+            margin: 0;
+        }
+
+        /* ---- Survivor benefit calculation boxes ---- */
+        .gfg9-boxes {
+            display: flex;
+            gap: 32px;
+            margin-top: 18px;
+            clear: both;
+        }
+        .gfg9-box {
+            flex: 1 1 0;
+            border: 1px solid #ccc;
+            padding: 14px 18px 18px;
+            box-sizing: border-box;
+        }
+        .gfg9-box__title {
+            font-weight: 700;
+            font-size: 15px;
+            color: #2b2b2b;
+            text-align: center;
+            margin: 0 0 12px;
+        }
+        .gfg9-box__row {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin: 6px 0;
+            font-size: 13px;
+        }
+        .gfg9-box__row .gfg9-box__lbl { flex: 0 0 auto; white-space: nowrap; }
+        .gfg9-box__row .gfg9-blank {
+            flex: 1 1 auto;
+            border-bottom: 1px solid #2b2b2b;
+            text-align: center;
+            font-weight: 700;
+            color: #1f3b38;
+            min-width: 80px;
+            padding: 0 4px;
+        }
+        .gfg9-box__caption {
+            text-align: center;
+            color: #B91C1C;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-top: 14px;
+        }
+        .gfg9-box__caption .gfg9-blank {
+            display: inline-block;
+            min-width: 100px;
+            border-bottom: 1px solid #B91C1C;
+            font-weight: 700;
+            color: #B91C1C;
+            padding: 0 4px;
+        }
+    </style>
+
+    <div class="gfg9-doc">
+        <div class="gfg9-sidebar"><span class="gfg9-pagenum">9</span></div>
+
+        <div class="gfg9-main">
+
+            <!-- ================================================================
+                 SECTION A: FERS - Calculating FERS Retirement (continued)
+                 ================================================================ -->
+            <h1 class="gfg9-title">FERS - Calculating FERS Retirement</h1>
+            <div class="gfg9-accent"></div>
+
+            <!-- 4-column comparison grid -->
+            <apex:form id="gfg9form">
+                <!-- Auto-save on age change; reRenders both computed output panels -->
+                <apex:actionFunction name="gfg9Save" action="{!saveLead}" reRender="gfg9row1,gfg9row2,gfg9msgs" />
+                <apex:outputPanel id="gfg9msgs"><apex:pageMessages /></apex:outputPanel>
+
+                <table class="gfg9-grid">
+                    <tbody>
+                        <!-- Scenario 1 value row -->
+                        <tr>
+                            <td>
+                                <!-- Editable: Age at Retirement (Scenario 1) -->
+                                <span class="gfg9-blank">
+                                    <apex:inputField value="{!lead.Scenario1_Retirement_Age__c}"
+                                        styleClass="gfg9-age-input"
+                                        onchange="gfg9Save();" />
+                                </span>
+                            </td>
+                            <td>
+                                <span class="gfg9-blank">
+                                    <apex:outputText value="{0, number, $#,##0.00}">
+                                        <apex:param value="{!s1CurrentMonthlyIncome}" />
+                                    </apex:outputText>
+                                </span>
+                            </td>
+                            <apex:outputPanel id="gfg9row1" layout="none">
+                                <td>
+                                    <span class="gfg9-blank">
+                                        <apex:outputText value="{0, number, $#,##0.00}">
+                                            <apex:param value="{!s1MonthlyRetirementAnnuity}" />
+                                        </apex:outputText>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="gfg9-blank">
+                                        <apex:outputText value="{0, number, $#,##0.00}">
+                                            <apex:param value="{!s1DifferenceInMonthlyAnnuity}" />
+                                        </apex:outputText>
+                                    </span>
+                                </td>
+                            </apex:outputPanel>
+                        </tr>
+                        <!-- Scenario 1 column labels -->
+                        <tr>
+                            <th>Age at Retirement</th>
+                            <th>Current Monthly Income</th>
+                            <th>Monthly Retirement Annuity</th>
+                            <th>Difference in Monthly Annuity</th>
+                        </tr>
+                        <!-- Scenario 2 value row -->
+                        <tr>
+                            <td>
+                                <!-- Editable: Age at Retirement (Scenario 2) -->
+                                <span class="gfg9-blank">
+                                    <apex:inputField value="{!lead.Scenario2_Retirement_Age__c}"
+                                        styleClass="gfg9-age-input"
+                                        onchange="gfg9Save();" />
+                                </span>
+                            </td>
+                            <td>
+                                <span class="gfg9-blank">
+                                    <apex:outputText value="{0, number, $#,##0.00}">
+                                        <apex:param value="{!s2CurrentMonthlyIncome}" />
+                                    </apex:outputText>
+                                </span>
+                            </td>
+                            <apex:outputPanel id="gfg9row2" layout="none">
+                                <td>
+                                    <span class="gfg9-blank">
+                                        <apex:outputText value="{0, number, $#,##0.00}">
+                                            <apex:param value="{!s2MonthlyRetirementAnnuity}" />
+                                        </apex:outputText>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="gfg9-blank">
+                                        <apex:outputText value="{0, number, $#,##0.00}">
+                                            <apex:param value="{!s2DifferenceInMonthlyAnnuity}" />
+                                        </apex:outputText>
+                                    </span>
+                                </td>
+                            </apex:outputPanel>
+                        </tr>
+                        <!-- Scenario 2 column labels -->
+                        <tr>
+                            <th>Age at Retirement</th>
+                            <th>Current Monthly Income</th>
+                            <th>Monthly Retirement Annuity</th>
+                            <th>Difference in Monthly Annuity</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </apex:form>
+
+            <!-- ================================================================
+                 SECTION B: FERS - Survivor Benefit Annuity
+                 ================================================================ -->
+            <div class="gfg9-section">
+                <h1 class="gfg9-title">FERS - Survivor Benefit Annuity</h1>
+                <div class="gfg9-accent"></div>
+
+                <p class="gfg9-body">
+                    Retiring federal employees under both the CSRS and FERS retirement
+                    systems have the opportunity to ensure continuation of benefits to
+                    survivors with an insurable interest. A person with an insurable
+                    interest is an insurance term applying to a person who would benefit
+                    financially by your continuation of life. Such persons would include,
+                    but are not limited to, a widow, widower, former spouse, and children.
+                </p>
+
+                <ul class="gfg9-red-bullets">
+                    <li>May elect a survivor benefit of either 25% or 50% or their retirement annuity</li>
+                    <li>If 25% is elected, their annuity will be reduced by 5%</li>
+                    <li>If 50% is elected, their annuity will be reduced by 10%</li>
+                </ul>
+
+                <p class="gfg9-body">
+                    To provide a survivor annuity for a person who has an
+                    &quot;insurable interest&quot; in you, your annual annuity would be
+                    reduced from 10 to 40 percent, depending on the difference in your
+                    age and the age of the person named.
+                </p>
+
+                <p class="gfg9-body">
+                    Age of the person named in relation to the retiring employee and the
+                    corresponding reduction in annuity:
+                </p>
+
+                <!-- Points to Consider callout floats right alongside the bullet list -->
+                <div class="gfg9-callout">
+                    <p class="gfg9-callout__title">Points to Consider</p>
+                    <p class="gfg9-callout__body">
+                        If you opt out of the survivor benefit, your spouse or any other
+                        family member covered under FEHB will lose that coverage if you
+                        predecease them during retirement, unless they are otherwise
+                        eligible for coverage. In addition, they will lose the ability to
+                        initially enroll in FLTCIP coverage, unless otherwise eligible,
+                        although they could continue coverage if already enrolled.
+                    </p>
+                </div>
+
+                <ul class="gfg9-bullets">
+                    <li>Older, same age, or less than 5 years younger 10% =</li>
+                    <li>5 but less than 10 years younger 15% =</li>
+                    <li>10 but less than 15 years younger 20% =</li>
+                    <li>15 but less than 20 years younger 25% =</li>
+                    <li>20 but less than 25 years younger 30% =</li>
+                    <li>25 but less than 30 years younger 35% =</li>
+                    <li>30 or more years younger 40%</li>
+                </ul>
+
+                <!-- Minimum / Maximum Survivor Benefit boxes -->
+                <div class="gfg9-boxes">
+
+                    <!-- Left box: Minimum Survivor Benefit Monthly Cost -->
+                    <div class="gfg9-box">
+                        <p class="gfg9-box__title">Minimum Survivor Benefit Monthly Cost</p>
+
+                        <div class="gfg9-box__row">
+                            <span class="gfg9-box__lbl">Monthly Annuity: $</span>
+                            <span class="gfg9-blank">
+                                <apex:outputText value="{0, number, #,##0.00}">
+                                    <apex:param value="{!monthlyAnnuity}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+
+                        <div class="gfg9-box__row">
+                            <span class="gfg9-box__lbl">Minus 5%</span>
+                            <span class="gfg9-blank">
+                                <apex:outputText value="{0, number, #,##0.00}">
+                                    <apex:param value="{!minus5Pct}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+
+                        <div class="gfg9-box__row">
+                            <span class="gfg9-box__lbl">Reduced Annuity: $</span>
+                            <span class="gfg9-blank">
+                                <apex:outputText value="{0, number, #,##0.00}">
+                                    <apex:param value="{!reducedMin}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+
+                        <div class="gfg9-box__caption">
+                            25% Reduction<br />
+                            Surviving Spouse Monthly Income<br />
+                            $ <span class="gfg9-blank">
+                                <apex:outputText value="{0, number, #,##0.00}">
+                                    <apex:param value="{!survivingSpouseMin}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Right box: Maximum Survivor Benefit Monthly Cost -->
+                    <div class="gfg9-box">
+                        <p class="gfg9-box__title">Maximum Survivor Benefit Monthly Cost</p>
+
+                        <div class="gfg9-box__row">
+                            <span class="gfg9-box__lbl">Monthly Annuity: $</span>
+                            <span class="gfg9-blank">
+                                <apex:outputText value="{0, number, #,##0.00}">
+                                    <apex:param value="{!monthlyAnnuity}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+
+                        <div class="gfg9-box__row">
+                            <span class="gfg9-box__lbl">Minus 10%</span>
+                            <span class="gfg9-blank">
+                                <apex:outputText value="{0, number, #,##0.00}">
+                                    <apex:param value="{!minus10Pct}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+
+                        <div class="gfg9-box__row">
+                            <span class="gfg9-box__lbl">Reduced Annuity: $</span>
+                            <span class="gfg9-blank">
+                                <apex:outputText value="{0, number, #,##0.00}">
+                                    <apex:param value="{!reducedMax}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+
+                        <div class="gfg9-box__caption">
+                            50% Reduction<br />
+                            Surviving Spouse Monthly Income<br />
+                            $ <span class="gfg9-blank">
+                                <apex:outputText value="{0, number, #,##0.00}">
+                                    <apex:param value="{!survivingSpouseMax}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+                    </div>
+
+                </div><!-- /gfg9-boxes -->
+
+            </div><!-- /gfg9-section -->
+
+        </div><!-- /gfg9-main -->
+    </div><!-- /gfg9-doc -->
+
+</apex:page>

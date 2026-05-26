@@ -47,6 +47,9 @@
 
             <!-- Page 8: FERS - Calculating FERS Retirement (renders when FERS__c is true) -->
             <apex:include pageName="FedWorkbook_FersCalc" />
+
+            <!-- Page 9: FERS - Survivor Benefit Annuity (renders when FERS__c is true) -->
+            <apex:include pageName="FedWorkbook_FersSurvivor" />
         </div>
     </body>
 

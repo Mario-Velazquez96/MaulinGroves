@@ -8,6 +8,7 @@
 		<members>FedWorkbook_EmployeeInfoExt</members>
 		<members>FedWorkbook_FegliACExt</members>
 		<members>FedWorkbook_FersCalcExt</members>
+		<members>FedWorkbook_FersSurvivorExt</members>
 		<members>FedWorkbook_OptionBExt</members>
 		<name>ApexClass</name>
 	</types>
@@ -22,6 +23,7 @@
 		<members>FedWorkbook_FegliAC</members>
 		<members>FedWorkbook_FERS</members>
 		<members>FedWorkbook_FersCalc</members>
+		<members>FedWorkbook_FersSurvivor</members>
 		<members>FedWorkbook_OptionB</members>
 		<members>FedWorkbook_Preview</members>
 		<name>ApexPage</name>
