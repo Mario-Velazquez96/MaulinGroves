@@ -19,27 +19,48 @@
  */
 public with sharing class FedWorkbook_FersCalcExt {
 
-    private final Lead lead;
+    // Public property so apex:inputField can bind to lead.Field__c
+    // and saveLead() operates on the same instance.
+    public Lead lead { get; set; }
+
+    private Id leadId;
 
     public FedWorkbook_FersCalcExt(ApexPages.StandardController stdController) {
-        Id leadId = stdController.getId();
-        if (leadId != null) {
-            this.lead = [
-                SELECT Sick_Leave__c,
-                       Contact_Age__c,
-                       Scenario1_Retirement_Age__c,
-                       Scenario2_Retirement_Age__c,
-                       Scenario1_YOS__c,
-                       Scenario2_YOS__c,
-                       High_3_Salary__c,
-                       High_3_Salary2__c
-                FROM Lead
-                WHERE Id = :leadId
-                LIMIT 1
-            ];
-        } else {
-            this.lead = new Lead();
+        this.leadId = stdController.getId();
+        this.lead = fetchLead();
+    }
+
+    // Centralised SOQL fetch — called by constructor and after save so
+    // computed getters always see fresh values.
+    private Lead fetchLead() {
+        if (this.leadId == null) { return new Lead(); }
+        return [
+            SELECT FERS__c,
+                   Sick_Leave__c,
+                   Contact_Age__c,
+                   Scenario1_Retirement_Age__c,
+                   Scenario2_Retirement_Age__c,
+                   Scenario1_YOS__c,
+                   Scenario2_YOS__c,
+                   High_3_Salary__c,
+                   High_3_Salary2__c
+            FROM Lead
+            WHERE Id = :this.leadId
+            LIMIT 1
+        ];
+    }
+
+    // Auto-save invoked by onchange on editable input cells.
+    // Re-fetches after update so computed getters reflect fresh values.
+    public PageReference saveLead() {
+        try {
+            update lead;
+            lead = fetchLead();
+        } catch (Exception e) {
+            ApexPages.addMessage(new ApexPages.Message(
+                ApexPages.Severity.ERROR, e.getMessage()));
         }
+        return null;
     }
 
     // ---- Shared ------------------------------------------------------------
