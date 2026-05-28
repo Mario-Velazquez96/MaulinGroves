@@ -56,6 +56,9 @@
 
             <!-- Page 11: FERS Special Supplement (renders only when retirement age is less than 62) -->
             <apex:include pageName="FedWorkbook_SpecialSupplement" />
+
+            <!-- Page 12: TSP, Resources, Forms For Collecting Benefits -->
+            <apex:include pageName="FedWorkbook_TspResources" />
         </div>
     </body>
 

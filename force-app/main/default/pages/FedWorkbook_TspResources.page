@@ -1,0 +1,442 @@
+<apex:page id="tspResources12" standardController="Lead" extensions="FedWorkbook_TspResourcesExt"
+    showHeader="false" sidebar="false" standardStylesheets="false"
+    applyHtmlTag="false" applyBodyTag="false"
+    docType="html-5.0" title="TSP - Thrift Savings Plan">
+    <!--
+      ============================================================
+      FedWorkbook_TspResources  (Page 12)
+      Three stacked sections:
+        A. TSP - Thrift Savings Plan
+        B. Resources
+        C. Forms For Collecting Benefits (Military Time Recapture)
+      Lead fields used:
+        Regular_Contribution__c     (editable currency)
+        Catchup_Contribution__c     (editable currency, catch-up for age 50+)
+      Total Contribution computed in Apex: getTotalContribution()
+      No render gate — always renders.
+      Even page => left sidebar.
+      ============================================================
+    -->
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=PT+Serif:wght@400;700&amp;display=swap');
+
+        /* ---- Document shell ---- */
+        .gfg12-doc {
+            position: relative;
+            background: #ffffff;
+            color: #2b2b2b;
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.55;
+            margin: 0 auto 24px;
+            width: 850px;
+            max-width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Left sidebar (even page = left) */
+        .gfg12-sidebar {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 54px;
+            background: #3A5754;
+        }
+        .gfg12-pagenum {
+            position: absolute;
+            bottom: 18px; left: 0;
+            width: 54px;
+            text-align: center;
+            color: #ffffff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+        }
+        .gfg12-main {
+            margin-left: 54px;
+            padding: 26px 30px 36px;
+        }
+
+        /* ---- Title + accent bar ---- */
+        .gfg12-title {
+            margin: 0 0 8px;
+            color: #3A5754;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 33px;
+            font-weight: 800;
+            letter-spacing: .2px;
+            line-height: 1.1;
+        }
+        .gfg12-title--sub {
+            font-size: 28px;
+        }
+        .gfg12-accent { height: 9px; background: #8FA68C; margin: 0 0 14px; }
+
+        /* ---- Body text ---- */
+        .gfg12-body {
+            margin: 8px 0 10px;
+            text-align: justify;
+            font-size: 13px;
+        }
+
+        /* ---- Spacer between sections ---- */
+        .gfg12-section-spacer { margin-top: 22px; }
+
+        /* ---- Three-column TSP block ---- */
+        .gfg12-three-col {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin: 12px 0;
+        }
+        .gfg12-col-left   { flex: 2.2; min-width: 0; }
+        .gfg12-col-middle { flex: 1;   min-width: 0; text-align: center; }
+        .gfg12-col-right  { flex: 2;   min-width: 0; }
+
+        /* Column headings */
+        .gfg12-col-heading {
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: underline;
+            margin: 0 0 8px;
+        }
+        .gfg12-col-heading--center { text-align: center; }
+
+        /* Bullet list in left and right columns */
+        .gfg12-bullets {
+            list-style: disc;
+            padding-left: 18px;
+            margin: 4px 0;
+        }
+        .gfg12-bullets li {
+            margin: 5px 0;
+            font-size: 13px;
+        }
+        .gfg12-bullets--circle {
+            list-style: circle;
+            padding-left: 22px;
+            margin: 2px 0;
+        }
+        .gfg12-bullets--circle li {
+            font-size: 12px;
+            margin: 3px 0;
+        }
+
+        /* Header row above the label+value bullet list (left column).
+           Aligns "Contribution Limits" with the labels and "Current" with the values. */
+        .gfg12-contrib-headers {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin: 0 0 4px;
+            padding-left: 18px; /* match .gfg12-bullets padding so the left label aligns over the bullet text */
+        }
+        .gfg12-contrib-headers .gfg12-col-heading:first-child { flex: 1; }
+        .gfg12-contrib-headers .gfg12-col-heading--center {
+            display: inline-block;
+            min-width: 90px;
+            text-align: center;
+        }
+
+        /* Label-value row for contribution bullets */
+        .gfg12-contrib-label {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            font-size: 13px;
+        }
+        .gfg12-contrib-name { flex: 1; }
+        .gfg12-contrib-val {
+            display: inline-block;
+            min-width: 90px;
+            border-bottom: 1px solid #2b2b2b;
+            text-align: center;
+            color: #1f3b38;
+            padding: 0 4px;
+            vertical-align: bottom;
+        }
+        /* Editable input styled to match underline blank */
+        .gfg12-contrib-val input {
+            border: 0;
+            background: transparent;
+            font: inherit;
+            color: #1f3b38;
+            width: 88px;
+            text-align: center;
+            padding: 0;
+            outline: none;
+            box-shadow: none;
+        }
+        .gfg12-contrib-val input:focus {
+            border-bottom: 1px solid #3A5754;
+        }
+
+        /* Sub-label (e.g. "for employees over age 50") */
+        .gfg12-sublabel {
+            font-size: 10px;
+            font-style: italic;
+            margin: 1px 0 5px 18px;
+            color: #555;
+        }
+
+        /* Footer note under contribution list */
+        .gfg12-contrib-note {
+            font-size: 10px;
+            font-style: italic;
+            margin-top: 8px;
+            color: #444;
+        }
+
+        /* QR image centering */
+        .gfg12-qr-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: 6px;
+        }
+
+        /* TSP Options in Retirement block */
+        .gfg12-options-block {
+            margin-top: 14px;
+            text-align: center;
+        }
+        .gfg12-options-heading {
+            color: #B91C1C;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: underline;
+            margin-bottom: 8px;
+        }
+        .gfg12-options-grid {
+            display: inline-grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 40px;
+            text-align: left;
+        }
+        .gfg12-option-item {
+            color: #B91C1C;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        /* ---- Resources section ---- */
+        .gfg12-link {
+            color: #1f3b38;
+            text-decoration: underline;
+        }
+        .gfg12-link-item {
+            font-size: 13px;
+            margin: 6px 0;
+        }
+
+        /* ---- Military Time Recapture table ---- */
+        .gfg12-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        .gfg12-table-header td {
+            background: #3A5754;
+            color: #ffffff;
+            font-size: 18px;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 1px;
+            padding: 8px 12px;
+            border: 1px solid #3A5754;
+        }
+        .gfg12-table-label {
+            background: #3A5754;
+            color: #ffffff;
+            font-weight: 400;
+            text-align: center;
+            width: 130px;
+            padding: 7px 10px;
+            border: 1px solid #3A5754;
+            vertical-align: middle;
+        }
+        .gfg12-table-addr {
+            background: #3A5754;
+            color: #ffffff;
+            padding: 7px 12px;
+            border: 1px solid #3A5754;
+            vertical-align: middle;
+        }
+
+        /* Messages */
+        .gfg12-msgs { font-size: 12px; margin: 4px 0; }
+    </style>
+
+    <div class="gfg12-doc">
+        <div class="gfg12-sidebar"><span class="gfg12-pagenum">12</span></div>
+
+        <div class="gfg12-main">
+
+            <!-- ==========================================
+                 SECTION A: TSP - Thrift Savings Plan
+                 ========================================== -->
+            <h1 class="gfg12-title">TSP - Thrift Savings Plan</h1>
+            <div class="gfg12-accent"></div>
+
+            <p class="gfg12-body">
+                The Thrift Savings Plan (TSP) is a retirement savings and investment plan for Federal employees and
+                members of the uniformed services, including the Ready Reserve. It was established by Congress in the
+                Federal Employees&apos; Retirement System Act of 1986. For FERS employees, TSP is one of a
+                three-part retirement package that also includes your FERS basic annuity and Social Security. For a
+                FERS employee to take full advantage of this plan, they should contribute 5% to receive the full
+                matching benefit. CSRS employees receive no matching funds.
+            </p>
+
+            <!-- Three-column block -->
+            <div class="gfg12-three-col">
+
+                <!-- Column 1: Contribution Limits (labels) + Current (values) -->
+                <div class="gfg12-col-left">
+                    <div class="gfg12-contrib-headers">
+                        <span class="gfg12-col-heading">Contribution Limits</span>
+                        <span class="gfg12-col-heading gfg12-col-heading--center">Current</span>
+                    </div>
+                    <ul class="gfg12-bullets">
+                        <li>
+                            <div class="gfg12-contrib-label">
+                                <span class="gfg12-contrib-name">Regular Contribution</span>
+                                <span class="gfg12-contrib-val">
+                                    <apex:outputText value="{0, number, $###,###}">
+                                        <apex:param value="{!currentYear.Regular_Contribution__c}" />
+                                    </apex:outputText>
+                                </span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="gfg12-contrib-label">
+                                <span class="gfg12-contrib-name">Catch-Up Contribution</span>
+                                <span class="gfg12-contrib-val">
+                                    <apex:outputText value="{0, number, $###,###}">
+                                        <apex:param value="{!currentYear.Catch_Up_Contribution__c}" />
+                                    </apex:outputText>
+                                </span>
+                            </div>
+                            <p class="gfg12-sublabel">for employees over age 50</p>
+                        </li>
+                        <li>
+                            <div class="gfg12-contrib-label">
+                                <span class="gfg12-contrib-name">Total Contribution</span>
+                                <span class="gfg12-contrib-val">
+                                    <apex:outputText value="{0, number, $###,###}">
+                                        <apex:param value="{!totalContribution}" />
+                                    </apex:outputText>
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                    <p class="gfg12-contrib-note">
+                        Visit <a href="https://www.tsp.gov/making-contributions/contribution-limits/" class="gfg12-link">https://www.tsp.gov/making-contributions/contribution-limits/</a>
+                        or scan the QR code for <u>current</u> Contribution Limits
+                    </p>
+                </div>
+
+                <!-- Column 2: QR Code (no header) -->
+                <div class="gfg12-col-middle">
+                    <div class="gfg12-qr-wrap">
+                        <apex:image url="{!$Resource.Pg12GrovesQR}" width="110" height="110"
+                            alt="Current Contribution Limits QR" />
+                    </div>
+                </div>
+
+                <!-- Column 3: Government Matching Contributions -->
+                <div class="gfg12-col-right">
+                    <p class="gfg12-col-heading">Government Matching Contributions</p>
+                    <ul class="gfg12-bullets">
+                        <li>CSRS and CSRS Offset employees receive no matching funds</li>
+                        <li>
+                            FERS employees receive up to 5% of personal contributions
+                            <ul class="gfg12-bullets--circle">
+                                <li>1% agency automatic contribution</li>
+                                <li>1%-3% of employee contributions are matched at 100%</li>
+                                <li>4%-5% of employee contributions are matched at 50%</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+            </div><!-- /gfg12-three-col -->
+
+            <!-- TSP Options in Retirement -->
+            <div class="gfg12-options-block">
+                <p class="gfg12-options-heading">TSP Options in Retirement</p>
+                <div class="gfg12-options-grid">
+                    <span class="gfg12-option-item">Monthly Payments</span>
+                    <span class="gfg12-option-item">Rollover</span>
+                    <span class="gfg12-option-item">Annuitize</span>
+                    <span class="gfg12-option-item">Do Nothing</span>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 SECTION B: Resources
+                 ========================================== -->
+            <div class="gfg12-section-spacer">
+                <h1 class="gfg12-title gfg12-title--sub">Resources</h1>
+                <div class="gfg12-accent"></div>
+
+                <p class="gfg12-body">
+                    Information in this workbook came from many sources (see below) and, due to time and space, has
+                    been condensed to offer you a basic overview. It is not meant to provide a detailed explanation
+                    of all benefits. Below are links with extensive information on the benefits which we covered
+                    during our review. Should you have additional questions, please review these links and contact us
+                    so we may assist you further.
+                </p>
+
+                <div class="gfg12-link-item">Federal Retirement: <a href="http://www.opm.gov/retirement-services/publications-forms/pamphlets/ri90-8.pdf" class="gfg12-link">http://www.opm.gov/retirement-services/publications-forms/pamphlets/ri90-8.pdf</a></div>
+                <div class="gfg12-link-item">FERS: <a href="http://www.opm.gov/retirement-services/fers-information/" class="gfg12-link">http://www.opm.gov/retirement-services/fers-information/</a></div>
+                <div class="gfg12-link-item">CSRS: <a href="http://www.opm.gov/retirement-services/csrs-information/" class="gfg12-link">http://www.opm.gov/retirement-services/csrs-information/</a></div>
+                <div class="gfg12-link-item">FEGLI: <a href="http://www.opm.gov/healthcare-insurance/life-insurance/" class="gfg12-link">http://www.opm.gov/healthcare-insurance/life-insurance/</a></div>
+                <div class="gfg12-link-item">TSP: <a href="https://www.tsp.gov/index.html" class="gfg12-link">https://www.tsp.gov/index.html</a></div>
+                <div class="gfg12-link-item">Social Security: <a href="https://www.ssa.gov/" class="gfg12-link">https://www.ssa.gov/</a></div>
+                <div class="gfg12-link-item">Windfall Elimination Provision (WEP): <a href="http://www.socialsecurity.gov/pubs/EN-05-10045.pdf" class="gfg12-link">http://www.socialsecurity.gov/pubs/EN-05-10045.pdf</a></div>
+                <div class="gfg12-link-item">Government Pension Offset (GPO): <a href="http://www.socialsecurity.gov/pubs/EN-05-10007.pdf" class="gfg12-link">http://www.socialsecurity.gov/pubs/EN-05-10007.pdf</a></div>
+            </div>
+
+            <!-- ==========================================
+                 SECTION C: Forms For Collecting Benefits
+                 ========================================== -->
+            <div class="gfg12-section-spacer">
+                <h1 class="gfg12-title gfg12-title--sub">Forms For Collecting Benefits</h1>
+                <div class="gfg12-accent"></div>
+
+                <table class="gfg12-table">
+                    <tbody>
+                        <tr class="gfg12-table-header">
+                            <td colspan="2">MILITARY TIME RECAPTURE</td>
+                        </tr>
+                        <tr>
+                            <td class="gfg12-table-label">Army</td>
+                            <td class="gfg12-table-addr">DFAS - Indianapolis Center, ATTN: IN-FO-FC-A, 8899 E 56, Indianapolis, IN 46249-0875. Fax: 317-542-2779</td>
+                        </tr>
+                        <tr>
+                            <td class="gfg12-table-label">Navy</td>
+                            <td class="gfg12-table-addr">Director, DFAS - Cleveland Center-JJCS/FMCS, Anthony J. Celebreeze Federal Bldg., Cleveland, OH 44199-2055. Fax: 216-522-5974</td>
+                        </tr>
+                        <tr>
+                            <td class="gfg12-table-label">Air Force</td>
+                            <td class="gfg12-table-addr">DFAS-DE/FUPBC, 6760 East Irvington Place, Denver CO 80279-5000. Fax: 303-676-7408</td>
+                        </tr>
+                        <tr>
+                            <td class="gfg12-table-label">Marines</td>
+                            <td class="gfg12-table-addr">DFAS - Kansas City Center, 1500 East 95th Street, Kansas City, MO 64197-0001. Fax: 800-929-4207</td>
+                        </tr>
+                        <tr>
+                            <td class="gfg12-table-label">Coast Guard</td>
+                            <td class="gfg12-table-addr">Commanding Officer Settlements and Records, U.S. Coast Guard, Military Pay and Personnel Center, 444 SE Quincy Street, Topeka, KS 66683-3591</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div><!-- /gfg12-main -->
+    </div><!-- /gfg12-doc -->
+
+</apex:page>
