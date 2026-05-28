@@ -53,6 +53,9 @@
 
             <!-- Page 10: FERS Special Groups (renders when Special_Group_Member__c is true) -->
             <apex:include pageName="FedWorkbook_SpecialGroups" />
+
+            <!-- Page 11: FERS Special Supplement (renders only when retirement age is less than 62) -->
+            <apex:include pageName="FedWorkbook_SpecialSupplement" />
         </div>
     </body>
 

@@ -11,6 +11,7 @@
 		<members>FedWorkbook_FersSurvivorExt</members>
 		<members>FedWorkbook_OptionBExt</members>
 		<members>FedWorkbook_SpecialGroupsExt</members>
+		<members>FedWorkbook_SpecialSupplementExt</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
@@ -28,6 +29,7 @@
 		<members>FedWorkbook_OptionB</members>
 		<members>FedWorkbook_Preview</members>
 		<members>FedWorkbook_SpecialGroups</members>
+		<members>FedWorkbook_SpecialSupplement</members>
 		<name>ApexPage</name>
 	</types>
 	<types>

@@ -1,0 +1,356 @@
+<apex:page id="specialSupp11" standardController="Lead" extensions="FedWorkbook_SpecialSupplementExt"
+    showHeader="false" sidebar="false" standardStylesheets="false"
+    applyHtmlTag="false" applyBodyTag="false"
+    docType="html-5.0" title="FERS - Special Supplement"
+    rendered="{!showSpecialSupp}">
+    <!--
+      ============================================================
+      FedWorkbook_SpecialSupplement  (Page 11)
+      FERS - Special Supplement.
+      Lead fields used:
+        Special_Group_Member__c         (render gate)
+        FERS__c                         (render gate)
+        Expected_Retirement_Age__c      (render gate)
+        Scenario1_Primary__c            (render gate)
+        Scenario1_Retirement_Age__c     (render gate)
+        Scenario2_Primary__c            (render gate)
+        Scenario2_Retirement_Age__c     (render gate)
+        YOS_Special_Supplement__c       (editable, drives calculation)
+        Predicted_Social_Security__c    (editable, drives calculation)
+      Renders only when retirement age is less than 62 (per four-branch gate).
+      Odd page => right sidebar.
+      ============================================================
+    -->
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=PT+Serif:wght@400;700&amp;display=swap');
+
+        .gfg11-doc {
+            position: relative;
+            background: #ffffff;
+            color: #2b2b2b;
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.55;
+            margin: 0 auto 24px;
+            width: 850px;
+            max-width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Right sidebar (odd page = right) */
+        .gfg11-sidebar {
+            position: absolute;
+            right: 0; top: 0; bottom: 0;
+            width: 54px;
+            background: #3A5754;
+        }
+        .gfg11-pagenum {
+            position: absolute;
+            bottom: 18px; right: 0;
+            width: 54px;
+            text-align: center;
+            color: #ffffff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+        }
+        .gfg11-main {
+            margin-right: 54px;
+            padding: 26px 30px 36px;
+        }
+
+        /* Title + accent bar */
+        .gfg11-title {
+            margin: 0 0 8px;
+            color: #3A5754;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 33px;
+            font-weight: 800;
+            letter-spacing: .2px;
+            line-height: 1.1;
+        }
+        .gfg11-accent { height: 9px; background: #8FA68C; margin: 0 0 18px; }
+
+        /* Body text */
+        .gfg11-body {
+            margin: 10px 0;
+            text-align: justify;
+            font-size: 13px;
+        }
+
+        /* Red text */
+        .gfg11-red { color: #B91C1C; }
+
+        /* Centered block */
+        .gfg11-centered {
+            margin: 8px 0;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* Subheading (centered, regular weight) */
+        .gfg11-subhead {
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            font-weight: 400;
+            text-align: center;
+            margin: 14px 0 6px;
+        }
+
+        /* Bullet list */
+        .gfg11-bullets {
+            list-style: disc;
+            padding-left: 22px;
+            margin: 6px 0;
+        }
+        .gfg11-bullets li {
+            margin: 5px 0;
+            font-size: 13px;
+        }
+
+        /* Divider */
+        .gfg11-divider {
+            border: none;
+            border-top: 1px solid #d0d0d0;
+            margin: 18px 0;
+        }
+
+        /* Calculation section */
+        .gfg11-calc-section {
+            margin-top: 20px;
+            border-top: 1px solid #d0d0d0;
+            padding-top: 16px;
+        }
+        .gfg11-calc-title {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #2b2b2b;
+            margin: 0 0 14px;
+        }
+        .gfg11-calc-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: center;
+            gap: 6px 10px;
+            font-size: 18px;
+            font-weight: 400;
+            margin: 8px 0;
+        }
+        .gfg11-calc-op {
+            white-space: nowrap;
+        }
+
+        /* Underlined blank cells */
+        .gfg11-blank {
+            display: inline-block;
+            min-width: 80px;
+            border-bottom: 1px solid #2b2b2b;
+            text-align: center;
+            font-weight: 400;
+            color: #1f3b38;
+            padding: 0 4px;
+            vertical-align: bottom;
+        }
+        .gfg11-blank--sm {
+            min-width: 60px;
+        }
+
+        /* Editable input styled to match underline-blank cells */
+        .gfg11-blank input.gfg11-num-input {
+            border: 0;
+            border-bottom: 0;
+            background: transparent;
+            font: inherit;
+            font-weight: 400;
+            color: #1f3b38;
+            width: 100%;
+            min-width: 50px;
+            text-align: center;
+            padding: 0;
+            outline: none;
+            box-shadow: none;
+        }
+        .gfg11-blank input.gfg11-num-input:focus {
+            border-bottom: 1px solid #3A5754;
+        }
+
+        /* Paper fill-in blank (non-bound) */
+        .gfg11-paper-blank {
+            display: inline-block;
+            min-width: 70px;
+            border-bottom: 1px solid #2b2b2b;
+            text-align: center;
+            vertical-align: bottom;
+            padding: 0 4px;
+        }
+
+        /* Supplement dollars output (red bold) */
+        .gfg11-supplement-result {
+            color: #B91C1C;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+    </style>
+
+    <div class="gfg11-doc">
+        <div class="gfg11-sidebar"><span class="gfg11-pagenum">11</span></div>
+
+        <div class="gfg11-main">
+
+            <!-- Title row -->
+            <h1 class="gfg11-title">FERS - Special Supplement</h1>
+            <div class="gfg11-accent"></div>
+
+            <!-- Intro paragraph -->
+            <p class="gfg11-body">
+                Also known as the Special Retirement Supplement or SRS. It is designed to help bridge the income gap
+                for certain FERS employees who retire before age 62. It will supplement your missing Social Security
+                income until you reach age 62 and then stop. Since the SRS is not paid by Social Security, you do not
+                have to start receiving benefits from Social Security at age 62. You may delay taking these benefits to
+                help increase your future Social Security annuity.
+            </p>
+
+            <!-- Eligibility paragraph with red callout -->
+            <p class="gfg11-body">
+                To be eligible, you must have a normal immediate retirement, not an early retirement (MRA+10).
+                <span class="gfg11-red">
+                    This means you must have 30 years of creditable service and meet your MRA, or you can have 20
+                    years of creditable service and be age 60.
+                </span>
+            </p>
+
+            <!-- "To recap" centered block -->
+            <p class="gfg11-centered">To recap, you may be eligible if:</p>
+            <p class="gfg11-centered">
+                You retire voluntarily | On an Immediate Annuity | Annuity not reduced for age
+            </p>
+            <p class="gfg11-centered">You may still be eligible if you:</p>
+            <p class="gfg11-centered">
+                Retire involuntarily before attaining MRA | Because of a major reorganization | Reduction in force
+            </p>
+            <p class="gfg11-centered">You are <em>not</em> eligible if:</p>
+            <p class="gfg11-centered">
+                You receive a deferred annuity benefit | Disability benefit | Immediate MRA + 10 annuity benefit
+            </p>
+
+            <hr class="gfg11-divider" />
+
+            <!-- Eligibility subheading (red, centered) -->
+            <p class="gfg11-subhead gfg11-red">Eligibility</p>
+            <ul class="gfg11-bullets">
+                <li>You must be a FERS employee</li>
+                <li>You must retire on a full immediate retirement</li>
+                <li>Have 25 years of creditable service under Special Provisions and be any age or have 20 years of
+                    creditable service under Special Provisions and be at least 50 years old.</li>
+            </ul>
+
+            <!-- Red note paragraph -->
+            <p class="gfg11-body gfg11-red">
+                Note: If you do not have enough years of creditable service under Special Provisions, you may qualify
+                for the FERS Supplement, if you retire under the regular FERS immediate retirement rules, see above.
+            </p>
+
+            <hr class="gfg11-divider" />
+
+            <!-- Earnings Test subheading (black, centered) -->
+            <p class="gfg11-subhead">How the Earnings Test affects your SRS</p>
+
+            <!-- Earnings Test paragraph (2026 amounts) -->
+            <p class="gfg11-body">
+                Although the SRS is not paid by Social Security, it is subject to the Earnings Test. This is the
+                amount of income allowed before Social Security benefits would be affected. This also applies to the
+                SRS. For 2026, the exempt amount you can earn before Social Security benefit withholdings is
+                $24,480 annually or $2,040 monthly if you are under full retirement age for the entire year. After
+                reaching the exempt amount, benefits are reduced by $1.00 for every $2.00 earned over the limit.
+            </p>
+
+            <!-- SSA link paragraph -->
+            <p class="gfg11-body">
+                For current exempt amounts please visit:
+                <a href="https://www.ssa.gov/OACT/COLA/rtea.html">https://www.ssa.gov/OACT/COLA/rtea.html</a>
+            </p>
+
+            <hr class="gfg11-divider" />
+
+            <!-- Example paragraph -->
+            <p class="gfg11-body">
+                Example: your SRS is $1470 monthly and you earned an additional $2110 that month.
+            </p>
+
+            <!-- Example computation paragraph -->
+            <p class="gfg11-body">
+                $2110 (earned) - $2040 (exempt amount) = $70 over exempt amount divided by 2 = $35 Deducted from SRS payment.
+            </p>
+
+            <!-- Three bullets -->
+            <ul class="gfg11-bullets">
+                <li>The Earnings Test does not apply to Special Groups until they reach their regular FERS Minimum
+                    Retirement Age (MRA) at which point the Earnings Test will apply</li>
+                <li>It is possible that your SRS could reduce to $0.00</li>
+                <li>If you receive the SRS, you must report your earnings to OPM</li>
+            </ul>
+
+            <!-- FERS SPECIAL SUPPLEMENT calculation block -->
+            <apex:form id="gfg11form">
+                <apex:actionFunction name="gfg11Save" action="{!saveLead}" reRender="gfg11calc,gfg11msgs" />
+                <apex:outputPanel id="gfg11msgs"><apex:pageMessages /></apex:outputPanel>
+
+                <div class="gfg11-calc-section">
+                    <p class="gfg11-calc-title">FERS Special Supplement</p>
+
+                    <apex:outputPanel id="gfg11calc" layout="block">
+
+                        <!-- Row 1: Years of Service / 40 = percentage % -->
+                        <div class="gfg11-calc-row">
+                            <span class="gfg11-calc-op">Years of Service:</span>
+                            <span class="gfg11-blank">
+                                <apex:inputField value="{!lead.YOS_Special_Supplement__c}"
+                                    styleClass="gfg11-num-input"
+                                    onchange="gfg11Save();" />
+                            </span>
+                            <span class="gfg11-calc-op">&#247; 40 =</span>
+                            <span class="gfg11-blank">
+                                <apex:outputText value="{0, number, #0.0}">
+                                    <apex:param value="{!supplementPct}" />
+                                </apex:outputText>
+                            </span>
+                            <span class="gfg11-calc-op">%</span>
+                        </div>
+
+                        <!-- Row 2: Social Security @ 62 X percentage % = supplement dollars -->
+                        <div class="gfg11-calc-row">
+                            <span class="gfg11-calc-op">Social Security @ 62</span>
+                            <span class="gfg11-blank">
+                                <apex:inputField value="{!lead.Predicted_Social_Security__c}"
+                                    styleClass="gfg11-num-input"
+                                    onchange="gfg11Save();" />
+                            </span>
+                            <span class="gfg11-calc-op">X</span>
+                            <span class="gfg11-blank">
+                                <apex:outputText value="{0, number, #0.0}">
+                                    <apex:param value="{!supplementPct}" />
+                                </apex:outputText>
+                            </span>
+                            <span class="gfg11-calc-op">% =</span>
+                            <span class="gfg11-blank gfg11-supplement-result">
+                                <apex:outputText value="{0, number, $#,##0.00}">
+                                    <apex:param value="{!supplementDollars}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+
+                    </apex:outputPanel>
+                </div>
+            </apex:form>
+
+        </div><!-- /gfg11-main -->
+    </div><!-- /gfg11-doc -->
+
+</apex:page>
