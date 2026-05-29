@@ -59,6 +59,9 @@
 
             <!-- Page 12: TSP, Resources, Forms For Collecting Benefits -->
             <apex:include pageName="FedWorkbook_TspResources" />
+
+            <!-- Page 13: Financial Snapshot -->
+            <apex:include pageName="FedWorkbook_FinancialSnapshot" />
         </div>
     </body>
 

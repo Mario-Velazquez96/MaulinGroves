@@ -13,6 +13,7 @@
 		<members>FedWorkbook_SpecialGroupsExt</members>
 		<members>FedWorkbook_SpecialSupplementExt</members>
 		<members>FedWorkbook_TspResourcesExt</members>
+		<members>FedWorkbook_FinancialSnapshotExt</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
@@ -32,6 +33,7 @@
 		<members>FedWorkbook_SpecialGroups</members>
 		<members>FedWorkbook_SpecialSupplement</members>
 		<members>FedWorkbook_TspResources</members>
+		<members>FedWorkbook_FinancialSnapshot</members>
 		<name>ApexPage</name>
 	</types>
 	<types>
@@ -46,6 +48,7 @@
 		<members>Pg1GrovesFedForm</members>
 		<members>Pg5GrovesArrow</members>
 		<members>Pg12GrovesQR</members>
+		<members>Pg13GrovesLogo</members>
 		<name>StaticResource</name>
 	</types>
 	<types>

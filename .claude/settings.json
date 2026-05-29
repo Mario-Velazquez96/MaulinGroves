@@ -3,7 +3,13 @@
     "allow": [
       "Bash(git init *)",
       "Bash(git config *)",
-      "Bash(git remote *)"
+      "Bash(git remote *)",
+      "Bash(sf data *)",
+      "PowerShell(sf data query --query \"SELECT Id, Name, FERS__c, Scenario1_Primary__c, Scenario1_Retirement_Age__c, Scenario1_YOS__c, High_3_Salary__c, Scenario2_Primary__c, Scenario2_Retirement_Age__c, Scenario2_YOS__c, High_3_Salary2__c, Date_of_Birth__c, Date_of_Hire__c, Marital_Status__c, Opt_Out__c, Min__c, Max__c, Expected_Retirement_Age__c FROM Lead WHERE Id = '00QO800000a4jppMAA'\")",
+      "PowerShell(sf data query --query \"SELECT Years_of_Employment__c, Total_Basic_Benefit__c, Predicted_Pension__c, Pension__c FROM Lead WHERE Id = '00QO800000a4jppMAA'\")",
+      "PowerShell(sf data query --query \"SELECT Years_of_Employment__c, hiddenTotalBenefitformula__c, AgeFactorformula_OptionB__c FROM Lead WHERE Id = '00QO800000a4jppMAA'\")",
+      "PowerShell(sf data query --query \"SELECT Special_Group_Member__c, Min__c, Max__c, Years_of_Employment__c, formula_basePay__c FROM Lead WHERE Id = '00QO800000a4jppMAA'\")",
+      "PowerShell(sf data query --query \"SELECT Remaining_Years__c FROM Lead WHERE Id = '00QO800000a4jppMAA'\")"
     ]
   }
 }

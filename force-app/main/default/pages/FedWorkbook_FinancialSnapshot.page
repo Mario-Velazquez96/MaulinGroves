@@ -1,0 +1,625 @@
+<apex:page id="finSnapshot13" standardController="Lead" extensions="FedWorkbook_FinancialSnapshotExt"
+    showHeader="false" sidebar="false" standardStylesheets="false"
+    applyHtmlTag="false" applyBodyTag="false"
+    docType="html-5.0" title="Financial Snapshot">
+    <!--
+      ============================================================
+      FedWorkbook_FinancialSnapshot  (Page 13)
+      Interactive Financial Snapshot calculator.
+      Lead fields used:
+        EDITABLE:
+          Total_Health__c                 (currency - health deduction)
+          Additional_Insurance__c         (currency - additional insurance deduction)
+          YOS_Special_Supplement__c       (decimal - Years of Service for supplement formula)
+          Predicted_Social_Security__c    (currency - Social Security monthly amount)
+          Spouse_Social_Security__c       (currency - Spouse Social Security)
+          Military_Retirement__c          (currency - Military Retirement)
+          Disability_in_Retirement__c     (currency - Disability in Retirement)
+          Additional_Income1__c           (currency - Additional Income 1)
+          Additional_Income2__c           (currency - Additional Income 2)
+          currentNET__c                   (currency - Current Net Pay)
+          TSP_Balance_No_Match__c         (currency - Traditional TSP Balance)
+          ROTH_Contributions__c           (currency - Roth TSP Balance)
+          AnnualWithdraw1__c              (picklist/text - Annual Withdraw % for traditional TSP)
+          AnnualWithdraw2__c              (picklist/text - Annual Withdraw % for Roth TSP)
+          taxRate3_Picklist__c            (picklist - tax rate for pension tax deduction)
+        READ-ONLY display:
+          Name                            (employee name header)
+          Contact_Age__c                  (current age display)
+          Expected_Retirement_Age__c      (age at retirement display)
+          Scenario1_Retirement_Age__c     (age at retirement when Scenario1_Primary__c)
+          Scenario2_Retirement_Age__c     (age at retirement when Scenario2_Primary__c)
+          Scenario1_Primary__c / Scenario2_Primary__c (drive retirement age display)
+          High_3_Salary__c               (used in pension base formula)
+      COMPUTED (Apex getters):
+          getExpenseTotal()             legacy line 1646 simplified
+          getYosPercent()               legacy lines 1979-1981
+          getFersSupplementDisplay()    legacy line 2013
+          getTspDisplay()               legacy lines 2998-3005
+          getIncomeTotal()              legacy line 2328 simplified
+          getDifference()               legacy line 2664
+          getBottomLine()               legacy line 3106
+      No render gate - always displays.
+      Odd page (13) = right sidebar.
+      ============================================================
+    -->
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=PT+Serif:wght@400;700&amp;display=swap');
+
+        /* ---- Document shell ---- */
+        .gfg13-doc {
+            position: relative;
+            background: #ffffff;
+            color: #2b2b2b;
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.55;
+            margin: 0 auto 24px;
+            width: 850px;
+            max-width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Right sidebar (odd page = right) */
+        .gfg13-sidebar {
+            position: absolute;
+            right: 0; top: 0; bottom: 0;
+            width: 54px;
+            background: #3A5754;
+        }
+        .gfg13-pagenum {
+            position: absolute;
+            bottom: 18px; right: 0;
+            width: 54px;
+            text-align: center;
+            color: #ffffff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+        }
+        .gfg13-main {
+            margin-right: 54px;
+            padding: 26px 30px 36px;
+        }
+
+        /* ---- Title + accent bar ---- */
+        .gfg13-title {
+            margin: 0 0 8px;
+            color: #3A5754;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 33px;
+            font-weight: 800;
+            letter-spacing: .2px;
+            line-height: 1.1;
+        }
+        .gfg13-accent { height: 9px; background: #8FA68C; margin: 0 0 14px; }
+
+        /* ---- Top row (logo left + date right) ---- */
+        .gfg13-top-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .gfg13-logo-col { flex: 1; }
+        .gfg13-date-col {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            padding-top: 6px;
+        }
+        .gfg13-date-label { font-weight: 700; white-space: nowrap; }
+
+        /* ---- Personal info row ---- */
+        .gfg13-person-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .gfg13-person-cell {
+            flex: 1;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            font-size: 13px;
+        }
+        .gfg13-person-label { white-space: nowrap; font-weight: 400; }
+
+        /* ---- Surviving Spouse Benefit (inline on Pension row, right side) ---- */
+        .gfg13-spouse-benefit {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin-left: auto;
+            margin-right: 24px; /* breathing room before the green sidebar */
+        }
+
+        /* ---- Section label ---- */
+        .gfg13-section-label {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #3A5754;
+            margin: 0 0 10px;
+            border-bottom: 1px solid #d0d0d0;
+            padding-bottom: 4px;
+        }
+
+        /* ---- Calculator row (label + sign + blank) ---- */
+        .gfg13-calc-row {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin: 6px 0;
+            font-size: 13px;
+        }
+        .gfg13-row-label {
+            min-width: 190px;
+            font-weight: 400;
+            color: #2b2b2b;
+            flex-shrink: 0;
+        }
+        .gfg13-row-label--wide { min-width: 215px; }
+        .gfg13-sign {
+            font-weight: 700;
+            color: #2b2b2b;
+            min-width: 14px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* ---- Underline blank ----
+           Fixed width so every value line is identical length and the
+           left/right edges form one clean vertical column. ~150px lands the
+           right edge near the page midpoint given the ~215px label tab. */
+        .gfg13-blank {
+            display: inline-block;
+            width: 150px;
+            border-bottom: 1px solid #2b2b2b;
+            text-align: center;
+            font-weight: 400;
+            color: #1f3b38;
+            padding: 0 4px;
+            vertical-align: bottom;
+            box-sizing: border-box;
+        }
+        .gfg13-blank--sm { width: 60px; }
+        .gfg13-blank--xs { width: 44px; }
+
+        /* "Not Eligible" label (Social Security, retiring before 62) */
+        .gfg13-not-eligible { font-style: italic; font-weight: 700; }
+
+        /* Strip input styling inside blanks */
+        .gfg13-blank input.gfg13-num-input {
+            border: 0;
+            background: transparent;
+            font: inherit;
+            font-weight: 400;
+            color: #1f3b38;
+            width: 100%;
+            min-width: 50px;
+            text-align: center;
+            padding: 0;
+            outline: none;
+            box-shadow: none;
+        }
+        .gfg13-blank input.gfg13-num-input:focus {
+            border-bottom: 1px solid #3A5754;
+        }
+
+        /* Age inline row */
+        .gfg13-age-row {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            margin: 6px 0;
+            font-size: 13px;
+            flex-wrap: wrap;
+        }
+        .gfg13-age-pair {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        /* YOS formula row */
+        .gfg13-yos-row {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin: 6px 0;
+            font-size: 13px;
+            flex-wrap: wrap;
+        }
+
+        /* Inline extras (SS start age, TSP withdrawal) */
+        .gfg13-inline-extra {
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+            margin-left: 8px;
+            font-size: 12px;
+            color: #555;
+            white-space: nowrap;
+        }
+
+        /* ---- Footer disclaimer ---- */
+        .gfg13-disclaimer {
+            margin-top: 20px;
+            text-align: center;
+            font-style: italic;
+            font-size: 11px;
+            color: #555;
+        }
+
+        .gfg13-divider {
+            border: none;
+            border-top: 1px solid #d0d0d0;
+            margin: 16px 0;
+        }
+
+        .gfg13-spacer-30 { height: 30px; }
+        .gfg13-spacer-20 { height: 20px; }
+        .gfg13-spacer-10 { height: 10px; }
+    </style>
+
+    <div class="gfg13-doc">
+
+        <!-- Right sidebar -->
+        <div class="gfg13-sidebar">
+            <div class="gfg13-pagenum">13</div>
+        </div>
+
+        <!-- Main content -->
+        <div class="gfg13-main">
+
+            <h1 class="gfg13-title">Financial Snapshot</h1>
+            <div class="gfg13-accent"></div>
+
+            <apex:form id="gfg13form">
+
+                <apex:pageMessages id="gfg13msgs" />
+
+                <apex:actionFunction name="gfg13Save" action="{!saveLead}" reRender="gfg13calc,gfg13msgs" />
+
+                <!-- ================================================
+                     TOP ROW: Logo (left) + Date (right)
+                     ================================================ -->
+                <div class="gfg13-top-row">
+                    <div class="gfg13-logo-col">
+                        <apex:image url="{!$Resource.Pg13GrovesLogo}" width="220" alt="Groves Financial Group" />
+                    </div>
+                    <div class="gfg13-date-col">
+                        <span class="gfg13-date-label">Date:</span>
+                        <span class="gfg13-blank gfg13-blank--sm">
+                            <apex:outputText value="{0, date, MM/dd/yyyy}">
+                                <apex:param value="{!TODAY()}" />
+                            </apex:outputText>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="gfg13-spacer-10"></div>
+
+                <!-- ================================================
+                     PERSONAL INFO: Employee Name + Spouse Name
+                     ================================================ -->
+                <div class="gfg13-person-row">
+                    <div class="gfg13-person-cell">
+                        <span class="gfg13-person-label">Employee Name:</span>
+                        <span class="gfg13-blank">
+                            <apex:outputField value="{!Lead.Name}" />
+                        </span>
+                    </div>
+                    <div class="gfg13-person-cell">
+                        <span class="gfg13-person-label">Spouse Name:</span>
+                        <span class="gfg13-blank">
+                            <apex:outputField value="{!Lead.Spouse_Name__r.Name}" />
+                        </span>
+                    </div>
+                </div>
+
+                <div class="gfg13-spacer-20"></div>
+
+                <!-- ================================================
+                     ALL COMPUTED OUTPUTS live inside this single
+                     reRender panel so a save refreshes them all.
+                     ================================================ -->
+                <apex:outputPanel id="gfg13calc" layout="block">
+
+                    <!-- ============================================
+                         SECTION A - Monthly Expenses (full width).
+                         Pension row carries Surviving Spouse Benefit
+                         on the right, matching the print design.
+                         ============================================ -->
+
+                    <!-- Current Age / Age at Retirement on same line -->
+                    <div class="gfg13-age-row">
+                        <div class="gfg13-age-pair">
+                            <span class="gfg13-row-label" style="min-width:auto;">Current Age:</span>
+                            <span class="gfg13-blank gfg13-blank--xs">
+                                <apex:outputText value="{0, number, #0}">
+                                    <apex:param value="{!lead.Contact_Age__c}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+                        <div class="gfg13-age-pair">
+                            <span class="gfg13-row-label" style="min-width:auto;">Age at Retirement:</span>
+                            <span class="gfg13-blank gfg13-blank--xs">
+                                <apex:outputText value="{0, number, #0}" rendered="{!lead.Scenario1_Primary__c == true}">
+                                    <apex:param value="{!lead.Scenario1_Retirement_Age__c}" />
+                                </apex:outputText>
+                                <apex:outputText value="{0, number, #0}" rendered="{!lead.Scenario2_Primary__c == true}">
+                                    <apex:param value="{!lead.Scenario2_Retirement_Age__c}" />
+                                </apex:outputText>
+                                <apex:outputText value="{0, number, #0}"
+                                    rendered="{!AND(lead.Scenario1_Primary__c == false, lead.Scenario2_Primary__c == false)}">
+                                    <apex:param value="{!lead.Expected_Retirement_Age__c}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Pension (left, read-only computed) + Surviving Spouse Benefit (right).
+                         Pension: legacy lines 745/753 (High_3_Salary * 0.01 * scenarioXYOS) / 12
+                         Surviving Spouse Benefit: legacy line 1040 (pension * 0.25) -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">Pension:</span>
+                        <span class="gfg13-sign">&#160;</span>
+                        <span class="gfg13-blank">
+                            <apex:outputText value="{0, number, $#,##0.00}">
+                                <apex:param value="{!pensionBase}" />
+                            </apex:outputText>
+                        </span>
+                        <span class="gfg13-spouse-benefit">
+                            <span class="gfg13-row-label" style="min-width:auto;">Surviving Spouse Benefit:</span>
+                            <span class="gfg13-blank">
+                                <apex:outputText value="{0, number, $#,##0.00}">
+                                    <apex:param value="{!survivingSpouseBenefit}" />
+                                </apex:outputText>
+                            </span>
+                        </span>
+                    </div>
+
+                    <!-- Taxes (editable picklist — tax rate selector) -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">Taxes: 12% 15% 20% 25%</span>
+                        <span class="gfg13-sign">-</span>
+                        <span class="gfg13-blank">
+                            <apex:inputField value="{!lead.taxRate3_Picklist__c}" styleClass="gfg13-num-input"
+                                onchange="gfg13Save();" />
+                        </span>
+                    </div>
+
+                    <!-- Health (editable) -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">Health:</span>
+                        <span class="gfg13-sign">-</span>
+                        <span class="gfg13-blank">
+                            <apex:inputField value="{!lead.Total_Health__c}" styleClass="gfg13-num-input"
+                                onchange="gfg13Save();" />
+                        </span>
+                    </div>
+
+                    <!-- Additional Insurance (editable) -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">Additional Insurance:</span>
+                        <span class="gfg13-sign">-</span>
+                        <span class="gfg13-blank">
+                            <apex:inputField value="{!lead.Additional_Insurance__c}" styleClass="gfg13-num-input"
+                                onchange="gfg13Save();" />
+                        </span>
+                    </div>
+
+                    <!-- Expense Total (computed) -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide" style="font-weight:700;">Total:</span>
+                        <span class="gfg13-sign">=</span>
+                        <span class="gfg13-blank">
+                            <!-- getExpenseTotal(): pension - (taxRate * pension) - Health - AddlIns
+                                 legacy line 1646 simplified -->
+                            <apex:outputText value="{0, number, $#,##0.00}">
+                                <apex:param value="{!expenseTotal}" />
+                            </apex:outputText>
+                        </span>
+                    </div>
+
+                    <div class="gfg13-spacer-20"></div>
+
+                    <!-- ============================================
+                         SECTION B - Retirement Income (full width)
+                         ============================================ -->
+
+                    <!-- YOS formula row: YOS / 40 = x% -->
+                    <div class="gfg13-yos-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">Formula Years of Service:</span>
+                        <span class="gfg13-blank gfg13-blank--sm">
+                            <apex:inputField value="{!lead.YOS_Special_Supplement__c}" styleClass="gfg13-num-input"
+                                onchange="gfg13Save();" />
+                        </span>
+                        <span>&#247; 40 =</span>
+                        <!-- getYosPercent(): (YOS/40)*100, legacy lines 1979-1981 -->
+                        <span class="gfg13-blank gfg13-blank--sm">
+                            <apex:outputText value="{0, number, #0.0}">
+                                <apex:param value="{!yosPercent}" />
+                            </apex:outputText>%
+                        </span>
+                    </div>
+
+                    <!-- FERS Special Supplement (computed read-only)
+                         getFersSupplementDisplay(): SS * (YOS/40), legacy line 2013 -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">FERS Special Supplement:</span>
+                        <span class="gfg13-sign">+</span>
+                        <span class="gfg13-blank">
+                            <apex:outputText value="{0, number, $#,##0.00}">
+                                <apex:param value="{!fersSupplementDisplay}" />
+                            </apex:outputText>
+                        </span>
+                    </div>
+
+                    <!-- Social Security: "Not Eligible" before 62, else editable $ value -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">Social Security:</span>
+                        <span class="gfg13-sign">+</span>
+                        <span class="gfg13-blank">
+                            <apex:outputText value="Not Eligible" styleClass="gfg13-not-eligible"
+                                rendered="{!NOT(socialSecurityEligible)}" />
+                            <apex:inputField value="{!lead.Predicted_Social_Security__c}" styleClass="gfg13-num-input"
+                                onchange="gfg13Save();" rendered="{!socialSecurityEligible}" />
+                        </span>
+                        <span class="gfg13-inline-extra">
+                            Start Age:
+                            <span class="gfg13-blank gfg13-blank--xs">
+                                <apex:outputText value="{0, number, #0}" rendered="{!lead.Scenario1_Primary__c == true}">
+                                    <apex:param value="{!lead.Scenario1_Retirement_Age__c}" />
+                                </apex:outputText>
+                                <apex:outputText value="{0, number, #0}" rendered="{!lead.Scenario2_Primary__c == true}">
+                                    <apex:param value="{!lead.Scenario2_Retirement_Age__c}" />
+                                </apex:outputText>
+                                <apex:outputText value="{0, number, #0}"
+                                    rendered="{!AND(lead.Scenario1_Primary__c == false, lead.Scenario2_Primary__c == false)}">
+                                    <apex:param value="{!lead.Expected_Retirement_Age__c}" />
+                                </apex:outputText>
+                            </span>
+                        </span>
+                    </div>
+
+                    <!-- Spouse Social Security (editable) -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">Spouse Social Security:</span>
+                        <span class="gfg13-sign">+</span>
+                        <span class="gfg13-blank">
+                            <apex:inputField value="{!lead.Spouse_Social_Security__c}" styleClass="gfg13-num-input"
+                                onchange="gfg13Save();" />
+                        </span>
+                    </div>
+
+                    <!-- Military Retirement (editable) -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">Military Retirement:</span>
+                        <span class="gfg13-sign">+</span>
+                        <span class="gfg13-blank">
+                            <apex:inputField value="{!lead.Military_Retirement__c}" styleClass="gfg13-num-input"
+                                onchange="gfg13Save();" />
+                        </span>
+                    </div>
+
+                    <!-- Disability Retirement (editable) -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">Disability Retirement:</span>
+                        <span class="gfg13-sign">+</span>
+                        <span class="gfg13-blank">
+                            <apex:inputField value="{!lead.Disability_in_Retirement__c}" styleClass="gfg13-num-input"
+                                onchange="gfg13Save();" />
+                        </span>
+                    </div>
+
+                    <!-- Additional Income 1 (editable) -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">Additional Income:</span>
+                        <span class="gfg13-sign">+</span>
+                        <span class="gfg13-blank">
+                            <apex:inputField value="{!lead.Additional_Income1__c}" styleClass="gfg13-num-input"
+                                onchange="gfg13Save();" />
+                        </span>
+                    </div>
+
+                    <!-- Additional Income 2 (editable) -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">Additional Income:</span>
+                        <span class="gfg13-sign">+</span>
+                        <span class="gfg13-blank">
+                            <apex:inputField value="{!lead.Additional_Income2__c}" styleClass="gfg13-num-input"
+                                onchange="gfg13Save();" />
+                        </span>
+                    </div>
+
+                    <!-- Income Total (computed)
+                         getIncomeTotal() - legacy line 2328 simplified -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide" style="font-weight:700;">Total:</span>
+                        <span class="gfg13-sign">=</span>
+                        <span class="gfg13-blank">
+                            <apex:outputText value="{0, number, $#,##0.00}">
+                                <apex:param value="{!incomeTotal}" />
+                            </apex:outputText>
+                        </span>
+                    </div>
+
+                    <!-- Current Net (editable) -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">Current Net:</span>
+                        <span class="gfg13-sign">-</span>
+                        <span class="gfg13-blank">
+                            <apex:inputField value="{!lead.currentNET__c}" styleClass="gfg13-num-input"
+                                onchange="gfg13Save();" />
+                        </span>
+                    </div>
+
+                    <!-- Difference (computed)
+                         getDifference() = incomeTotal - currentNET, legacy line 2664 -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide" style="font-weight:700;">Difference:</span>
+                        <span class="gfg13-sign">=</span>
+                        <span class="gfg13-blank">
+                            <apex:outputText value="{0, number, $#,##0.00}">
+                                <apex:param value="{!difference}" />
+                            </apex:outputText>
+                        </span>
+                    </div>
+
+                    <!-- TSP (computed read-only) + Annual Withdrawal % inline (editable)
+                         getTspDisplay() - legacy lines 2998-3005 -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">TSP:</span>
+                        <span class="gfg13-sign">+</span>
+                        <span class="gfg13-blank">
+                            <apex:outputText value="{0, number, $#,##0.00}">
+                                <apex:param value="{!tspDisplay}" />
+                            </apex:outputText>
+                        </span>
+                        <span class="gfg13-inline-extra">
+                            Annual Withdrawal:
+                            <span class="gfg13-blank gfg13-blank--xs">
+                                <apex:inputField value="{!lead.AnnualWithdraw1__c}" styleClass="gfg13-num-input"
+                                    onchange="gfg13Save();" />
+                            </span>
+                            %
+                        </span>
+                    </div>
+
+                    <!-- Bottom Line (computed)
+                         getBottomLine() = difference + tsp, legacy line 3106 -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide" style="font-weight:700;">Bottom Line:</span>
+                        <span class="gfg13-sign">=</span>
+                        <span class="gfg13-blank">
+                            <apex:outputText value="{0, number, $#,##0.00}">
+                                <apex:param value="{!bottomLine}" />
+                            </apex:outputText>
+                        </span>
+                    </div>
+
+                </apex:outputPanel><!-- /#gfg13calc -->
+
+                <!-- Footer disclaimer -->
+                <div class="gfg13-spacer-20"></div>
+                <div class="gfg13-disclaimer">
+                    The information &amp; values shown are for illustration purposes only.
+                    These values are not guaranteed as shown.
+                </div>
+
+            </apex:form>
+
+        </div><!-- /.gfg13-main -->
+    </div><!-- /.gfg13-doc -->
+
+</apex:page>
