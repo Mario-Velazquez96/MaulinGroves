@@ -14,6 +14,7 @@
 		<members>FedWorkbook_SpecialSupplementExt</members>
 		<members>FedWorkbook_TspResourcesExt</members>
 		<members>FedWorkbook_FinancialSnapshotExt</members>
+		<members>FedWorkbook_NotesExt</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
@@ -34,6 +35,7 @@
 		<members>FedWorkbook_SpecialSupplement</members>
 		<members>FedWorkbook_TspResources</members>
 		<members>FedWorkbook_FinancialSnapshot</members>
+		<members>FedWorkbook_Notes</members>
 		<name>ApexPage</name>
 	</types>
 	<types>

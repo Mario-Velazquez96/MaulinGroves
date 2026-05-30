@@ -62,6 +62,9 @@
 
             <!-- Page 13: Financial Snapshot -->
             <apex:include pageName="FedWorkbook_FinancialSnapshot" />
+
+            <!-- Pages 14 & 15: Notes (free-form, Lead.Description) -->
+            <apex:include pageName="FedWorkbook_Notes" />
         </div>
     </body>
 

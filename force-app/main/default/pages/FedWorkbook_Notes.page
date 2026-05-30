@@ -1,0 +1,144 @@
+<apex:page id="notes1415" standardController="Lead" extensions="FedWorkbook_NotesExt"
+    showHeader="false" sidebar="false" standardStylesheets="false"
+    applyHtmlTag="false" applyBodyTag="false"
+    docType="html-5.0" title="Notes">
+    <!--
+      ============================================================
+      FedWorkbook_Notes  (Pages 14 & 15)
+      Free-form notes section. Replicates the legacy Notes section
+      (GPIS_Federal_Workbook.page "<a name="Notes">"): a single
+      editable textarea bound to Lead.Description that auto-saves
+      on change via the standard controller.
+
+      Lead fields used:
+        EDITABLE:
+          Description   (the notes body — same field as legacy)
+
+      Rendered as two branded sheets to match the print design:
+        Page 14 = even page -> LEFT sidebar, carries the textarea.
+        Page 15 = odd page  -> RIGHT sidebar, blank continuation
+                  sheet (extra space for printed/handwritten notes).
+      No render gate - always displays.
+      ============================================================
+    -->
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=PT+Serif:wght@400;700&amp;display=swap');
+
+        /* ---- Document shell (one sheet) ---- */
+        .gfgN-doc {
+            position: relative;
+            background: #ffffff;
+            color: #2b2b2b;
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.55;
+            margin: 0 auto 24px;
+            width: 850px;
+            max-width: 100%;
+            min-height: 1040px;            /* full letter-page feel */
+            box-sizing: border-box;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ---- Side accent bar (54px) ---- */
+        .gfgN-sidebar {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 54px;
+            background: #3A5754;
+        }
+        .gfgN-sidebar--left  { left: 0; }
+        .gfgN-sidebar--right { right: 0; }
+
+        .gfgN-pagenum {
+            position: absolute;
+            bottom: 18px;
+            width: 54px;
+            text-align: center;
+            color: #ffffff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+        }
+        .gfgN-pagenum--left  { left: 0; }
+        .gfgN-pagenum--right { right: 0; }
+
+        /* ---- Main content (offset away from the sidebar) ---- */
+        .gfgN-main { padding: 26px 30px 36px; }
+        .gfgN-main--left  { margin-left: 54px; }
+        .gfgN-main--right { margin-right: 54px; }
+
+        /* ---- Title + accent bar (matches the other pages) ---- */
+        .gfgN-title {
+            margin: 0 0 8px;
+            color: #3A5754;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 33px;
+            font-weight: 800;
+            letter-spacing: .2px;
+            line-height: 1.1;
+        }
+        .gfgN-accent { height: 9px; background: #8FA68C; margin: 0 0 18px; }
+
+        /* ---- Notes textarea (fills the sheet) ---- */
+        .gfgN-textarea {
+            display: block;
+            width: 100%;
+            min-height: 880px;
+            box-sizing: border-box;
+            resize: vertical;
+            padding: 10px 12px;
+            border: 1px solid #d0d0d0;
+            border-radius: 2px;
+            background: #ffffff;
+            color: #2b2b2b;
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.7;
+            outline: none;
+        }
+        .gfgN-textarea:focus { border-color: #3A5754; }
+    </style>
+
+    <apex:form id="gfgNotesForm">
+
+        <apex:pageMessages id="gfgNmsgs" />
+
+        <!-- ================================================
+             PAGE 14 (even) - LEFT sidebar - editable notes
+             ================================================ -->
+        <div class="gfgN-doc">
+            <div class="gfgN-sidebar gfgN-sidebar--left">
+                <div class="gfgN-pagenum gfgN-pagenum--left">14</div>
+            </div>
+            <div class="gfgN-main gfgN-main--left">
+                <h1 class="gfgN-title">Notes</h1>
+                <div class="gfgN-accent"></div>
+
+                <!-- Legacy behavior: Lead.Description, auto-save on change.
+                     saveNotes() returns null so we stay on the page (the
+                     StandardController's save() would redirect to the record). -->
+                <apex:inputTextarea value="{!Lead.Description}" styleClass="gfgN-textarea">
+                    <apex:actionSupport event="onchange" action="{!saveNotes}" reRender="gfgNmsgs" />
+                </apex:inputTextarea>
+            </div>
+        </div>
+
+        <!-- ================================================
+             PAGE 15 (odd) - RIGHT sidebar - continuation
+             Blank sheet for additional / handwritten notes.
+             ================================================ -->
+        <div class="gfgN-doc">
+            <div class="gfgN-sidebar gfgN-sidebar--right">
+                <div class="gfgN-pagenum gfgN-pagenum--right">15</div>
+            </div>
+            <div class="gfgN-main gfgN-main--right">
+                <h1 class="gfgN-title">Notes</h1>
+                <div class="gfgN-accent"></div>
+            </div>
+        </div>
+
+    </apex:form>
+
+</apex:page>
