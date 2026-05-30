@@ -23,6 +23,7 @@
           AnnualWithdraw1__c              (picklist/text - Annual Withdraw % for traditional TSP)
           AnnualWithdraw2__c              (picklist/text - Annual Withdraw % for Roth TSP)
           taxRate3_Picklist__c            (picklist - tax rate for pension tax deduction)
+          taxRate5_Picklist__c            (picklist - tax rate on traditional TSP, Bottom Line only)
         READ-ONLY display:
           Name                            (employee name header)
           Contact_Age__c                  (current age display)
@@ -32,13 +33,19 @@
           Scenario1_Primary__c / Scenario2_Primary__c (drive retirement age display)
           High_3_Salary__c               (used in pension base formula)
       COMPUTED (Apex getters):
+          getPensionBase()              legacy lines 745/842/920 (married Min/Max reduction)
+          getSurvivingSpouseBenefit()   Min x0.25 / Max x0.50, legacy 1040/1116/1188
+          getIsMarried() / getSpouseBenefitOptedOut()  spouse-benefit display gates (1024/1195)
           getExpenseTotal()             legacy line 1646 simplified
           getYosPercent()               legacy lines 1979-1981
-          getFersSupplementDisplay()    legacy line 2013
-          getTspDisplay()               legacy lines 2998-3005
+          getYosFormulaVisible()        legacy fersformula gate, line 1966
+          getFersSupplementDisplay()    legacy line 2013 (un-floored)
+          getFersSupplementEligible()   legacy line 2012 gate (else "Not Eligible")
+          getSocialSecurityEligible()   legacy line 2075 gate
+          getTspDisplay()               pre-tax, legacy lines 2998-3005
           getIncomeTotal()              legacy line 2328 simplified
           getDifference()               legacy line 2664
-          getBottomLine()               legacy line 3106
+          getBottomLine()               Difference + tax-adjusted TSP (controller 663-677)
       No render gate - always displays.
       Odd page (13) = right sidebar.
       ============================================================
@@ -196,6 +203,14 @@
         /* "Not Eligible" label (Social Security, retiring before 62) */
         .gfg13-not-eligible { font-style: italic; font-weight: 700; }
 
+        /* "OPTED OUT" note next to a zeroed Surviving Spouse Benefit */
+        .gfg13-opted-out {
+            margin-left: 6px;
+            font-size: 9px;
+            font-weight: 700;
+            color: #b00020;
+        }
+
         /* Strip input styling inside blanks */
         .gfg13-blank input.gfg13-num-input {
             border: 0;
@@ -237,6 +252,28 @@
             margin: 6px 0;
             font-size: 13px;
             flex-wrap: wrap;
+        }
+
+        /* TSP withdrawal/tax inputs — wrap as a group if the row runs long */
+        .gfg13-tsp-extras {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 6px;
+            margin-left: 8px;
+        }
+
+        /* Smaller label text for the longer TSP withdrawal caption */
+        .gfg13-extra-label-sm { font-size: 10px; }
+
+        /* Picklist dropdowns in the TSP row — size to content, no overflow */
+        select.gfg13-pick {
+            font-family: 'PT Serif', Georgia, serif;
+            font-size: 12px;
+            width: auto;
+            max-width: 70px;
+            padding: 1px 2px;
+            vertical-align: baseline;
         }
 
         /* Inline extras (SS start age, TSP withdrawal) */
@@ -378,14 +415,21 @@
                                 <apex:param value="{!pensionBase}" />
                             </apex:outputText>
                         </span>
-                        <span class="gfg13-spouse-benefit">
-                            <span class="gfg13-row-label" style="min-width:auto;">Surviving Spouse Benefit:</span>
-                            <span class="gfg13-blank">
-                                <apex:outputText value="{0, number, $#,##0.00}">
-                                    <apex:param value="{!survivingSpouseBenefit}" />
-                                </apex:outputText>
+                        <!-- Surviving Spouse Benefit: shown only when Married.
+                             Opted-out married → "$0.00 / OPTED OUT". Min → x0.25, Max → x0.50. -->
+                        <apex:outputPanel layout="none" rendered="{!isMarried}">
+                            <span class="gfg13-spouse-benefit">
+                                <span class="gfg13-row-label" style="min-width:auto;">Surviving Spouse Benefit:</span>
+                                <span class="gfg13-blank">
+                                    <apex:outputText value="$0.00" rendered="{!spouseBenefitOptedOut}" />
+                                    <apex:outputText value="{0, number, $#,##0.00}" rendered="{!NOT(spouseBenefitOptedOut)}">
+                                        <apex:param value="{!survivingSpouseBenefit}" />
+                                    </apex:outputText>
+                                </span>
+                                <apex:outputText value="OPTED OUT" styleClass="gfg13-opted-out"
+                                    rendered="{!spouseBenefitOptedOut}" />
                             </span>
-                        </span>
+                        </apex:outputPanel>
                     </div>
 
                     <!-- Taxes (editable picklist — tax rate selector) -->
@@ -437,7 +481,9 @@
                          SECTION B - Retirement Income (full width)
                          ============================================ -->
 
-                    <!-- YOS formula row: YOS / 40 = x% -->
+                    <!-- YOS formula row: YOS / 40 = x%
+                         Renders only when retiring at/under 62 (legacy fersformula gate, line 1966). -->
+                    <apex:outputPanel layout="none" rendered="{!yosFormulaVisible}">
                     <div class="gfg13-yos-row">
                         <span class="gfg13-row-label gfg13-row-label--wide">Formula Years of Service:</span>
                         <span class="gfg13-blank gfg13-blank--sm">
@@ -452,16 +498,20 @@
                             </apex:outputText>%
                         </span>
                     </div>
+                    </apex:outputPanel>
 
-                    <!-- FERS Special Supplement (computed read-only)
-                         getFersSupplementDisplay(): SS * (YOS/40), legacy line 2013 -->
+                    <!-- FERS Special Supplement (computed read-only).
+                         Eligible (retiring before 62) → un-floored SS * (YOS/40), legacy line 2013.
+                         Otherwise → "Not Eligible", legacy line 2020. -->
                     <div class="gfg13-calc-row">
                         <span class="gfg13-row-label gfg13-row-label--wide">FERS Special Supplement:</span>
                         <span class="gfg13-sign">+</span>
                         <span class="gfg13-blank">
-                            <apex:outputText value="{0, number, $#,##0.00}">
+                            <apex:outputText value="{0, number, $#,##0.00}" rendered="{!fersSupplementEligible}">
                                 <apex:param value="{!fersSupplementDisplay}" />
                             </apex:outputText>
+                            <apex:outputText value="Not Eligible" styleClass="gfg13-not-eligible"
+                                rendered="{!NOT(fersSupplementEligible)}" />
                         </span>
                     </div>
 
@@ -586,13 +636,23 @@
                                 <apex:param value="{!tspDisplay}" />
                             </apex:outputText>
                         </span>
-                        <span class="gfg13-inline-extra">
-                            Annual Withdrawal:
-                            <span class="gfg13-blank gfg13-blank--xs">
-                                <apex:inputField value="{!lead.AnnualWithdraw1__c}" styleClass="gfg13-num-input"
+                        <span class="gfg13-tsp-extras">
+                            <span class="gfg13-inline-extra">
+                                <span class="gfg13-extra-label-sm">Annual Withdrawal &#8212; Traditional:</span>
+                                <apex:inputField value="{!lead.AnnualWithdraw1__c}" styleClass="gfg13-pick"
                                     onchange="gfg13Save();" />
                             </span>
-                            %
+                            <span class="gfg13-inline-extra">
+                                Roth:
+                                <apex:inputField value="{!lead.AnnualWithdraw2__c}" styleClass="gfg13-pick"
+                                    onchange="gfg13Save();" />
+                            </span>
+                            <!-- Tax rate applied to the traditional TSP portion in the Bottom Line only -->
+                            <span class="gfg13-inline-extra">
+                                Tax Rate:
+                                <apex:inputField value="{!lead.taxRate5_Picklist__c}" styleClass="gfg13-pick"
+                                    onchange="gfg13Save();" />
+                            </span>
                         </span>
                     </div>
 

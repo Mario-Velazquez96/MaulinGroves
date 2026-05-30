@@ -37,6 +37,7 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
                    AnnualWithdraw1__c,
                    AnnualWithdraw2__c,
                    taxRate3_Picklist__c,
+                   taxRate5_Picklist__c,
                    High_3_Salary__c
             FROM Lead WHERE Id = :this.leadId LIMIT 1
         ];
@@ -114,10 +115,10 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
             return d(lead.Expected_Retirement_Age__c) >= 62;
         }
         if (lead.FERS__c == true) {
+            // Legacy SS gate (page line 2075) checks ONLY the two scenario clauses;
+            // a FERS lead with no primary scenario is always "Not Eligible".
             return (lead.Scenario1_Primary__c == true && d(lead.Scenario1_Retirement_Age__c) >= 62)
-                || (lead.Scenario2_Primary__c == true && d(lead.Scenario2_Retirement_Age__c) >= 62)
-                || (lead.Scenario1_Primary__c != true && lead.Scenario2_Primary__c != true
-                    && d(lead.Expected_Retirement_Age__c) >= 62);
+                || (lead.Scenario2_Primary__c == true && d(lead.Scenario2_Retirement_Age__c) >= 62);
         }
         return d(lead.Expected_Retirement_Age__c) >= 62;
     }
@@ -146,6 +147,40 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
             return (rothBal * pct2) / 12;
         } else if (tspBal != 0 && rothBal != 0) {
             return ((tspBal * pct1) / 12) + ((rothBal * pct2) / 12);
+        }
+        return 0;
+    }
+
+    // -----------------------------------------------------------------------
+    // Tax-adjusted TSP monthly income used by the BOTTOM LINE, mirroring
+    // Federal_LeadControllerExtension.TspCalculateValue (controller lines
+    // 663-677). The traditional portion is reduced by taxRate5_Picklist__c;
+    // the Roth portion is untaxed. (The "TSP" row display stays pre-tax —
+    // legacy "Pre-Tax Total", page lines 2998-3005.)
+    // -----------------------------------------------------------------------
+    private Decimal tspBottomLineValue() {
+        Decimal tspBal   = d(lead.TSP_Balance_No_Match__c);
+        Decimal rothBal  = d(lead.ROTH_Contributions__c);
+        Decimal aw1      = tspWithdrawPct(lead.AnnualWithdraw1__c);
+        Decimal aw2      = tspWithdrawPct(lead.AnnualWithdraw2__c);
+        Decimal taxRate5 = tspWithdrawPct(lead.taxRate5_Picklist__c);
+
+        // All-zero guard (controller line 675).
+        if ((tspBal == 0 && rothBal == 0) || (aw1 == 0 && aw2 == 0)) {
+            return 0;
+        }
+        Decimal tradMonthly = (tspBal * aw1) / 12;
+        // Traditional only (controller line 663).
+        if (tspBal != 0 && aw1 != 0 && (rothBal == 0 || aw2 == 0)) {
+            return tradMonthly - (taxRate5 * tradMonthly);
+        }
+        // Roth only (controller line 667).
+        if (rothBal != 0 && aw2 != 0 && (tspBal == 0 || aw1 == 0)) {
+            return (rothBal * aw2) / 12;
+        }
+        // Both (controller line 671).
+        if (tspBal != 0 && aw1 != 0 && rothBal != 0 && aw2 != 0) {
+            return tradMonthly - (taxRate5 * tradMonthly) + ((rothBal * aw2) / 12);
         }
         return 0;
     }
@@ -234,8 +269,9 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
             scenarioYosField = d(lead.Years_of_Employment__c);
         }
 
-        // 1.1% bonus when retirement age > 61 AND career YOS >= 20.
-        Decimal factor = (retirementAge > 61 && scenarioYosField >= 20) ? 0.011 : 0.01;
+        // 1.1% bonus when retirement age > 61 AND scenario YOS > 19.
+        // Legacy gate (page lines 764/796/910/1184) is "> 19", not ">= 20".
+        Decimal factor = (retirementAge > 61 && scenarioYosField > 19) ? 0.011 : 0.01;
 
         return (high3 * factor * yosCareer) / 12;
     }
@@ -258,20 +294,30 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
     }
 
     // -----------------------------------------------------------------------
-    // Surviving Spouse Benefit reduction ratio depends on the rendering path:
-    //   * Special Group:        Max → × 0.50 (line 1188), Min → × 0.25 (line 1191)
-    //   * Non-scenario (regular FERS): × 0.50 (line 1176, Max-gated)
-    //   * Scenario primary:     × 0.25 (line 1040, scenario-gated)
+    // Surviving Spouse Benefit reduction ratio is keyed on Min/Max in EVERY
+    // path (scenario, non-scenario, and Special Group):
+    //   Min → × 0.25 (legacy reduction 0.75; pages 1040, 1100, 1192)
+    //   Max → × 0.50 (legacy reduction 0.50; pages 1116, 1176, 1188)
+    // The benefit is computed from the un-reduced pension base.
     // -----------------------------------------------------------------------
     public Decimal getSurvivingSpouseBenefit() {
         Decimal base = rawPensionBase();
-        if (lead.Special_Group_Member__c == true) {
-            if (lead.Min__c == true) { return base * 0.25; }
-            return base * 0.50; // default to Max when Special Group
-        }
-        // Non-scenario regular FERS uses × 0.50; scenario primary uses × 0.25
-        Boolean noScenarioPrimary = (lead.Scenario1_Primary__c != true && lead.Scenario2_Primary__c != true);
-        return noScenarioPrimary ? base * 0.50 : base * 0.25;
+        if (lead.Min__c == true) { return base * 0.25; }
+        if (lead.Max__c == true) { return base * 0.50; }
+        return 0;
+    }
+
+    // -----------------------------------------------------------------------
+    // Surviving Spouse Benefit display gates (legacy pages 1024, 1195-1196):
+    //   * The label + value render only when Marital_Status == 'Married'.
+    //   * A married member who opted out shows "$0.00 / OPTED OUT".
+    // -----------------------------------------------------------------------
+    public Boolean getIsMarried() {
+        return lead.Marital_Status__c == 'Married';
+    }
+
+    public Boolean getSpouseBenefitOptedOut() {
+        return getIsMarried() && lead.Opt_Out__c == true;
     }
 
     private Decimal pensionBase() {
@@ -300,13 +346,44 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
     }
 
     // -----------------------------------------------------------------------
+    // getYosFormulaVisible()
+    // The "YOS / 40 = x%" row renders only when retiring at/under 62, mirroring
+    // the legacy `fersformula` panel gate (page line 1966).
+    // -----------------------------------------------------------------------
+    public Boolean getYosFormulaVisible() {
+        return (lead.Scenario1_Primary__c == true && d(lead.Scenario1_Retirement_Age__c) <= 62)
+            || (lead.Scenario2_Primary__c == true && d(lead.Scenario2_Retirement_Age__c) <= 62)
+            || (lead.Scenario1_Primary__c != true && lead.Scenario2_Primary__c != true
+                && d(lead.Expected_Retirement_Age__c) <= 62);
+    }
+
+    // -----------------------------------------------------------------------
     // getFersSupplementDisplay()
-    // FERS Special Supplement computed value (read-only display).
-    // Legacy line 2013: Predicted_Social_Security__c * (YOS / 40)
+    // FERS Special Supplement value shown in the supplement row (read-only).
+    // Legacy DISPLAY (page line 2013) is UN-floored: Predicted_SS * (YOS / 40).
+    // (The floored value, fersSupplementGated(), only feeds the income total.)
     // -----------------------------------------------------------------------
     public Decimal getFersSupplementDisplay() {
-        // Gated: only paid when retiring before 62 (legacy lines 591-602).
-        return fersSupplementGated();
+        return fersSupplementValue();
+    }
+
+    // -----------------------------------------------------------------------
+    // getFersSupplementEligible()
+    // Render gate for the supplement value vs the "Not Eligible" label,
+    // mirroring legacy page line 2012:
+    //   Special Group   → Expected_Retirement_Age < 62
+    //   FERS            → (Scenario1 primary & age<62) OR (Scenario2 primary & age<62)
+    //   neither         → Expected_Retirement_Age < 62
+    // -----------------------------------------------------------------------
+    public Boolean getFersSupplementEligible() {
+        if (lead.Special_Group_Member__c == true) {
+            return d(lead.Expected_Retirement_Age__c) < 62;
+        }
+        if (lead.FERS__c == true) {
+            return (lead.Scenario1_Primary__c == true && d(lead.Scenario1_Retirement_Age__c) < 62)
+                || (lead.Scenario2_Primary__c == true && d(lead.Scenario2_Retirement_Age__c) < 62);
+        }
+        return d(lead.Expected_Retirement_Age__c) < 62;
     }
 
     // -----------------------------------------------------------------------
@@ -352,11 +429,11 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
 
     // -----------------------------------------------------------------------
     // getBottomLine()
-    // = Difference + TSP monthly income.
-    // Legacy line 3106 (TspCalculateValue added to IncomeTotal path,
-    // then minus currentNET produces BottomLine = Difference + Tsp).
+    // = Difference + tax-adjusted TSP monthly income.
+    // Legacy Bottom Line adds the controller's tax-adjusted TspCalculateValue
+    // (controller lines 663-677), not the pre-tax display value.
     // -----------------------------------------------------------------------
     public Decimal getBottomLine() {
-        return getDifference() + tspCalculateValue();
+        return getDifference() + tspBottomLineValue();
     }
 }
