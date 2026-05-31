@@ -1,0 +1,36 @@
+<apex:component layout="none">
+    <!--
+      ============================================================
+      FedWorkbook_BackCover
+      Rebranded final page (Page 16) for the Groves Federal Workbook.
+      Single full-bleed image, mirroring FedWorkbook_Cover: renders
+      as a fixed-width "page" so it sits alongside the other workbook
+      pages like sheets of paper. Safe for both interactive pages and
+      renderAs="pdf".
+      ============================================================
+    -->
+
+    <style type="text/css">
+        /* PDF-safe: no flexbox, no vh units, no CSS variables */
+        .gfg-backcover {
+            background-color: #3A5754;
+            margin: 0 auto 24px;
+            width: 850px;
+            max-width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+            page-break-after: always;
+        }
+        .gfg-backcover__img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+    </style>
+
+    <div class="gfg-backcover">
+        <apex:image url="{!$Resource.Pg16GrovesFedForm}"
+            styleClass="gfg-backcover__img"
+            alt="Groves Financial Group - Federal Employee Benefits and Retirement Workbook" />
+    </div>
+</apex:component>

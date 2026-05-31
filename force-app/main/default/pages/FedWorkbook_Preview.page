@@ -65,6 +65,9 @@
 
             <!-- Pages 14 & 15: Notes (free-form, Lead.Description) -->
             <apex:include pageName="FedWorkbook_Notes" />
+
+            <!-- Page 16: Back cover -->
+            <c:FedWorkbook_BackCover />
         </div>
     </body>
 

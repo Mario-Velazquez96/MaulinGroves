@@ -19,6 +19,7 @@
 	</types>
 	<types>
 		<members>FedWorkbook_Cover</members>
+		<members>FedWorkbook_BackCover</members>
 		<name>ApexComponent</name>
 	</types>
 	<types>
@@ -51,6 +52,7 @@
 		<members>Pg5GrovesArrow</members>
 		<members>Pg12GrovesQR</members>
 		<members>Pg13GrovesLogo</members>
+		<members>Pg16GrovesFedForm</members>
 		<name>StaticResource</name>
 	</types>
 	<types>
