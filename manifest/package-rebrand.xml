@@ -40,9 +40,6 @@
 		<name>ApexPage</name>
 	</types>
 	<types>
-		<members>Lead.Annual_Leave__c</members>
-		<members>Lead.FEHB_PSHB__c</members>
-		<members>Lead.Sick_Leave__c</members>
 		<members>Lead.Total_Basic_Benefit__c</members>
 		<members>Lead.Years_of_CSRS_Offset__c</members>
 		<name>CustomField</name>

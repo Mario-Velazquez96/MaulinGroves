@@ -8,7 +8,7 @@
  *   Scenario 1: Scenario1_Retirement_Age__c, Scenario1_YOS__c, High_3_Salary__c
  *   Scenario 2: Scenario2_Retirement_Age__c, Scenario2_YOS__c, High_3_Salary2__c
  *
- * Plus the page-shared Sick_Leave__c and Contact_Age__c.
+ * Plus the page-shared Contact_Age__c.
  *
  * FERS factor rule (from the red bullets at the top of the page):
  *   - 1.1% if retirement age >= 62 AND years of service >= 20
@@ -36,7 +36,6 @@ public with sharing class FedWorkbook_FersCalcExt {
         if (this.leadId == null) { return new Lead(); }
         return [
             SELECT FERS__c,
-                   Sick_Leave__c,
                    Contact_Age__c,
                    Scenario1_Retirement_Age__c,
                    Scenario2_Retirement_Age__c,
@@ -64,9 +63,6 @@ public with sharing class FedWorkbook_FersCalcExt {
     }
 
     // ---- Shared ------------------------------------------------------------
-    public Decimal getSickLeave() {
-        return lead.Sick_Leave__c == null ? 0 : lead.Sick_Leave__c;
-    }
     public Decimal getCurrentAge() {
         return lead.Contact_Age__c == null ? 0 : lead.Contact_Age__c;
     }

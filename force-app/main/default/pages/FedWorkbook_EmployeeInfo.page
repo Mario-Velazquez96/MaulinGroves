@@ -7,8 +7,7 @@
       FedWorkbook_EmployeeInfo  (Page 2)
       Rebranded "Federal Benefits & Retirement Analysis" employee form.
       Uses the Lead standard controller (quicksave) so all fields,
-      including the new Apt__c / Sick_Leave__c / Annual_Leave__c /
-      FEHB_PSHB__c fields, bind without modifying existing Apex.
+      including the new Apt__c fields, bind without modifying existing Apex.
       Designed to render standalone or via apex:include.
       ============================================================
     -->
@@ -316,13 +315,6 @@
                         <label>FEGLI Code:</label>
                         <apex:inputField value="{!Lead.FEGLI_Code_Picklist__c}" styleClass="gfg2-input" onchange="gfg2Save();" />
                     </span>
-                    <span class="gfg2-field">
-                        <label>FEHB/PSHB:</label>
-                        <span class="gfg2-affix">
-                            <span class="gfg2-sym">$</span>
-                            <apex:inputField value="{!Lead.FEHB_PSHB__c}" styleClass="gfg2-input" onchange="gfg2Save();" />
-                        </span>
-                    </span>
                 </div>
 
                 <!-- FEGLI Plan: read-only (per client request) -->
@@ -335,18 +327,6 @@
                         <apex:outputField value="{!Lead.Option_B_Choice_Selection__c}" styleClass="gfg2-ro" />
                         <apex:inputCheckbox value="{!planOptionC}" styleClass="gfg2-check gfg2-ml" disabled="true" /> Option C
                         <apex:outputField value="{!Lead.Option_C_Choice_Selection__c}" styleClass="gfg2-ro" />
-                    </span>
-                </div>
-
-                <!-- Leave balances (new fields) -->
-                <div class="gfg2-row" style="text-align:center">
-                    <span class="gfg2-field">
-                        <label>Sick Leave:</label>
-                        <apex:inputField value="{!Lead.Sick_Leave__c}" styleClass="gfg2-input" style="min-width:90px" onchange="gfg2Save();" />
-                    </span>
-                    <span class="gfg2-field">
-                        <label>Annual Leave:</label>
-                        <apex:inputField value="{!Lead.Annual_Leave__c}" styleClass="gfg2-input" style="min-width:90px" onchange="gfg2Save();" />
                     </span>
                 </div>
             </apex:form>
