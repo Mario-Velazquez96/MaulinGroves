@@ -237,24 +237,6 @@
                             </apex:outputText>
                         </span>
                     </div>
-                    <div class="gfg3-calc__row">
-                        <span class="gfg3-label">Extra Benefit Years Remaining:</span>
-                        <span class="gfg3-blank">
-                            <!-- Prefer Contact_Age when it's in 1..44 -->
-                            <apex:outputText value="{0, number, ###,###,##0}"
-                                rendered="{!Lead.Contact_Age__c > 0 && Lead.Contact_Age__c <= 44}">
-                                <apex:param value="{!45 - Lead.Contact_Age__c}" />
-                            </apex:outputText>
-                            <!-- Otherwise fall back to manual numeric age (36-44) -->
-                            <apex:outputText value="{0, number, ###,###,##0}"
-                                rendered="{!(ISBLANK(Lead.Contact_Age__c) || Lead.Contact_Age__c <= 0 || Lead.Contact_Age__c > 44) && NOT(ISBLANK(Lead.Age_Option_Basic_Manual__c)) && ISNUMBER(Lead.Age_Option_Basic_Manual__c) && value(Lead.Age_Option_Basic_Manual__c) >= 36 && value(Lead.Age_Option_Basic_Manual__c) <= 44}">
-                                <apex:param value="{!45 - value(Lead.Age_Option_Basic_Manual__c)}" />
-                            </apex:outputText>
-                            <!-- "--" when neither source is in range -->
-                            <apex:outputText value="--"
-                                rendered="{!(ISBLANK(Lead.Contact_Age__c) || Lead.Contact_Age__c <= 0 || Lead.Contact_Age__c > 44) && (ISBLANK(Lead.Age_Option_Basic_Manual__c) || NOT(ISNUMBER(Lead.Age_Option_Basic_Manual__c)) || value(Lead.Age_Option_Basic_Manual__c) < 36 || value(Lead.Age_Option_Basic_Manual__c) > 44)}" />
-                        </span>
-                    </div>
                 </div>
 
                 <div class="gfg3-calc__table">
