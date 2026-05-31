@@ -97,7 +97,7 @@
             font-size: 22px;
         }
         .gfg5-summary { display: flex; gap: 26px; align-items: flex-start; flex-wrap: wrap; }
-        .gfg5-summary__left { flex: 1 1 320px; }
+        .gfg5-summary__left { flex: 1 1 100%; }
         .gfg5-summary__head { display: flex; gap: 10px; padding-left: 100px; margin-bottom: 6px; font-style: italic; color: #555; }
         .gfg5-summary__head > span { flex: 1 1 auto; text-align: center; }
         .gfg5-summary__row {
@@ -111,24 +111,6 @@
         }
         .gfg5-summary__cell--empty { border-bottom: 1px solid transparent; }
 
-        /* Right column of the summary: holds the boxes + disclaimer */
-        .gfg5-summary__right { flex: 1 1 320px; }
-        /* Three colored boxes (FEGLI OPT B / ALTERNATIVE / SAVINGS) */
-        .gfg5-boxes { display: flex; gap: 6px; }
-        .gfg5-box {
-            flex: 1 1 0;
-            padding: 14px 10px;
-            text-align: center;
-            color: #ffffff;
-            font-family: 'PT Serif', Georgia, serif;
-        }
-        .gfg5-box--fegli { background: #8FA68C; }
-        .gfg5-box--alt   { background: #3A5754; }
-        .gfg5-box--save  { background: #4B5563; }
-        .gfg5-box__title { font-size: 13px; letter-spacing: .5px; margin: 0 0 10px; font-weight: 700; }
-        .gfg5-box__years { font-size: 13px; margin: 6px 0 2px; }
-        .gfg5-box__amount { font-weight: 700; margin: 2px 0 12px; min-height: 18px; border-bottom: 1px solid rgba(255,255,255,0.4); padding: 0 4px; }
-
         .gfg5-bottom-note {
             text-align: center; font-size: 12px; margin: 14px 0 0;
             background: #f6f1e9; padding: 10px;
@@ -136,7 +118,6 @@
 
         @media (max-width: 700px) {
             .gfg5-cols, .gfg5-summary { flex-direction: column; }
-            .gfg5-boxes { flex-wrap: wrap; }
         }
     </style>
 
@@ -355,39 +336,13 @@
                         </span>
                     </div>
                 </div>
-
-                <!-- Right column: three colored projection boxes + disclaimer directly below -->
-                <div class="gfg5-summary__right">
-                    <div class="gfg5-boxes">
-                        <div class="gfg5-box gfg5-box--fegli">
-                            <p class="gfg5-box__title">FEGLI OPT. B</p>
-                            <p class="gfg5-box__years">20 Years</p>
-                            <div class="gfg5-box__amount">$</div>
-                            <p class="gfg5-box__years">30 Years</p>
-                            <div class="gfg5-box__amount">$</div>
-                        </div>
-                        <div class="gfg5-box gfg5-box--alt">
-                            <p class="gfg5-box__title">ALTERNATIVE</p>
-                            <p class="gfg5-box__years">&#160;</p>
-                            <div class="gfg5-box__amount">$</div>
-                            <p class="gfg5-box__years">&#160;</p>
-                            <div class="gfg5-box__amount">$</div>
-                        </div>
-                        <div class="gfg5-box gfg5-box--save">
-                            <p class="gfg5-box__title">SAVINGS</p>
-                            <p class="gfg5-box__years">&#160;</p>
-                            <div class="gfg5-box__amount">$</div>
-                            <p class="gfg5-box__years">&#160;</p>
-                            <div class="gfg5-box__amount">$</div>
-                        </div>
-                    </div>
-
-                    <p class="gfg5-bottom-note">
-                        Rates are subject to change and are not guaranteed upon approval.<br/>
-                        FEGLI rates are based on current rates.
-                    </p>
-                </div>
             </div>
+
+            <!-- Rates disclaimer (full width, below the now single-column summary) -->
+            <p class="gfg5-bottom-note">
+                Rates are subject to change and are not guaranteed upon approval.<br/>
+                FEGLI rates are based on current rates.
+            </p>
 
         </div>
     </div>
