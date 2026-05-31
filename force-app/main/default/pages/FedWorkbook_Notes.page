@@ -4,7 +4,7 @@
     docType="html-5.0" title="Notes">
     <!--
       ============================================================
-      FedWorkbook_Notes  (Pages 14 & 15)
+      FedWorkbook_Notes  (Pages 13 & 14)
       Free-form notes section. Replicates the legacy Notes section
       (GPIS_Federal_Workbook.page "<a name="Notes">"): a single
       editable textarea bound to Lead.Description that auto-saves
@@ -15,8 +15,8 @@
           Description   (the notes body — same field as legacy)
 
       Rendered as two branded sheets to match the print design:
-        Page 14 = even page -> LEFT sidebar, carries the textarea.
-        Page 15 = odd page  -> RIGHT sidebar, blank continuation
+        Page 13 -> LEFT sidebar, carries the textarea.
+        Page 14 -> RIGHT sidebar, blank continuation
                   sheet (extra space for printed/handwritten notes).
       No render gate - always displays.
       ============================================================
@@ -110,7 +110,7 @@
              ================================================ -->
         <div class="gfgN-doc">
             <div class="gfgN-sidebar gfgN-sidebar--left">
-                <div class="gfgN-pagenum gfgN-pagenum--left">14</div>
+                <div class="gfgN-pagenum gfgN-pagenum--left">13</div>
             </div>
             <div class="gfgN-main gfgN-main--left">
                 <h1 class="gfgN-title">Notes</h1>
@@ -131,7 +131,7 @@
              ================================================ -->
         <div class="gfgN-doc">
             <div class="gfgN-sidebar gfgN-sidebar--right">
-                <div class="gfgN-pagenum gfgN-pagenum--right">15</div>
+                <div class="gfgN-pagenum gfgN-pagenum--right">14</div>
             </div>
             <div class="gfgN-main gfgN-main--right">
                 <h1 class="gfgN-title">Notes</h1>

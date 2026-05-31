@@ -4,7 +4,6 @@
      production metadata. -->
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>FedWorkbook_CsrsOffsetExt</members>
 		<members>FedWorkbook_EmployeeInfoExt</members>
 		<members>FedWorkbook_FegliACExt</members>
 		<members>FedWorkbook_FersCalcExt</members>
@@ -24,7 +23,6 @@
 	</types>
 	<types>
 		<members>FedWorkbook_BasicLife</members>
-		<members>FedWorkbook_CsrsOffset</members>
 		<members>FedWorkbook_EmployeeInfo</members>
 		<members>FedWorkbook_FegliAC</members>
 		<members>FedWorkbook_FERS</members>
@@ -41,7 +39,6 @@
 	</types>
 	<types>
 		<members>Lead.Total_Basic_Benefit__c</members>
-		<members>Lead.Years_of_CSRS_Offset__c</members>
 		<name>CustomField</name>
 	</types>
 	<types>

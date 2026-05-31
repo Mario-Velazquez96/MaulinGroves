@@ -5,7 +5,7 @@
     rendered="{!Lead.FERS__c == true}">
     <!--
       ============================================================
-      FedWorkbook_FERS  (Page 7)
+      FedWorkbook_FERS  (Page 6)
       FERS - Federal Employee Retirement System (overview / first FERS page).
       Static informational content; no Lead-derived calculations.
       Renders only when Lead.FERS__c is true.
@@ -74,7 +74,7 @@
     </style>
 
     <div class="gfg7-doc">
-        <div class="gfg7-sidebar"><span class="gfg7-pagenum">7</span></div>
+        <div class="gfg7-sidebar"><span class="gfg7-pagenum">6</span></div>
 
         <div class="gfg7-main">
 

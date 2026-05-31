@@ -4,7 +4,7 @@
     docType="html-5.0" title="Financial Snapshot">
     <!--
       ============================================================
-      FedWorkbook_FinancialSnapshot  (Page 13)
+      FedWorkbook_FinancialSnapshot  (Page 12)
       Interactive Financial Snapshot calculator.
       Lead fields used:
         EDITABLE:
@@ -47,7 +47,7 @@
           getDifference()               legacy line 2664
           getBottomLine()               Difference + tax-adjusted TSP (controller 663-677)
       No render gate - always displays.
-      Odd page (13) = right sidebar.
+      Right sidebar.
       ============================================================
     -->
 
@@ -311,7 +311,7 @@
 
         <!-- Right sidebar -->
         <div class="gfg13-sidebar">
-            <div class="gfg13-pagenum">13</div>
+            <div class="gfg13-pagenum">12</div>
         </div>
 
         <!-- Main content -->

@@ -4,7 +4,7 @@
     docType="html-5.0" title="TSP - Thrift Savings Plan">
     <!--
       ============================================================
-      FedWorkbook_TspResources  (Page 12)
+      FedWorkbook_TspResources  (Page 11)
       Three stacked sections:
         A. TSP - Thrift Savings Plan
         B. Resources
@@ -14,7 +14,7 @@
         Catchup_Contribution__c     (editable currency, catch-up for age 50+)
       Total Contribution computed in Apex: getTotalContribution()
       No render gate — always renders.
-      Even page => left sidebar.
+      Left sidebar.
       ============================================================
     -->
 
@@ -36,7 +36,7 @@
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
         }
 
-        /* Left sidebar (even page = left) */
+        /* Left sidebar */
         .gfg12-sidebar {
             position: absolute;
             left: 0; top: 0; bottom: 0;
@@ -271,7 +271,7 @@
     </style>
 
     <div class="gfg12-doc">
-        <div class="gfg12-sidebar"><span class="gfg12-pagenum">12</span></div>
+        <div class="gfg12-sidebar"><span class="gfg12-pagenum">11</span></div>
 
         <div class="gfg12-main">
 

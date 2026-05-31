@@ -5,7 +5,7 @@
     rendered="{!Lead.FERS__c == true}">
     <!--
       ============================================================
-      FedWorkbook_FersCalc  (Page 8)
+      FedWorkbook_FersCalc  (Page 7)
       FERS - Calculating FERS Retirement.
       Uses the same Lead fields as FERS_System.page:
         Scenario1/2_Retirement_Age__c, Scenario1/2_YOS__c,
@@ -127,7 +127,7 @@
     </style>
 
     <div class="gfg8-doc">
-        <div class="gfg8-sidebar"><span class="gfg8-pagenum">8</span></div>
+        <div class="gfg8-sidebar"><span class="gfg8-pagenum">7</span></div>
 
         <div class="gfg8-main">
 

@@ -5,7 +5,7 @@
     rendered="{!Lead.FERS__c == true}">
     <!--
       ============================================================
-      FedWorkbook_FersSurvivor  (Page 9)
+      FedWorkbook_FersSurvivor  (Page 8)
       Two stacked sections on one sheet:
         Section A - FERS Calculating FERS Retirement (continued)
                     4-column comparison grid (2 scenario rows)
@@ -21,7 +21,7 @@
         Expected_Retirement_Age__c, Years_of_Employment__c
 
       Renders only when Lead.FERS__c is true.
-      Odd page => right sidebar.
+      Right sidebar.
       ============================================================
     -->
 
@@ -223,7 +223,7 @@
     </style>
 
     <div class="gfg9-doc">
-        <div class="gfg9-sidebar"><span class="gfg9-pagenum">9</span></div>
+        <div class="gfg9-sidebar"><span class="gfg9-pagenum">8</span></div>
 
         <div class="gfg9-main">
 

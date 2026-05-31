@@ -5,7 +5,7 @@
     rendered="{!showSpecialSupp}">
     <!--
       ============================================================
-      FedWorkbook_SpecialSupplement  (Page 11)
+      FedWorkbook_SpecialSupplement  (Page 10)
       FERS - Special Supplement.
       Lead fields used:
         Special_Group_Member__c         (render gate)
@@ -18,7 +18,7 @@
         YOS_Special_Supplement__c       (editable, drives calculation)
         Predicted_Social_Security__c    (editable, drives calculation)
       Renders only when retirement age is less than 62 (per four-branch gate).
-      Odd page => right sidebar.
+      Right sidebar.
       ============================================================
     -->
 
@@ -200,7 +200,7 @@
     </style>
 
     <div class="gfg11-doc">
-        <div class="gfg11-sidebar"><span class="gfg11-pagenum">11</span></div>
+        <div class="gfg11-sidebar"><span class="gfg11-pagenum">10</span></div>
 
         <div class="gfg11-main">
 

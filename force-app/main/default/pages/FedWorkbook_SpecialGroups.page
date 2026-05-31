@@ -5,14 +5,14 @@
     rendered="{!Lead.Special_Group_Member__c == true}">
     <!--
       ============================================================
-      FedWorkbook_SpecialGroups  (Page 10)
+      FedWorkbook_SpecialGroups  (Page 9)
       FERS - Special Groups.
       Lead fields used:
         Special_Group_Member__c  (render gate)
         High_3_Salary__c         (editable, drives calculation row)
         Remaining_Years__c       (editable, drives calculation row)
       Renders only when Lead.Special_Group_Member__c is true.
-      Even page => left sidebar.
+      Left sidebar.
       ============================================================
     -->
 
@@ -33,7 +33,7 @@
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
         }
 
-        /* Left sidebar (even page = left) */
+        /* Left sidebar */
         .gfg10-sidebar {
             position: absolute;
             left: 0; top: 0; bottom: 0;
@@ -247,7 +247,7 @@
     </style>
 
     <div class="gfg10-doc">
-        <div class="gfg10-sidebar"><span class="gfg10-pagenum">10</span></div>
+        <div class="gfg10-sidebar"><span class="gfg10-pagenum">9</span></div>
 
         <div class="gfg10-main">
 

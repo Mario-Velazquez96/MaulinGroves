@@ -39,34 +39,31 @@
             <!-- Page 5: FEGLI Option B (renders when Option B is active) -->
             <apex:include pageName="FedWorkbook_OptionB" />
 
-            <!-- Page 6: CSRS Offset (renders when CSRS_Offset__c is true) -->
-            <apex:include pageName="FedWorkbook_CsrsOffset" />
-
-            <!-- Page 7: FERS - Federal Employee Retirement System (renders when FERS__c is true) -->
+            <!-- Page 6: FERS - Federal Employee Retirement System (renders when FERS__c is true) -->
             <apex:include pageName="FedWorkbook_FERS" />
 
-            <!-- Page 8: FERS - Calculating FERS Retirement (renders when FERS__c is true) -->
+            <!-- Page 7: FERS - Calculating FERS Retirement (renders when FERS__c is true) -->
             <apex:include pageName="FedWorkbook_FersCalc" />
 
-            <!-- Page 9: FERS - Survivor Benefit Annuity (renders when FERS__c is true) -->
+            <!-- Page 8: FERS - Survivor Benefit Annuity (renders when FERS__c is true) -->
             <apex:include pageName="FedWorkbook_FersSurvivor" />
 
-            <!-- Page 10: FERS Special Groups (renders when Special_Group_Member__c is true) -->
+            <!-- Page 9: FERS Special Groups (renders when Special_Group_Member__c is true) -->
             <apex:include pageName="FedWorkbook_SpecialGroups" />
 
-            <!-- Page 11: FERS Special Supplement (renders only when retirement age is less than 62) -->
+            <!-- Page 10: FERS Special Supplement (renders only when retirement age is less than 62) -->
             <apex:include pageName="FedWorkbook_SpecialSupplement" />
 
-            <!-- Page 12: TSP, Resources, Forms For Collecting Benefits -->
+            <!-- Page 11: TSP, Resources, Forms For Collecting Benefits -->
             <apex:include pageName="FedWorkbook_TspResources" />
 
-            <!-- Page 13: Financial Snapshot -->
+            <!-- Page 12: Financial Snapshot -->
             <apex:include pageName="FedWorkbook_FinancialSnapshot" />
 
-            <!-- Pages 14 & 15: Notes (free-form, Lead.Description) -->
+            <!-- Pages 13 & 14: Notes (free-form, Lead.Description) -->
             <apex:include pageName="FedWorkbook_Notes" />
 
-            <!-- Page 16: Back cover -->
+            <!-- Page 15: Back cover -->
             <c:FedWorkbook_BackCover />
         </div>
     </body>
