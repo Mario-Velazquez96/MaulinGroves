@@ -1,4 +1,5 @@
-<apex:page standardController="Lead" showHeader="false" sidebar="false" standardStylesheets="false"
+<apex:page standardController="Lead" extensions="FedWorkbook_PreviewExt"
+    showHeader="false" sidebar="false" standardStylesheets="false"
     applyHtmlTag="false" applyBodyTag="false" docType="html-5.0"
     title="Federal Workbook - Preview">
     <!--
@@ -112,6 +113,13 @@
             <!-- Notes -->
             <a href="#nav-notes"
                 style="text-decoration: none; color: #333; padding: 8px 12px; border-radius: 6px; transition: 0.3s;">Notes</a>
+
+            <!-- Save Attachment (replicated from legacy pdfAction): renders FedWorkbook_PDF
+                 and saves it to the Lead as a ContentVersion, then redirects to the record. -->
+            <apex:form style="margin-left:auto;" target="_parent">
+                <apex:commandButton action="{!saveAttachment}" value="Save Attachment"
+                    style="padding:6px 14px; cursor:pointer;" />
+            </apex:form>
         </div>
 
         <div class="gfg-pageframe">

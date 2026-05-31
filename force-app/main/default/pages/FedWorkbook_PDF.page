@@ -1,0 +1,84 @@
+<apex:page id="fedWorkbookPdf" standardController="Lead"
+    showHeader="false" sidebar="false" standardStylesheets="false"
+    applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" renderAs="pdf"
+    title="Groves Federal Benefits and Retirement Analysis">
+    <!--
+      ============================================================
+      FedWorkbook_PDF
+      PDF-render target for the rebranded Federal Workbook. Mirrors
+      the page set of FedWorkbook_Preview (minus the sticky nav) so
+      FedWorkbook_PreviewExt.saveAttachment() can render it to a
+      Blob and attach it to the Lead - the rebrand equivalent of the
+      legacy Federal_Workbook_PDF used by pdfAction().
+      Pass ?id=<LeadId>; render gates on each page evaluate from it.
+      ============================================================
+    -->
+    <html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Groves Federal Benefits and Retirement Analysis</title>
+        <style type="text/css">
+            html, body { margin: 0; padding: 0; background: #ffffff; }
+            .gfg-pdf-break { page-break-after: always; }
+        </style>
+    </head>
+
+    <body>
+        <!-- Page 1: Cover -->
+        <c:FedWorkbook_Cover />
+
+        <!-- Page 2: Federal Employee Information -->
+        <apex:include pageName="FedWorkbook_EmployeeInfo" />
+        <div class="gfg-pdf-break"></div>
+
+        <!-- Page 3: FEGLI Basic Life -->
+        <apex:include pageName="FedWorkbook_BasicLife" />
+        <div class="gfg-pdf-break"></div>
+
+        <!-- Page 4: FEGLI Option A and Option C -->
+        <apex:include pageName="FedWorkbook_FegliAC" />
+        <div class="gfg-pdf-break"></div>
+
+        <!-- Page 5: FEGLI Option B -->
+        <apex:include pageName="FedWorkbook_OptionB" />
+        <div class="gfg-pdf-break"></div>
+
+        <!-- Page 6: FERS -->
+        <apex:include pageName="FedWorkbook_FERS" />
+        <div class="gfg-pdf-break"></div>
+
+        <!-- Page 7: Calculating FERS Retirement -->
+        <apex:include pageName="FedWorkbook_FersCalc" />
+        <div class="gfg-pdf-break"></div>
+
+        <!-- Page 8: FERS Survivor Benefit Annuity -->
+        <apex:include pageName="FedWorkbook_FersSurvivor" />
+        <div class="gfg-pdf-break"></div>
+
+        <!-- Page 9: FERS Special Groups -->
+        <apex:include pageName="FedWorkbook_SpecialGroups" />
+        <div class="gfg-pdf-break"></div>
+
+        <!-- Page 10: FERS Special Supplement -->
+        <apex:include pageName="FedWorkbook_SpecialSupplement" />
+        <div class="gfg-pdf-break"></div>
+
+        <!-- Page 11: TSP, Resources, Forms -->
+        <apex:include pageName="FedWorkbook_TspResources" />
+        <div class="gfg-pdf-break"></div>
+
+        <!-- Page 12: Financial Snapshot -->
+        <apex:include pageName="FedWorkbook_FinancialSnapshot" />
+        <div class="gfg-pdf-break"></div>
+
+        <!-- Pages 13 & 14: Notes -->
+        <apex:include pageName="FedWorkbook_Notes" />
+        <div class="gfg-pdf-break"></div>
+
+        <!-- Page 15: Back cover -->
+        <c:FedWorkbook_BackCover />
+    </body>
+
+    </html>
+</apex:page>
