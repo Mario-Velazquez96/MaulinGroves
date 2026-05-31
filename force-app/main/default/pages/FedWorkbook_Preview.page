@@ -1,10 +1,16 @@
-<apex:page showHeader="false" sidebar="false" standardStylesheets="false"
+<apex:page standardController="Lead" showHeader="false" sidebar="false" standardStylesheets="false"
     applyHtmlTag="false" applyBodyTag="false" docType="html-5.0"
     title="Federal Workbook - Preview">
     <!--
       Preview harness for the rebranded Federal Workbook components.
       As each section component is built, add it here to review the result.
       This page is for preview only and is not wired into the live workbook.
+
+      Sticky top navigation replicates the legacy GPIS_Federal_Workbook nav bar:
+      fixed bar with jump links + hover dropdowns (FEGLI / FERS), with sections
+      conditionally shown from the same Lead fields. Each page is wrapped in an
+      anchor (gfg-anchor) so the links scroll to it. standardController="Lead"
+      supplies the Lead context the conditional links need (pass ?id=<LeadId>).
     -->
     <html>
 
@@ -17,55 +23,178 @@
                 padding: 0;
                 background: #e6e8e6;
             }
-            /* Backdrop around the pages so each section looks like a sheet of paper */
-            .gfg-pageframe { padding: 32px; }
+            /* Backdrop around the pages so each section looks like a sheet of paper.
+               Extra top padding clears the fixed nav bar. */
+            .gfg-pageframe { padding: 88px 32px 32px; }
+            /* Scroll target offset so a page heading isn't hidden behind the bar */
+            .gfg-anchor { scroll-margin-top: 72px; }
         </style>
     </head>
 
     <body>
+
+        <!-- ===== Sticky navigation bar (replicated from GPIS_Federal_Workbook) ===== -->
+        <div
+            style="position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, #f9f9f9, #f1f1f1); padding: 12px 20px; z-index: 999; border-bottom: 1px solid #ccc; display: flex; gap: 25px; align-items: center; font-family: Arial, sans-serif; font-size: 14px; font-weight: 500; box-shadow: rgba(17, 17, 26, 0.11) 1px 17px 17px; box-sizing: border-box;">
+
+            <!-- About Us / Cover -->
+            <a href="#nav-cover"
+                style="text-decoration: none; color: #333; padding: 8px 12px; border-radius: 6px; transition: 0.3s;">About Us</a>
+
+            <!-- Federal Employee Info -->
+            <a href="#nav-empinfo"
+                style="text-decoration: none; color: #333; padding: 8px 12px; border-radius: 6px; transition: 0.3s;">Federal Employee Info</a>
+
+            <!-- FEGLI dropdown -->
+            <div style="position: relative;">
+                <a href="#nav-basic"
+                    style="text-decoration: none; color: #333; padding: 8px 12px; border-radius: 6px; transition: 0.3s; display:inline-block;">
+                    FEGLI &#9662;
+                </a>
+                <div
+                    style="display: none; position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ccc; min-width: 160px; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); border-radius: 6px;">
+                    <apex:outputPanel rendered="{!Lead.Basic__c}" layout="none">
+                        <a href="#nav-basic"
+                            style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">Basic</a>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!Lead.OptionA__c}" layout="none">
+                        <a href="#nav-fegliac"
+                            style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">Option A</a>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!Lead.OptionB__c}" layout="none">
+                        <a href="#nav-optionb"
+                            style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">Option B</a>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!Lead.OptionC__c}" layout="none">
+                        <a href="#nav-fegliac"
+                            style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">Option C</a>
+                    </apex:outputPanel>
+                </div>
+            </div>
+
+            <!-- FERS dropdown -->
+            <apex:outputPanel rendered="{!Lead.FERS__c}" layout="none">
+                <div style="position: relative;">
+                    <a href="#nav-fers"
+                        style="text-decoration: none; color: #333; padding: 8px 12px; border-radius: 6px; transition: 0.3s; display:inline-block;">
+                        FERS &#9662;
+                    </a>
+                    <div
+                        style="display: none; position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ccc; min-width: 200px; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); border-radius: 6px;">
+                        <a href="#nav-fers"
+                            style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">FERS Pension</a>
+                        <a href="#nav-ferscalc"
+                            style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">Calculating FERS</a>
+                        <a href="#nav-ferssurvivor"
+                            style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">FERS Gap/Survivor Benefits</a>
+                        <apex:outputPanel rendered="{!(IF(Lead.Scenario1_Primary__c == true && Lead.Scenario1_Retirement_Age__c < 62, true,false) || IF(Lead.Scenario2_Primary__c == true && Lead.Scenario2_Retirement_Age__c < 62,true,false) || IF(Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Expected_Retirement_Age__c < 62,true,false))}" layout="none">
+                            <a href="#nav-specialsupp"
+                                style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">FERS Special Supplement</a>
+                        </apex:outputPanel>
+                    </div>
+                </div>
+            </apex:outputPanel>
+
+            <!-- Special Groups -->
+            <apex:outputPanel rendered="{!Lead.Special_Group_Member__c}" layout="none">
+                <a href="#nav-sg"
+                    style="text-decoration: none; color: #333; padding: 8px 12px; border-radius: 6px; transition: 0.3s;">Special Groups</a>
+            </apex:outputPanel>
+
+            <!-- TSP Info -->
+            <a href="#nav-tsp"
+                style="text-decoration: none; color: #333; padding: 8px 12px; border-radius: 6px; transition: 0.3s;">TSP Info</a>
+
+            <!-- Financial Snapshot -->
+            <a href="#nav-finsnap"
+                style="text-decoration: none; color: #333; padding: 8px 12px; border-radius: 6px; transition: 0.3s;">Financial Snapshot</a>
+
+            <!-- Notes -->
+            <a href="#nav-notes"
+                style="text-decoration: none; color: #333; padding: 8px 12px; border-radius: 6px; transition: 0.3s;">Notes</a>
+        </div>
+
         <div class="gfg-pageframe">
             <!-- Page 1: Cover -->
-            <c:FedWorkbook_Cover />
+            <div id="nav-cover" class="gfg-anchor">
+                <c:FedWorkbook_Cover />
+            </div>
 
             <!-- Page 2: Federal Employee Information -->
-            <apex:include pageName="FedWorkbook_EmployeeInfo" />
+            <div id="nav-empinfo" class="gfg-anchor">
+                <apex:include pageName="FedWorkbook_EmployeeInfo" />
+            </div>
 
             <!-- Page 3: FEGLI Basic Life (renders only when Basic or a relevant FEGLI code is set) -->
-            <apex:include pageName="FedWorkbook_BasicLife" />
+            <div id="nav-basic" class="gfg-anchor">
+                <apex:include pageName="FedWorkbook_BasicLife" />
+            </div>
 
             <!-- Page 4: FEGLI Option A and Option C (renders when either option is active) -->
-            <apex:include pageName="FedWorkbook_FegliAC" />
+            <div id="nav-fegliac" class="gfg-anchor">
+                <apex:include pageName="FedWorkbook_FegliAC" />
+            </div>
 
             <!-- Page 5: FEGLI Option B (renders when Option B is active) -->
-            <apex:include pageName="FedWorkbook_OptionB" />
+            <div id="nav-optionb" class="gfg-anchor">
+                <apex:include pageName="FedWorkbook_OptionB" />
+            </div>
 
             <!-- Page 6: FERS - Federal Employee Retirement System (renders when FERS__c is true) -->
-            <apex:include pageName="FedWorkbook_FERS" />
+            <div id="nav-fers" class="gfg-anchor">
+                <apex:include pageName="FedWorkbook_FERS" />
+            </div>
 
             <!-- Page 7: FERS - Calculating FERS Retirement (renders when FERS__c is true) -->
-            <apex:include pageName="FedWorkbook_FersCalc" />
+            <div id="nav-ferscalc" class="gfg-anchor">
+                <apex:include pageName="FedWorkbook_FersCalc" />
+            </div>
 
             <!-- Page 8: FERS - Survivor Benefit Annuity (renders when FERS__c is true) -->
-            <apex:include pageName="FedWorkbook_FersSurvivor" />
+            <div id="nav-ferssurvivor" class="gfg-anchor">
+                <apex:include pageName="FedWorkbook_FersSurvivor" />
+            </div>
 
             <!-- Page 9: FERS Special Groups (renders when Special_Group_Member__c is true) -->
-            <apex:include pageName="FedWorkbook_SpecialGroups" />
+            <div id="nav-sg" class="gfg-anchor">
+                <apex:include pageName="FedWorkbook_SpecialGroups" />
+            </div>
 
             <!-- Page 10: FERS Special Supplement (renders only when retirement age is less than 62) -->
-            <apex:include pageName="FedWorkbook_SpecialSupplement" />
+            <div id="nav-specialsupp" class="gfg-anchor">
+                <apex:include pageName="FedWorkbook_SpecialSupplement" />
+            </div>
 
             <!-- Page 11: TSP, Resources, Forms For Collecting Benefits -->
-            <apex:include pageName="FedWorkbook_TspResources" />
+            <div id="nav-tsp" class="gfg-anchor">
+                <apex:include pageName="FedWorkbook_TspResources" />
+            </div>
 
             <!-- Page 12: Financial Snapshot -->
-            <apex:include pageName="FedWorkbook_FinancialSnapshot" />
+            <div id="nav-finsnap" class="gfg-anchor">
+                <apex:include pageName="FedWorkbook_FinancialSnapshot" />
+            </div>
 
             <!-- Pages 13 & 14: Notes (free-form, Lead.Description) -->
-            <apex:include pageName="FedWorkbook_Notes" />
+            <div id="nav-notes" class="gfg-anchor">
+                <apex:include pageName="FedWorkbook_Notes" />
+            </div>
 
             <!-- Page 15: Back cover -->
             <c:FedWorkbook_BackCover />
         </div>
+
+        <script>
+            // Enable dropdown hover (replicated from the legacy nav bar)
+            document.querySelectorAll("div[style*='position: relative;']").forEach(function (dropdown) {
+                dropdown.addEventListener("mouseover", function () {
+                    dropdown.querySelector("div").style.display = "block";
+                });
+                dropdown.addEventListener("mouseout", function () {
+                    dropdown.querySelector("div").style.display = "none";
+                });
+            });
+        </script>
     </body>
 
     </html>
