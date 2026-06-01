@@ -1,84 +1,1413 @@
-<apex:page id="fedWorkbookPdf" standardController="Lead"
+<apex:page id="fedWorkbookPdf" standardController="Lead" extensions="FedWorkbook_PDFExt"
     showHeader="false" sidebar="false" standardStylesheets="false"
     applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" renderAs="pdf"
     title="Groves Federal Benefits and Retirement Analysis">
     <!--
       ============================================================
-      FedWorkbook_PDF
-      PDF-render target for the rebranded Federal Workbook. Mirrors
-      the page set of FedWorkbook_Preview (minus the sticky nav) so
-      FedWorkbook_PreviewExt.saveAttachment() can render it to a
-      Blob and attach it to the Lead - the rebrand equivalent of the
-      legacy Federal_Workbook_PDF used by pdfAction().
-      Pass ?id=<LeadId>; render gates on each page evaluate from it.
+      FedWorkbook_PDF  (PDF-OPTIMIZED workbook)
+      Self-contained, PDF-safe layout for the Salesforce PDF engine:
+        * one <style> in <head> (no body-level <style> -> no CSS text)
+        * tables instead of flexbox/grid
+        * no @import / @media; built-in fonts (serif + Helvetica)
+        * width 100% within @page margins (no 850px clipping)
+      Rendered by FedWorkbook_PreviewExt.saveAttachment(); pass ?id=<LeadId>.
+      Built up page-by-page; mirrors FedWorkbook_Preview content.
       ============================================================
     -->
     <html>
-
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Groves Federal Benefits and Retirement Analysis</title>
         <style type="text/css">
-            html, body { margin: 0; padding: 0; background: #ffffff; }
-            .gfg-pdf-break { page-break-after: always; }
+            @page { size: Letter; margin: 0.6cm; }
+
+            body {
+                font-family: 'Times New Roman', Georgia, serif;
+                font-size: 11pt;
+                color: #2b2b2b;
+                line-height: 1.4;
+            }
+
+            /* ---- Full-bleed image pages (cover / back cover) ---- */
+            .gfgp-cover { page-break-after: always; }
+            .gfgp-cover img { width: 100%; height: auto; }
+
+            /* ---- One workbook sheet = a 2-column table (rail + body) ---- */
+            .gfgp-sheet { width: 100%; border-collapse: collapse; page-break-after: always; }
+            .gfgp-rail { width: 30px; background-color: #3A5754; }
+            .gfgp-body { vertical-align: top; padding: 0 10px; }
+            .gfgp-pageno {
+                color: #ffffff;
+                font-family: 'Helvetica', Arial, sans-serif;
+                font-size: 22pt;
+                font-weight: bold;
+                text-align: center;
+                padding: 0 0 10pt;
+            }
+
+            /* ---- Titles + accent bar ---- */
+            .gfgp-title {
+                color: #3A5754;
+                font-family: 'Helvetica', Arial, sans-serif;
+                font-size: 21pt;
+                font-weight: bold;
+                margin: 0 0 4pt;
+            }
+            .gfgp-accent {
+                height: 8px;
+                line-height: 8px;
+                font-size: 1px;
+                background-color: #8FA68C;
+                margin: 0 0 12pt;
+            }
+            .gfgp-h2 {
+                font-family: 'Helvetica', Arial, sans-serif;
+                font-size: 14pt;
+                font-weight: bold;
+                color: #2b2b2b;
+                margin: 14pt 0 6pt;
+            }
+
+            /* ---- Body copy ---- */
+            .gfgp-p { text-align: justify; margin: 7pt 0; }
+            .gfgp-center { text-align: center; }
+            .gfgp-italic { font-style: italic; }
+            .gfgp-rule { border: 0; border-top: 2px solid #8FA68C; margin: 12pt 0; }
+            .gfgp-link { color: #1d4ed8; text-decoration: underline; }
+
+            /* ---- Label/value info grid ---- */
+            .gfgp-info { width: 100%; border-collapse: collapse; table-layout: fixed; }
+            .gfgp-info td { padding: 2pt 6pt 2pt 0; font-size: 10.5pt; vertical-align: bottom;
+                            overflow: hidden; }
+            .gfgp-lbl { font-weight: bold; }
+            .gfgp-val { border-bottom: 1px solid #9aa6a3; }
+
+            /* ---- Lists ---- */
+            ul.gfgp-ul, ol.gfgp-ol { margin: 4pt 0 4pt 18pt; padding: 0; }
+            ul.gfgp-ul li, ol.gfgp-ol li { margin: 3pt 0; }
+            .gfgp-bold-li li { font-weight: bold; }
+
+            /* ---- Data tables (rate / projection / comparison) ---- */
+            .gfgp-tab { width: 100%; border-collapse: collapse; margin: 8pt 0; font-size: 10pt; }
+            .gfgp-tab th { background-color: #3A5754; color: #ffffff; padding: 4pt 6pt; text-align: center; border: 1px solid #ffffff; }
+            .gfgp-tab td { padding: 3pt 6pt; text-align: center; border: 1px solid #cccccc; }
+            .gfgp-tab--rate th { background-color: #B91C1C; color: #ffffff; font-weight: bold; }
+            .gfgp-tab--rate td { background-color: #4B5563; color: #ffffff; }
+            .gfgp-tab tfoot td { background-color: #4B5563; color: #ffffff; font-weight: bold; }
+
+            /* ---- Option B future-cost projection table ---- */
+            .gfgp-proj { width: 100%; border-collapse: collapse; margin: 8pt 0 2pt; font-size: 9pt; }
+            .gfgp-proj th, .gfgp-proj td { padding: 4pt 5pt; text-align: center; border: 1px solid #ffffff; }
+            .gfgp-proj thead th { background-color: #3A5754; color: #ffffff; font-weight: bold; }
+            .gfgp-proj thead th.ageband { background-color: #B91C1C; }
+            .gfgp-proj tbody td { background-color: #A5BFA1; color: #2b2b2b; }
+            .gfgp-proj tbody td.age { background-color: #B91C1C; color: #ffffff; font-weight: bold; }
+            .gfgp-proj tfoot td { background-color: #4B5563; color: #ffffff; font-weight: bold; }
+            .gfgp-rate-note { text-align: center; font-size: 9pt; font-weight: bold; margin: 4pt 0 10pt; }
+
+            /* ---- FERS red factor bullets ---- */
+            ul.gfgp-red-ul { margin: 4pt 0 4pt 18pt; padding: 0; color: #B91C1C; }
+            ul.gfgp-red-ul li { margin: 3pt 0; font-weight: bold; }
+
+            /* ---- FERS eligibility (MRA) table ---- */
+            .gfgp-elig { width: 100%; border-collapse: collapse; margin: 8pt 0 4pt; font-size: 8pt; }
+            .gfgp-elig th { background-color: #3A5754; color: #ffffff; font-weight: bold; padding: 4pt 4pt; text-align: center; border: 1px solid #ffffff; }
+            .gfgp-elig td { background-color: #A5BFA1; color: #ffffff; padding: 3pt 5pt; text-align: center; border: 1px solid #ffffff; vertical-align: middle; }
+            .gfgp-elig td.gray { background-color: #4B5563; }
+            .gfgp-elig td.red { background-color: #B91C1C; }
+            .gfgp-elig .note { display: block; font-style: italic; font-size: 7pt; margin-top: 2pt; }
+
+            /* ---- FERS scenario grid (borderless, underline-blank look) ---- */
+            .gfgp-sc { width: 100%; border-collapse: collapse; margin: 16pt 0 0; }
+            .gfgp-sc > tbody > tr > td { border: none; padding: 5pt 6pt; vertical-align: bottom; font-size: 11pt; }
+            .gfgp-sc .lhead { text-align: left; }
+            .gfgp-sc .schead { text-align: center; font-weight: bold; font-size: 14pt; padding-bottom: 6pt; }
+            .gfgp-scin { width: 100%; border-collapse: collapse; }
+            .gfgp-scin td { border: none; padding: 0 3pt; vertical-align: bottom; font-size: 11pt; }
+            .gfgp-scin .lab { text-align: left; white-space: nowrap; }
+            .gfgp-scin .op { white-space: nowrap; }
+            .gfgp-scin .blank { border-bottom: 1px solid #2b2b2b; text-align: center; font-weight: bold; color: #1f3b38; width: 60%; }
+
+            /* ---- FERS survivor: 4-column comparison grid ---- */
+            .gfgp-cmp { width: 100%; border-collapse: collapse; margin: 10pt 0 14pt; }
+            .gfgp-cmp td { padding: 7pt 6pt 2pt; text-align: center; vertical-align: bottom; font-size: 10pt; }
+            .gfgp-cmp td.l { text-align: left; }
+            .gfgp-cmp .vblank { display: block; border-bottom: 1px solid #2b2b2b; font-weight: bold; color: #1f3b38; padding-bottom: 2pt; }
+            .gfgp-cmp tr.hd td { color: #2E5395; font-weight: bold; font-size: 8.5pt; border-top: 1px solid #2b2b2b; padding: 3pt 6pt 7pt; vertical-align: top; }
+            .gfgp-cmp tr.hd td.l { text-align: left; }
+
+            /* ---- FERS survivor: Min/Max benefit boxes ---- */
+            .gfgp-survbox { border: 1px solid #cccccc; padding: 8pt 12pt 12pt; }
+            .gfgp-survbox__title { font-weight: bold; text-align: center; font-size: 11pt; margin: 0 0 8pt; }
+            .gfgp-survcap { text-align: center; color: #B91C1C; font-size: 10pt; line-height: 1.5; margin-top: 10pt; }
+            .gfgp-survcap .u { border-bottom: 1px solid #B91C1C; font-weight: bold; padding: 0 6pt; }
+
+            /* ---- Special Groups inline formula calc ---- */
+            .gfgp-fcalc { border-collapse: collapse; margin: 4pt auto; }
+            .gfgp-fcalc td { border: none; padding: 2pt 5pt; font-size: 10pt; vertical-align: bottom; text-align: center; white-space: nowrap; }
+            .gfgp-fcalc td.b { border-bottom: 1px solid #2b2b2b; font-weight: bold; color: #1f3b38; }
+            .gfgp-fcalc .sub { display: block; font-size: 8pt; font-style: italic; font-weight: normal; color: #2b2b2b; }
+            .gfgp-eg { text-align: center; font-size: 9.5pt; margin: 3pt 0; }
+            .gfgp-eg-total { text-align: center; font-size: 9.5pt; font-weight: bold; margin: 4pt 0; }
+            .gfgp-li-red { color: #B91C1C; }
+            .gfgp-calc-section { border-top: 1px solid #d0d0d0; padding-top: 10pt; margin-top: 12pt; }
+
+            /* ---- TSP contribution limits / matching ---- */
+            .gfgp-uhead { font-weight: bold; text-decoration: underline; font-size: 10pt; margin: 0 0 4pt; }
+            .gfgp-contrib { width: 100%; border-collapse: collapse; }
+            .gfgp-contrib td { border: none; padding: 2pt 4pt; font-size: 10pt; vertical-align: bottom; }
+            .gfgp-contrib .val { border-bottom: 1px solid #2b2b2b; text-align: center; color: #1f3b38; width: 38%; }
+            .gfgp-contrib .sub { font-size: 8pt; font-style: italic; color: #555; }
+            .gfgp-tspnote { font-size: 8.5pt; font-style: italic; color: #444; margin: 6pt 0; }
+            .gfgp-circ { list-style: circle; margin: 2pt 0 2pt 16pt; padding: 0; }
+            .gfgp-circ li { font-size: 9pt; margin: 2pt 0; }
+            .gfgp-tspopt { text-align: center; color: #B91C1C; font-weight: bold; text-decoration: underline; font-size: 10.5pt; padding: 2pt 18pt; }
+            .gfgp-linkrow { font-size: 9.5pt; margin: 4pt 0; }
+
+            /* ---- Military Time Recapture table ---- */
+            .gfgp-mtr { width: 100%; border-collapse: collapse; margin-top: 8pt; font-size: 9.5pt; }
+            .gfgp-mtr td { background-color: #3A5754; color: #ffffff; padding: 6pt 10pt; border: 1px solid #ffffff; vertical-align: middle; }
+            .gfgp-mtr .hdr { text-align: center; font-family: 'Helvetica', Arial, sans-serif; font-weight: bold; font-size: 13pt; letter-spacing: 1px; }
+            .gfgp-mtr .branch { text-align: center; width: 120px; }
+
+            /* ---- Financial Snapshot underline-blank rows ---- */
+            .gfgp-snap { width: 100%; border-collapse: collapse; margin: 2pt 0; }
+            .gfgp-snap td { border: none; padding: 3pt 4pt; font-size: 10.5pt; vertical-align: bottom; }
+            .gfgp-snap .lab { width: 36%; }
+            .gfgp-snap .sign { width: 16pt; text-align: center; font-weight: bold; }
+            .gfgp-snap .uval { border-bottom: 1px solid #2b2b2b; text-align: center; color: #1f3b38; width: 22%; }
+            .gfgp-snap .extra { font-size: 9pt; color: #555; padding-left: 10pt; }
+            .gfgp-snap .extra .u { display: inline-block; min-width: 70pt; border-bottom: 1px solid #2b2b2b; text-align: center; color: #1f3b38; padding: 0 4pt; }
+            .gfgp-snap tr.tot td { font-weight: bold; }
+            .gfgp-snap .ne { font-style: italic; font-weight: bold; }
+            .gfgp-snap .opt { font-size: 8pt; font-weight: bold; color: #b00020; }
+            .gfgp-seclabel { font-family: 'Helvetica', Arial, sans-serif; font-size: 9pt; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: #3A5754; border-bottom: 1px solid #d0d0d0; padding-bottom: 3pt; margin: 10pt 0 4pt; }
+
+            /* ---- Total Basic &amp; Optional Life Insurance summary ---- */
+            .gfgp-summary { width: 100%; border-collapse: collapse; margin: 6pt 0; }
+            .gfgp-summary td { padding: 4pt 6pt; font-size: 10.5pt; vertical-align: bottom; }
+            .gfgp-summary .lbl { width: 22%; }
+            .gfgp-summary .cell { border-bottom: 1px solid #9aa6a3; text-align: center; }
+            .gfgp-summary .colhead { font-style: italic; color: #555; text-align: center; border-bottom: none; }
+            .gfgp-summary .total td { font-weight: bold; }
+            .gfgp-bottom-note { text-align: center; font-size: 9pt; margin: 10pt 0 0; background-color: #f6f1e9; padding: 8pt; }
+
+            /* ---- Calculation rows ---- */
+            .gfgp-calc { width: 100%; border-collapse: collapse; }
+            .gfgp-calc td { padding: 3pt 4pt; font-size: 10.5pt; vertical-align: bottom; }
+            .gfgp-calc .v { border-bottom: 1px solid #2b2b2b; font-weight: bold; text-align: right; }
+            .gfgp-cost { color: #B91C1C; font-weight: bold; }
+            .gfgp-amt { font-weight: bold; text-decoration: underline; }
+            .gfgp-h3 { font-weight: bold; font-size: 12pt; margin: 12pt 0 4pt; }
+            .gfgp-center-h { text-align: center; font-weight: bold; font-size: 13pt; margin: 12pt 0 4pt; }
+
+            /* ---- Survivor "Points to Consider" callout ---- */
+            .gfgp-callout { background-color: #3A5754; color: #ffffff; padding: 8pt 12pt; margin: 6pt 0; }
+            .gfgp-callout-title { font-family: 'Helvetica', Arial, sans-serif; font-weight: bold; text-align: center; margin: 0 0 4pt; }
         </style>
     </head>
-
     <body>
-        <!-- Page 1: Cover -->
-        <c:FedWorkbook_Cover />
 
-        <!-- Page 2: Federal Employee Information -->
-        <apex:include pageName="FedWorkbook_EmployeeInfo" />
-        <div class="gfg-pdf-break"></div>
+        <!-- ============ Page 1: Cover ============ -->
+        <div class="gfgp-cover">
+            <apex:image url="{!$Resource.Pg1GrovesFedForm}"
+                alt="Groves Financial Group - Federal Employee Benefits and Retirement Workbook" />
+        </div>
 
-        <!-- Page 3: FEGLI Basic Life -->
-        <apex:include pageName="FedWorkbook_BasicLife" />
-        <div class="gfg-pdf-break"></div>
+        <!-- ============ Page 2: Federal Employee Information ============ -->
+        <table class="gfgp-sheet">
+            <tr>
+                <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">2</div></td>
+                <td class="gfgp-body">
+                    <div class="gfgp-title">Federal Benefits &amp; Retirement Analysis</div>
+                    <div class="gfgp-accent"></div>
 
-        <!-- Page 4: FEGLI Option A and Option C -->
-        <apex:include pageName="FedWorkbook_FegliAC" />
-        <div class="gfg-pdf-break"></div>
+                    <table class="gfgp-info">
+                        <colgroup><col style="width:15%" /><col style="width:35%" /><col style="width:15%" /><col style="width:35%" /></colgroup>
+                        <tr>
+                            <td class="gfgp-lbl">Date:</td>
+                            <td class="gfgp-val"><apex:outputText value="{0,date,MM/dd/yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></td>
+                            <td class="gfgp-lbl">Specialist:</td>
+                            <td class="gfgp-val">{!$User.FirstName} {!$User.LastName}</td>
+                        </tr>
+                        <tr>
+                            <td class="gfgp-lbl">Phone:</td>
+                            <td class="gfgp-val">{!$User.Phone}</td>
+                            <td class="gfgp-lbl">Email:</td>
+                            <td class="gfgp-val">{!$User.Email}</td>
+                        </tr>
+                    </table>
 
-        <!-- Page 5: FEGLI Option B -->
-        <apex:include pageName="FedWorkbook_OptionB" />
-        <div class="gfg-pdf-break"></div>
+                    <p class="gfgp-center gfgp-italic" style="margin:8pt 0;">
+                        Information used in this analysis is provided by the federal employee
+                    </p>
 
-        <!-- Page 6: FERS -->
-        <apex:include pageName="FedWorkbook_FERS" />
-        <div class="gfg-pdf-break"></div>
+                    <table class="gfgp-info">
+                        <colgroup><col style="width:18%" /><col style="width:32%" /><col style="width:18%" /><col style="width:32%" /></colgroup>
+                        <!-- Identity -->
+                        <tr>
+                            <td class="gfgp-lbl">Name:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Name}" /></td>
+                            <td class="gfgp-lbl">Email:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Email}" /></td>
+                        </tr>
+                        <tr>
+                            <td class="gfgp-lbl">Phone:</td>
+                            <td class="gfgp-val" colspan="3"><apex:outputField value="{!Lead.MobilePhone_Formatted__c}" /></td>
+                        </tr>
+                        <!-- Address -->
+                        <tr>
+                            <td class="gfgp-lbl">Address:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Street}" /></td>
+                            <td class="gfgp-lbl">City:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.City}" /></td>
+                        </tr>
+                        <tr>
+                            <td class="gfgp-lbl">State:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.State}" /></td>
+                            <td class="gfgp-lbl">Zip:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.PostalCode}" /></td>
+                        </tr>
+                        <!-- Employment -->
+                        <tr>
+                            <td class="gfgp-lbl">Job Title:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Title}" /></td>
+                            <td class="gfgp-lbl">Agency:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Company}" /></td>
+                        </tr>
+                        <tr>
+                            <td class="gfgp-lbl">Date of Hire:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Date_of_Hire__c}" /></td>
+                            <td class="gfgp-lbl">Exp. Retirement Date:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Expected_Retirement_Date__c}" /></td>
+                        </tr>
+                        <!-- DOB + derived -->
+                        <tr>
+                            <td class="gfgp-lbl">DOB:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Date_of_Birth__c}" /></td>
+                            <td class="gfgp-lbl">Current Age:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Contact_Age__c}" /></td>
+                        </tr>
+                        <tr>
+                            <td class="gfgp-lbl">Years of Creditable Service:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Years_of_Employment__c}" /></td>
+                            <td class="gfgp-lbl">Expected Retirement Age:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Expected_Retirement_Age__c}" /></td>
+                        </tr>
+                        <!-- Marital / Spouse / Federal Employee -->
+                        <tr>
+                            <td class="gfgp-lbl">Marital Status:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Marital_Status__c}" /></td>
+                            <td class="gfgp-lbl">
+                                <apex:outputText value="Spouse Name:" rendered="{!OR(Lead.Marital_Status__c == 'Married', Lead.Marital_Status__c == 'Registered Partnership')}" />
+                            </td>
+                            <td class="gfgp-val">
+                                <apex:outputText value="{!Lead.Spouse_Name__r.Name}" rendered="{!OR(Lead.Marital_Status__c == 'Married', Lead.Marital_Status__c == 'Registered Partnership')}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="gfgp-lbl">Federal Employee:</td>
+                            <td class="gfgp-val" colspan="3"><apex:outputField value="{!Lead.Federal_Employee__c}" /></td>
+                        </tr>
+                        <!-- Base Salary + Retirement System -->
+                        <tr>
+                            <td class="gfgp-lbl">Base Salary:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Base_Salary__c}" /></td>
+                            <td class="gfgp-lbl">Retirement System:</td>
+                            <td class="gfgp-val">
+                                CSRS [<apex:outputText value="{!IF(Lead.CSRS__c, 'X', ' ')}" />]
+                                CSRS Offset [<apex:outputText value="{!IF(Lead.CSRS_Offset__c, 'X', ' ')}" />]
+                                FERS [<apex:outputText value="{!IF(Lead.FERS__c, 'X', ' ')}" />]
+                            </td>
+                        </tr>
+                        <!-- TSP -->
+                        <tr>
+                            <td class="gfgp-lbl">TSP Contribution:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.TSP_Contribution__c}" /></td>
+                            <td class="gfgp-lbl">TSP Balance:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.TSP_Total__c}" /></td>
+                        </tr>
+                        <!-- FEGLI Code -->
+                        <tr>
+                            <td class="gfgp-lbl">FEGLI Code:</td>
+                            <td class="gfgp-val" colspan="3"><apex:outputField value="{!Lead.FEGLI_Code_Picklist__c}" /></td>
+                        </tr>
+                        <!-- FEGLI Plan -->
+                        <tr>
+                            <td class="gfgp-lbl">FEGLI Plan:</td>
+                            <td class="gfgp-val" colspan="3">
+                                Basic [<apex:outputText value="{!planBasicMark}" />]&#160;&#160;
+                                Option A [<apex:outputText value="{!planOptionAMark}" />]&#160;&#160;
+                                Option B [<apex:outputText value="{!planOptionBMark}" />]
+                                <apex:outputField value="{!Lead.Option_B_Choice_Selection__c}" />&#160;&#160;
+                                Option C [<apex:outputText value="{!planOptionCMark}" />]
+                                <apex:outputField value="{!Lead.Option_C_Choice_Selection__c}" />
+                            </td>
+                        </tr>
+                    </table>
 
-        <!-- Page 7: Calculating FERS Retirement -->
-        <apex:include pageName="FedWorkbook_FersCalc" />
-        <div class="gfg-pdf-break"></div>
+                    <hr class="gfgp-rule" />
 
-        <!-- Page 8: FERS Survivor Benefit Annuity -->
-        <apex:include pageName="FedWorkbook_FersSurvivor" />
-        <div class="gfg-pdf-break"></div>
+                    <p class="gfgp-p">
+                        The objective of this workbook is to give the Federal Employee a working
+                        knowledge of their current core benefits. It is not intended to offer tax
+                        or investing advice. Understanding how the federal retirement system works
+                        will offer you invaluable insight and the ability to make an informed
+                        decision when the time comes to plan for your retirement. Your retirement
+                        income is based on the system you are employed under, either CSRS, CSRS
+                        Offset, or FERS. While it is important to understand how this works, it is
+                        equally important to understand your other core benefits, what they are,
+                        how they affect your income during your working years, and how to maximize
+                        your pension into retirement.
+                    </p>
 
-        <!-- Page 9: FERS Special Groups -->
-        <apex:include pageName="FedWorkbook_SpecialGroups" />
-        <div class="gfg-pdf-break"></div>
+                    <div class="gfgp-h2 gfgp-center">The first steps in developing a financial strategy involve understanding:</div>
+                    <table style="width:100%;"><tr>
+                        <td style="vertical-align:top;width:50%;">
+                            <ul class="gfgp-ul"><li>What you have</li><li>What you want</li><li>What your costs will be</li></ul>
+                        </td>
+                        <td style="vertical-align:top;width:50%;">
+                            <ul class="gfgp-ul"><li>What you need</li><li>What your income will be</li><li>What your options are</li></ul>
+                        </td>
+                    </tr></table>
 
-        <!-- Page 10: FERS Special Supplement -->
-        <apex:include pageName="FedWorkbook_SpecialSupplement" />
-        <div class="gfg-pdf-break"></div>
+                    <div class="gfgp-h2 gfgp-center">During this review we will cover the following core benefits that apply to you:</div>
+                    <table style="width:100%;"><tr>
+                        <td style="vertical-align:top;width:50%;">
+                            <ul class="gfgp-ul"><li>Your Federal Retirement System</li><li>Retirement Annuity</li><li>FERS Supplement Annuity</li><li>Thrift Savings Plan</li></ul>
+                        </td>
+                        <td style="vertical-align:top;width:50%;">
+                            <ul class="gfgp-ul"><li>Social Security Annuity</li><li>Federal Employee Group Life Insurance</li><li>Survivor Benefits Plan</li></ul>
+                        </td>
+                    </tr></table>
+                </td>
+            </tr>
+        </table>
 
-        <!-- Page 11: TSP, Resources, Forms -->
-        <apex:include pageName="FedWorkbook_TspResources" />
-        <div class="gfg-pdf-break"></div>
+        <!-- ============ Page 3: FEGLI Basic Life ============ -->
+        <apex:outputPanel layout="none"
+            rendered="{!Lead.Basic__c == true || (Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != 'Ao' && Lead.FEGLI_Code_Picklist__c != 'Bo')}">
+        <table class="gfgp-sheet">
+            <tr>
+                <td class="gfgp-body">
+                    <div class="gfgp-title">Federal Employee Group Life Insurance</div>
+                    <div class="gfgp-accent"></div>
 
-        <!-- Page 12: Financial Snapshot -->
-        <apex:include pageName="FedWorkbook_FinancialSnapshot" />
-        <div class="gfg-pdf-break"></div>
+                    <p class="gfgp-p">
+                        FEGLI is a Group Term Life Insurance offered to most federal employees, administered by the
+                        Office of Federal Employees' Group Life Insurance (OFEGLI), the administrative unit of
+                        Metropolitan Life Insurance Company, which is under contract with the Office of Personnel
+                        Management (OPM). A complete FEGLI Program Handbook can be downloaded at:
+                    </p>
+                    <p class="gfgp-center"><a class="gfgp-link" href="http://www.opm.gov/healthcare-insurance/life-insurance/reference-materials/handbook.pdf">http://www.opm.gov/healthcare-insurance/life-insurance/reference-materials/handbook.pdf</a></p>
+                    <p class="gfgp-p">
+                        It is understood that neither OPM nor OFEGLI endorses any kind of privately-sponsored insurance
+                        plan. Employees are free to purchase whatever life insurance they choose. Comparison shopping is
+                        encouraged. GFG is an independent company offering alternatives to FEGLI and not affiliated with
+                        OPM or OFEGLI.
+                    </p>
+                    <p class="gfgp-p"><b>Basic -</b> As an eligible employee, you were automatically enrolled in Basic Life Insurance upon hiring, unless you waived this coverage. Under Basic Life Insurance you have three components:</p>
+                    <p class="gfgp-p"><b>I. Basic Life -</b> The cost of Basic is shared between the employee and the Government. The employee pays two-thirds and the Government pays one-third. <u>The USPS pays the full cost of Basic for postal employees.</u> <b>The cost of basic is $0.16 biweekly and $0.3467 monthly per $1,000 of coverage.</b> There is no extra charge for the Extra Benefit or AD&amp;D.</p>
+                    <p class="gfgp-p"><b>II. Extra Benefit</b> - (age Multiplication Factor) If you are under the age of 45 and covered by Basic, you automatically have extra coverage. (See chart)</p>
+                    <p class="gfgp-p"><b>III. Accidental Death and Dismemberment</b> - (AD&amp;D) Accidental death benefits are equal to your Basic Life Insurance coverage. Accidental dismemberment benefits for the loss of a hand, foot, or eye are equal to half of the Basic Life Insurance Amount; however if you lose any two of these, the full amount is payable. There is no additional cost for this coverage.</p>
 
-        <!-- Pages 13 & 14: Notes -->
-        <apex:include pageName="FedWorkbook_Notes" />
-        <div class="gfg-pdf-break"></div>
+                    <table style="width:100%;"><tr>
+                        <td style="width:55%;vertical-align:top;padding-right:10px;">
+                            <table class="gfgp-calc">
+                                <tr><td>Base Pay Round Up:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!Lead.formula_basePay__c}" /></apex:outputText></td></tr>
+                                <tr><td>Add $2000 = BIA Amount:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!Lead.formula_basePay__c + 2000}" /></apex:outputText></td></tr>
+                                <tr><td>Extra Benefit Factor (Age 45 &amp; under):</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!Lead.Total_Basic_Benefit__c - (Lead.formula_basePay__c + 2000)}" /></apex:outputText></td></tr>
+                                <tr><td><b>Total Current Benefit:</b></td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!Lead.Total_Basic_Benefit__c}" /></apex:outputText></td></tr>
+                            </table>
+                        </td>
+                        <td style="width:45%;vertical-align:top;">
+                            <table class="gfgp-tab gfgp-tab--rate">
+                                <thead><tr><th>AGE</th><th>FACTOR</th><th>AGE</th><th>FACTOR</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Under 35</td><td>1</td><td>40</td><td>0.5</td></tr>
+                                    <tr><td>36</td><td>0.9</td><td>41</td><td>0.4</td></tr>
+                                    <tr><td>37</td><td>0.8</td><td>42</td><td>0.3</td></tr>
+                                    <tr><td>38</td><td>0.7</td><td>43</td><td>0.2</td></tr>
+                                    <tr><td>39</td><td>0.6</td><td>44</td><td>0.1</td></tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr></table>
 
-        <!-- Page 15: Back cover -->
-        <c:FedWorkbook_BackCover />
+                    <div class="gfgp-center-h">Your Basic coverage, costs and options in retirement</div>
+                    <p class="gfgp-center gfgp-italic">For illustration purposes, your FEGLI coverage reflects a salary increase of 1% annually from your current income. We advise that you reevaluate retirement costs when salary increases occur.</p>
+                    <ul class="gfgp-ul">
+                        <li>No Reduction - Coverage Amount <span class="gfgp-amt"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!Lead.formula_basePay__c + 2000}" /></apex:outputText></span>
+                            <ul><li>Cost Prior to age 65 <span class="gfgp-cost">$2.5967</span> X <apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!(Lead.formula_basePay__c + 2000) / 1000}" /></apex:outputText> = <span class="gfgp-amt"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!((Lead.formula_basePay__c + 2000) / 1000) * 2.5967}" /></apex:outputText></span>&#160;&#160;&#160;After age 65 <span class="gfgp-cost">$2.25</span> X <apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!(Lead.formula_basePay__c + 2000) / 1000}" /></apex:outputText> = <span class="gfgp-amt"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!((Lead.formula_basePay__c + 2000) / 1000) * 2.25}" /></apex:outputText></span></li></ul>
+                        </li>
+                        <li>50% Reduction <span class="gfgp-cost">(Reduces 1% per month starting at age 65)</span> Coverage after reduction <span class="gfgp-amt"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!Lead.hiddenTotalBenefitformula__c / 2}" /></apex:outputText></span>
+                            <ul><li>Cost Prior to age 65 <span class="gfgp-cost">$1.0967</span> X <apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!(Lead.formula_basePay__c + 2000) / 1000}" /></apex:outputText> = <span class="gfgp-amt"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!((Lead.formula_basePay__c + 2000) / 1000) * 1.0967}" /></apex:outputText></span>&#160;&#160;&#160;After age 65 <span class="gfgp-cost">$0.75</span> X <apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!(Lead.formula_basePay__c + 2000) / 1000}" /></apex:outputText> = <span class="gfgp-amt"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!((Lead.formula_basePay__c + 2000) / 1000) * 0.75}" /></apex:outputText></span></li></ul>
+                        </li>
+                        <li>75% Reduction <span class="gfgp-cost">(Reduces 2% per month starting at age 65)</span> Coverage after reduction <span class="gfgp-amt"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!(Lead.hiddenTotalBenefitformula__c / 2) / 2}" /></apex:outputText></span>
+                            <ul><li>Cost Prior to age 65 <span class="gfgp-cost">$0.3467</span> X <apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!(Lead.formula_basePay__c + 2000) / 1000}" /></apex:outputText> = <span class="gfgp-amt"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!((Lead.formula_basePay__c + 2000) / 1000) * 0.3467}" /></apex:outputText></span>&#160;&#160;&#160;<span class="gfgp-cost">After age 65 =</span> <b><u>NO COST</u></b></li></ul>
+                        </li>
+                    </ul>
+                    <p class="gfgp-center" style="font-weight:bold;font-size:9pt;">**Rates are based on current FEGLI rates. Rates are subject to change.</p>
+                </td>
+                <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">3</div></td>
+            </tr>
+        </table>
+        </apex:outputPanel>
+
+        <!-- ============ Page 4: FEGLI Option A and Option C ============ -->
+        <apex:outputPanel layout="none" rendered="{!Lead.OptionA__c == true || Lead.OptionC__c == true}">
+        <table class="gfgp-sheet">
+            <tr>
+                <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">4</div></td>
+                <td class="gfgp-body">
+                    <!-- ===== Option A (rendered only when Option A active) ===== -->
+                    <apex:outputPanel layout="none" rendered="{!Lead.OptionA__c == true || CONTAINS(Lead.FEGLI_Plan__c, 'Option A')}">
+                    <div class="gfgp-title">FEGLI - Option A</div>
+                    <div class="gfgp-accent"></div>
+                    <p class="gfgp-p">Optional Life Insurance - Federal employees who are covered under Basic life insurance program may also elect to purchase one or all three of the Optional coverage plans.</p>
+                    <p class="gfgp-p"><b>Option A</b> - Standard Optional Insurance - <span style="color:#B91C1C;">The employee pays the full cost</span> for this optional insurance which offers an additional $10,000 of FEGLI. Option A also offers an equal amount of AD&amp;D protection. Costs are age-based.</p>
+
+                    <table style="width:100%;"><tr>
+                        <td style="width:50%;vertical-align:top;padding-right:12px;">
+                            <table class="gfgp-tab gfgp-tab--rate">
+                                <thead><tr><th>Employee Age Band</th><th>Pay Mode factor<br/>Bi-Weekly</th><th>Pay Mode Factor<br/>Monthly</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Under 35</td><td>$0.20</td><td>$0.43</td></tr>
+                                    <tr><td>35-39</td><td>$0.20</td><td>$0.43</td></tr>
+                                    <tr><td>40-44</td><td>$0.30</td><td>$0.65</td></tr>
+                                    <tr><td>45-49</td><td>$0.60</td><td>$1.30</td></tr>
+                                    <tr><td>50-54</td><td>$1.00</td><td>$2.17</td></tr>
+                                    <tr><td>55-59</td><td>$1.80</td><td>$3.90</td></tr>
+                                    <tr><td>60 Plus</td><td>$6.00</td><td>$13.00</td></tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td style="width:50%;vertical-align:top;text-align:center;">
+                            <div class="gfgp-center-h" style="text-decoration:underline;">Option A - After Retirement</div>
+                            <p class="gfgp-center gfgp-italic">The amount of your Option A life insurance decreases at age 65 or at retirement, whichever is later, at a rate of 2% per month until a 75% reduction is reached.</p>
+                            <apex:image url="{!$Resource.Pg5GrovesArrow}" width="180" alt="Option A coverage decreases from $10,000 to $2,500" />
+                            <p class="gfgp-center" style="margin-top:10pt;">Option A Cost: <span class="gfgp-cost">$</span> <span class="gfgp-amt"><apex:outputText value="{0, number, 0.00}"><apex:param value="{!acOptionACost}" /></apex:outputText></span></p>
+                        </td>
+                    </tr></table>
+                    </apex:outputPanel>
+
+                    <!-- ===== Option C (rendered only when Option C active) ===== -->
+                    <apex:outputPanel layout="none" rendered="{!Lead.OptionC__c == true || CONTAINS(Lead.FEGLI_Plan__c, 'Option C')}">
+                    <div class="gfgp-title" style="margin-top:14pt;">FEGLI - Option C</div>
+                    <div class="gfgp-accent"></div>
+                    <p class="gfgp-p"><b>Option C</b> - Family Optional Insurance - <span style="color:#B91C1C;">The employee pays the full cost</span> for optional family coverage. This coverage insures the lives of your spouse and eligible dependent children. You have the option of one to five multiples. <span style="color:#B91C1C;">Each multiple is equal to $5,000 for your spouse and $2,500 for each eligible dependent child.</span></p>
+                    <p class="gfgp-p">"Eligible family members" means your present spouse, and your unmarried dependent child, including an adopted child, a stepchild or a recognized natural child who is living with you, or who is receiving regular and substantial support from you. To be covered, a child must be under 22 years of age, or be 22 or over and incapable of self-support because of mental or physical disability, which existed before the child became 22 years of age.</p>
+
+                    <table style="width:100%;"><tr>
+                        <td style="width:50%;vertical-align:top;padding-right:12px;">
+                            <table class="gfgp-calc">
+                                <tr><td>Number of Multiples:</td><td class="v"><apex:outputText value="{!acOptionCMultiples}" /></td></tr>
+                                <tr><td>Spouse Benefit:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!acOptionCMultiples * 5000}" /></apex:outputText></td></tr>
+                                <tr><td>Each Child Benefit:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!acOptionCMultiples * 2500}" /></apex:outputText></td></tr>
+                                <tr><td>Multiples <apex:outputText value="{0, number, #0}"><apex:param value="{!acOptionCMultiples}" /></apex:outputText> X Factor <apex:outputText value="{0, number, #0.00}"><apex:param value="{!acOptionCBiWeeklyFactor}" /></apex:outputText> =</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!acOptionCMultiples * acOptionCBiWeeklyFactor}" /></apex:outputText></td></tr>
+                            </table>
+                        </td>
+                        <td style="width:50%;vertical-align:top;">
+                            <table class="gfgp-tab gfgp-tab--rate">
+                                <thead><tr><th>Age Band</th><th>Bi-Weekly Factor</th><th>Monthly Factor</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Under 35</td><td>$0.20</td><td>$0.43</td></tr>
+                                    <tr><td>35-39</td><td>$0.24</td><td>$0.52</td></tr>
+                                    <tr><td>40-44</td><td>$0.37</td><td>$0.80</td></tr>
+                                    <tr><td>45-49</td><td>$0.53</td><td>$1.15</td></tr>
+                                    <tr><td>50-54</td><td>$0.83</td><td>$1.80</td></tr>
+                                    <tr><td>55-59</td><td>$1.33</td><td>$2.88</td></tr>
+                                    <tr><td>60-64</td><td>$2.43</td><td>$5.27</td></tr>
+                                    <tr><td>65-69</td><td>$2.83</td><td>$6.13</td></tr>
+                                    <tr><td>70-74</td><td>$3.83</td><td>$8.30</td></tr>
+                                    <tr><td>75-79</td><td>$5.76</td><td>$12.48</td></tr>
+                                    <tr><td>80- Plus</td><td>$7.80</td><td>$16.90</td></tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr></table>
+
+                    <p class="gfgp-p" style="margin-top:12pt;"><b>Continuation Of Option B and C After Retirement</b></p>
+                    <p class="gfgp-p">Your full reduction Option B and C multiples are free after you reach age 65 or retire (whichever is later), but reductions begin. The full reduction multiples will reduce by 2% of the pre-retirement amount per month for 50 months, at which time your coverage ends. Effective April 24, 1999, Option B and C may be continued after retirement at per $1,000 rates. You do have the option to continue paying the monthly premiums and maintain coverage.</p>
+                    </apex:outputPanel>
+                </td>
+            </tr>
+        </table>
+        </apex:outputPanel>
+
+        <!-- ============ Page 5: FEGLI Option B ============ -->
+        <apex:outputPanel layout="none" rendered="{!Lead.OptionB__c == true}">
+        <table class="gfgp-sheet">
+            <tr>
+                <td class="gfgp-body">
+                    <div class="gfgp-title">FEGLI - Option B</div>
+                    <div class="gfgp-accent"></div>
+                    <p class="gfgp-p"><b>Option B</b> - Additional Optional Insurance - This benefit is calculated by taking your annual rate of pay and rounding it to the next $1,000 and using your multiplier (1-5) to determine your coverage amount. The factor chart below is based on each $1,000 of coverage. Group costs to the employee increase every five years after age 35.</p>
+
+                    <!-- Factor table (left) + calculation rows (right) -->
+                    <table style="width:100%;"><tr>
+                        <td style="width:50%;vertical-align:top;padding-right:12px;">
+                            <table class="gfgp-tab gfgp-tab--rate">
+                                <thead><tr><th>Employee Age Band</th><th>Bi-Weekly Factor</th><th>Monthly Factor</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Under 35</td><td>$0.02</td><td>$0.043</td></tr>
+                                    <tr><td>35-39</td><td>$0.02</td><td>$0.043</td></tr>
+                                    <tr><td>40-44</td><td>$0.03</td><td>$0.065</td></tr>
+                                    <tr><td>45-49</td><td>$0.06</td><td>$0.130</td></tr>
+                                    <tr><td>50-54</td><td>$0.10</td><td>$0.217</td></tr>
+                                    <tr><td>55-59</td><td>$0.18</td><td>$0.390</td></tr>
+                                    <tr><td>60-64</td><td>$0.40</td><td>$0.867</td></tr>
+                                    <tr><td>65-69</td><td>$0.48</td><td>$1.040</td></tr>
+                                    <tr><td>70-74</td><td>$0.86</td><td>$1.863</td></tr>
+                                    <tr><td>75-79</td><td>$1.80</td><td>$3.90</td></tr>
+                                    <tr><td>80+</td><td>$2.88</td><td>$6.240</td></tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td style="width:50%;vertical-align:top;">
+                            <table class="gfgp-calc">
+                                <tr><td>Annual Rate of Pay Rounded Up:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obAnnualRatePay}" /></apex:outputText></td></tr>
+                                <tr><td>Your Multiplier:</td><td class="v"><apex:outputText value="{!obMultiplier}" /></td></tr>
+                                <tr><td>Option B Insurance Coverage:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obOptionBCoverage}" /></apex:outputText></td></tr>
+                                <tr><td>Bi-Weekly Cost:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obOptionBBiWeeklyCost}" /></apex:outputText></td></tr>
+                                <tr><td>Monthly Cost:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obOptionBMonthlyCost}" /></apex:outputText></td></tr>
+                            </table>
+                        </td>
+                    </tr></table>
+
+                    <!-- Future-cost projection table -->
+                    <table class="gfgp-proj">
+                        <thead>
+                            <tr>
+                                <th>Option B</th>
+                                <th>$250,000 Coverage</th>
+                                <th>$375,000 Coverage</th>
+                                <th>$500,000 Coverage</th>
+                                <th>$625,000 Coverage</th>
+                            </tr>
+                            <tr>
+                                <th class="ageband">Age Band</th>
+                                <th class="ageband">&#160;</th>
+                                <th class="ageband">&#160;</th>
+                                <th class="ageband">&#160;</th>
+                                <th class="ageband">&#160;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="age">50-54</td><td>$3,250</td><td>$4,875</td><td>$6,500</td><td>$8,125</td></tr>
+                            <tr><td class="age">55-59</td><td>$5,850</td><td>$8,775</td><td>$11,700</td><td>$14,625</td></tr>
+                            <tr><td class="age">60-64</td><td>$13,300</td><td>$19,500</td><td>$26,000</td><td>$32,500</td></tr>
+                            <tr><td class="age">65-69</td><td>$15,600</td><td>$23,400</td><td>$31,200</td><td>$39,000</td></tr>
+                            <tr><td class="age">70-74</td><td>$27,950</td><td>$41,925</td><td>$55,900</td><td>$69,875</td></tr>
+                            <tr><td class="age">75-79</td><td>$58,500</td><td>$87,750</td><td>$117,000</td><td>$146,250</td></tr>
+                            <tr><td class="age">80 Plus</td><td>$18,720 per year</td><td>$28,080 per year</td><td>$37,440 per year</td><td>$46,800 per year</td></tr>
+                        </tbody>
+                        <tfoot>
+                            <tr><td>Total Cost From Age 50-80</td><td>$143,170</td><td>$214,305</td><td>$285,740</td><td>$357,175</td></tr>
+                        </tfoot>
+                    </table>
+                    <p class="gfgp-rate-note">**Rates are based on current FEGLI rates. Rates are subject to change.</p>
+
+                    <div class="gfgp-h3">Total Basic &amp; Optional Life Insurance</div>
+                    <table class="gfgp-summary">
+                        <colgroup><col style="width:22%" /><col style="width:39%" /><col style="width:39%" /></colgroup>
+                        <tr>
+                            <td class="lbl">&#160;</td>
+                            <td class="colhead">Coverage</td>
+                            <td class="colhead">Bi-Weekly Cost</td>
+                        </tr>
+                        <tr>
+                            <td class="lbl">Basic Life:</td>
+                            <td class="cell">$<apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!obBasicCoverage}" /></apex:outputText></td>
+                            <td class="cell">
+                                <apex:outputPanel layout="none" rendered="{!obBasicBiWeeklyCost > 0}">$<apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!obBasicBiWeeklyCost}" /></apex:outputText></apex:outputPanel>
+                                <apex:outputPanel layout="none" rendered="{!obBasicBiWeeklyCost <= 0}">$ --</apex:outputPanel>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="lbl">OPT A:</td>
+                            <td class="cell">$<apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!obOptionACoverage}" /></apex:outputText></td>
+                            <td class="cell">$<apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!obOptionABiWeeklyCost}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="lbl">OPT B:</td>
+                            <td class="cell">$<apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!obOptionBCoverage}" /></apex:outputText></td>
+                            <td class="cell">$<apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!obOptionBBiWeeklyCost}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="lbl">OPT C:</td>
+                            <td class="cell">$ --</td>
+                            <td class="cell">$<apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!obOptionCBiWeeklyCost}" /></apex:outputText></td>
+                        </tr>
+                        <tr class="total">
+                            <td class="lbl">TOTAL:</td>
+                            <td class="cell">$<apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!obTotalCoverage}" /></apex:outputText></td>
+                            <td class="cell">$<apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!obTotalBiWeeklyCost}" /></apex:outputText></td>
+                        </tr>
+                        <tr class="total">
+                            <td class="lbl">Monthly Cost</td>
+                            <td class="cell">$<apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!obTotalMonthlyCost}" /></apex:outputText></td>
+                            <td>&#160;</td>
+                        </tr>
+                    </table>
+
+                    <p class="gfgp-bottom-note">Rates are subject to change and are not guaranteed upon approval.<br/>FEGLI rates are based on current rates.</p>
+                </td>
+                <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">5</div></td>
+            </tr>
+        </table>
+        </apex:outputPanel>
+
+        <!-- ============ Page 6: FERS overview (FERS only) ============ -->
+        <apex:outputPanel layout="none" rendered="{!Lead.FERS__c == true}">
+        <table class="gfgp-sheet">
+            <tr>
+                <td class="gfgp-body">
+                    <div class="gfgp-title">FERS - Federal Employee Retirement System</div>
+                    <div class="gfgp-accent"></div>
+
+                    <p class="gfgp-p">
+                        The Federal Employees Retirement System, or FERS, became effective January 1, 1987.
+                        Almost all new employees hired after December 31, 1983, are automatically covered by
+                        FERS. Certain other Federal employees not covered by FERS have the option to transfer
+                        into the plan. The FERS retirement system is composed of three tiers:
+                    </p>
+                    <ol class="gfgp-ol">
+                        <li>The Basic Benefit Plan - FERS Retirement Annuity</li>
+                        <li>Social Security</li>
+                        <li>Thrift Savings Plan</li>
+                    </ol>
+
+                    <div class="gfgp-h2">Basic Benefit Plan - FERS Retirement Annuity</div>
+                    <ul class="gfgp-ul">
+                        <li><b>Eligibility</b> - If you were automatically covered by FERS, or you elected to
+                            transfer from CSRS, you will participate in the Basic Benefit plan. To be vested and
+                            receive retirement benefits from this plan, you must have at least 5 years of creditable
+                            civilian service. Survivor and disability benefits are available after 18 months of service.</li>
+                        <li><b>Contributions by employees into FERS</b></li>
+                    </ul>
+                    <ol class="gfgp-ol">
+                        <li>FERS - Hired on/after 1/1/1987 - Code K - Contribution 0.8%</li>
+                        <li>FERS-RAE - Hired on/after 1/1/2013 - Code KR - Contribution 3.1%</li>
+                        <li>FERS-FRAE - Hired on/after 1/1/2014 - Code KF - Contribution 4.4%</li>
+                        <li>Special Groups contributions are always .5% higher</li>
+                    </ol>
+                    <ul class="gfgp-ul">
+                        <li><b>Refunds</b> - You may withdraw your basic benefit contributions, if you leave Federal
+                            employment. However, if you do, you will not be eligible to receive benefits based on
+                            service covered by the refund. Rules regarding redeposits of refunded FERS contributions
+                            can vary based on service dates and individual circumstances. Employees should consult
+                            OPM or a qualified retirement specialist regarding redeposit eligibility.</li>
+                    </ul>
+
+                    <p class="gfgp-p">Retirement Options - There are three categories of retirement benefits in the Basic Benefit Plan:</p>
+                    <p class="gfgp-p" style="margin-left:14pt;"><b>1. Immediate or Postponed:</b> If you meet one of the following sets of age and service requirements, you are entitled to an immediate retirement benefit:</p>
+                    <ul class="gfgp-ul gfgp-bold-li">
+                        <li>Age 62 with at least 5 years of creditable service (unreduced benefit)</li>
+                        <li>Age 60 with at least 20 years of creditable service (unreduced benefit)</li>
+                        <li>MRA 30 (Minimum Retirement Age) with at least 30 years of service. <span style="font-weight:normal;">See chart (pg. 8)</span></li>
+                        <li>MRA 10 (Minimum Retirement Age) with at least 10 years of service. <span style="font-weight:normal;">See note below</span></li>
+                    </ul>
+                    <p class="gfgp-p">
+                        <span style="color:#B91C1C;">Note: MRA 10 - If you retire under MRA 10 (at least 10 years of service but less than 30 years) <b>your FERS Annuity will be reduced by 5% for every year you are under the age of 62.</b></span>
+                        Unless you have 20 years of service and your annuity begins at age 60 or later, you can avoid part, or all of the reduction by postponing the commencing date of your annuity.
+                    </p>
+                    <p class="gfgp-p" style="margin-left:14pt;"><b>2. Early Retirement</b> - An early retirement benefit is available in certain involuntary separation cases and in cases of voluntary separations, during a major reorganization, or reduction in force. To be eligible, you must meet the following requirements:</p>
+                    <ul class="gfgp-ul gfgp-bold-li">
+                        <li>Age 50 with 20 years of service</li>
+                        <li>Any age with 25 years of service</li>
+                    </ul>
+                    <p class="gfgp-p" style="margin-left:14pt;"><b>3. Deferred Retirement</b> - If you leave Federal service before you meet the age and service requirements for an immediate retirement benefit, you may be eligible for deferred retirement benefits. To be eligible, you must have completed at least 5 years of creditable civilian service. You may receive benefits when you meet one of the following sets of age and service requirements:</p>
+                    <ul class="gfgp-ul gfgp-bold-li">
+                        <li>Age 62 with 5 years of service &#8226; Age 60 with 20 years of service &#8226; MRA 30</li>
+                        <li>MRA 10 (Reduced benefit unless receipt is delayed to lessen or avoid age reduction)</li>
+                    </ul>
+                </td>
+                <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">6</div></td>
+            </tr>
+        </table>
+        </apex:outputPanel>
+
+        <!-- ============ Page 7: Calculating FERS Retirement (FERS only) ============ -->
+        <apex:outputPanel layout="none" rendered="{!Lead.FERS__c == true}">
+        <table class="gfgp-sheet">
+            <tr>
+                <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">7</div></td>
+                <td class="gfgp-body">
+                    <div class="gfgp-title">FERS - Calculating FERS Retirement</div>
+                    <div class="gfgp-accent"></div>
+                    <p class="gfgp-p"><b>Benefit Formula</b> - How your benefit is calculated: Your benefit is based on your "high-three average pay." This is figured by averaging your highest basic pay over any 3 consecutive years of creditable service. In addition to your high-three, your years of creditable service and age at retirement are key factors. Calculating your FERS Annuity:</p>
+                    <ul class="gfgp-red-ul">
+                        <li>If under age 62, your factor is 1% X High-Three X Years of Service</li>
+                        <li>At age 62 or older (20 plus years of service), your factor is 1.1% X High-Three X Years of Service</li>
+                    </ul>
+
+                    <!-- Eligibility / Minimum Retirement Age table -->
+                    <table class="gfgp-elig">
+                        <thead>
+                            <tr>
+                                <th>If your year of birth is...</th>
+                                <th>Your minimum retirement age is...</th>
+                                <th>Retirement</th>
+                                <th>Minimum Age</th>
+                                <th>Minimum Service</th>
+                                <th>Special Requirements</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Before 1948</td><td>55 years</td>
+                                <td rowspan="8">Voluntary<br/>(Optional)</td>
+                                <td>62</td><td>5</td><td>None</td>
+                            </tr>
+                            <tr>
+                                <td>1948</td><td>55 years, 2 mo.</td>
+                                <td>60</td><td>20</td><td>None</td>
+                            </tr>
+                            <tr>
+                                <td>1949</td><td>55 years, 4 mo.</td>
+                                <td>MRA*</td><td>30</td><td>None</td>
+                            </tr>
+                            <tr>
+                                <td>1950</td><td>55 years, 6 mo.</td>
+                                <td class="gray" rowspan="5">MRA*</td>
+                                <td class="gray" rowspan="5">10</td>
+                                <td class="gray" rowspan="5">None
+                                    <span class="note">Note: Annuity is reduced by 5% for each year that the employee is under the age of 62.</span>
+                                </td>
+                            </tr>
+                            <tr><td>1951</td><td>55 years, 8 mo.</td></tr>
+                            <tr><td>1952</td><td>55 years, 10 mo.</td></tr>
+                            <tr><td>1953 to 1964</td><td>56 years</td></tr>
+                            <tr><td>1965</td><td>56 years, 2 mo.</td></tr>
+                            <tr>
+                                <td>1966</td><td>56 years, 4 mo.</td>
+                                <td class="red" rowspan="3">&#160;</td>
+                                <td class="red" rowspan="3">Any Age<br/>50</td>
+                                <td class="red" rowspan="3">25<br/>20</td>
+                                <td class="red" rowspan="3">You must retire under special provisions for air traffic controller, law enforcement, firefighter, or military reserve technician personnel.</td>
+                            </tr>
+                            <tr><td>1967</td><td>56 years, 6 mo.</td></tr>
+                            <tr><td>1968</td><td>56 years, 8 mo.</td></tr>
+                            <tr>
+                                <td>1969</td><td>56 years, 10 mo.</td>
+                                <td rowspan="2">&#160;</td>
+                                <td rowspan="2">Any Age</td>
+                                <td rowspan="2">25</td>
+                                <td rowspan="2">OPM must have determined that your agency is undergoing a major reorganization, reduction-in-force, or transfer of function.</td>
+                            </tr>
+                            <tr><td>After 1969</td><td>57 Years</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="gfgp-p gfgp-italic" style="font-size:8.5pt;">*MRA = Minimum Retirement Age (between 55 and 57, based on your year of birth, per the table above).</p>
+
+                    <table class="gfgp-sc">
+                        <colgroup><col style="width:26%" /><col style="width:37%" /><col style="width:37%" /></colgroup>
+                        <tr>
+                            <td>&#160;</td>
+                            <td class="schead">Scenario 1</td>
+                            <td class="schead">Scenario 2</td>
+                        </tr>
+                        <tr>
+                            <td>&#160;</td>
+                            <td><table class="gfgp-scin"><tr><td class="lab">Current Age:</td><td class="blank"><apex:outputText value="{0, number, #0}"><apex:param value="{!fcCurrentAge}" /></apex:outputText></td></tr></table></td>
+                            <td><table class="gfgp-scin"><tr><td class="lab">Current Age:</td><td class="blank"><apex:outputText value="{0, number, #0}"><apex:param value="{!fcCurrentAge}" /></apex:outputText></td></tr></table></td>
+                        </tr>
+                        <tr>
+                            <td>&#160;</td>
+                            <td><table class="gfgp-scin"><tr><td class="lab">Retirement Age:</td><td class="blank"><apex:outputText value="{0, number, #0}"><apex:param value="{!fcS1RetirementAge}" /></apex:outputText></td></tr></table></td>
+                            <td><table class="gfgp-scin"><tr><td class="lab">Retirement Age:</td><td class="blank"><apex:outputText value="{0, number, #0}"><apex:param value="{!fcS2RetirementAge}" /></apex:outputText></td></tr></table></td>
+                        </tr>
+                        <tr>
+                            <td>&#160;</td>
+                            <td><table class="gfgp-scin"><tr><td class="lab">Years of Service:</td><td class="blank"><apex:outputText value="{0, number, #0.##}"><apex:param value="{!fcS1YearsOfService}" /></apex:outputText></td></tr></table></td>
+                            <td><table class="gfgp-scin"><tr><td class="lab">Years of Service:</td><td class="blank"><apex:outputText value="{0, number, #0.##}"><apex:param value="{!fcS2YearsOfService}" /></apex:outputText></td></tr></table></td>
+                        </tr>
+                        <tr>
+                            <td class="lhead">Annual Rate High-3 Average:</td>
+                            <td><table class="gfgp-scin"><tr><td class="op">$</td><td class="blank"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fcS1HighThree}" /></apex:outputText></td></tr></table></td>
+                            <td><table class="gfgp-scin"><tr><td class="op">$</td><td class="blank"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fcS2HighThree}" /></apex:outputText></td></tr></table></td>
+                        </tr>
+                        <tr>
+                            <td class="lhead">Time Your Factor: 1% 1.1%:</td>
+                            <td><table class="gfgp-scin"><tr><td class="blank"><apex:outputText value="{0, number, #0.0}"><apex:param value="{!fcS1Factor}" /></apex:outputText>%</td></tr></table></td>
+                            <td><table class="gfgp-scin"><tr><td class="op">1% 1.1%</td><td class="blank"><apex:outputText value="{0, number, #0.0}"><apex:param value="{!fcS2Factor}" /></apex:outputText>%</td></tr></table></td>
+                        </tr>
+                        <tr>
+                            <td>&#160;</td>
+                            <td><table class="gfgp-scin"><tr><td class="op">=</td><td class="blank"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!fcS1FactorTimesHighThree}" /></apex:outputText></td></tr></table></td>
+                            <td><table class="gfgp-scin"><tr><td class="op">=</td><td class="blank"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!fcS2FactorTimesHighThree}" /></apex:outputText></td></tr></table></td>
+                        </tr>
+                        <tr>
+                            <td class="lhead">Times Years of Service:</td>
+                            <td><table class="gfgp-scin"><tr><td class="blank"><apex:outputText value="{0, number, #0.##}"><apex:param value="{!fcS1YearsOfService}" /></apex:outputText></td></tr></table></td>
+                            <td><table class="gfgp-scin"><tr><td class="blank"><apex:outputText value="{0, number, #0.##}"><apex:param value="{!fcS2YearsOfService}" /></apex:outputText></td></tr></table></td>
+                        </tr>
+                        <tr>
+                            <td class="lhead">Annual Retirement Annuity:</td>
+                            <td><table class="gfgp-scin"><tr><td class="op">$</td><td class="blank"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fcS1AnnualAnnuity}" /></apex:outputText></td></tr></table></td>
+                            <td><table class="gfgp-scin"><tr><td class="op">$</td><td class="blank"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fcS2AnnualAnnuity}" /></apex:outputText></td></tr></table></td>
+                        </tr>
+                        <tr>
+                            <td class="lhead">Monthly Retirement Annuity:</td>
+                            <td><table class="gfgp-scin"><tr><td class="op">$</td><td class="blank"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fcS1MonthlyAnnuity}" /></apex:outputText></td></tr></table></td>
+                            <td><table class="gfgp-scin"><tr><td class="op">$</td><td class="blank"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fcS2MonthlyAnnuity}" /></apex:outputText></td></tr></table></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </apex:outputPanel>
+
+        <!-- ============ Page 8: FERS Survivor Benefit Annuity (FERS only) ============ -->
+        <apex:outputPanel layout="none" rendered="{!Lead.FERS__c == true}">
+        <table class="gfgp-sheet">
+            <tr>
+                <td class="gfgp-body">
+                    <!-- Section A: FERS - Calculating FERS Retirement (continued) -->
+                    <div class="gfgp-title">FERS - Calculating FERS Retirement</div>
+                    <div class="gfgp-accent"></div>
+
+                    <table class="gfgp-cmp">
+                        <colgroup><col style="width:22%" /><col style="width:26%" /><col style="width:26%" /><col style="width:26%" /></colgroup>
+                        <!-- Scenario 1 -->
+                        <tr>
+                            <td class="l"><span class="vblank"><apex:outputText value="{0, number, #0}"><apex:param value="{!fcS1RetirementAge}" /></apex:outputText></span></td>
+                            <td><span class="vblank"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!fsS1CurrentMonthlyIncome}" /></apex:outputText></span></td>
+                            <td><span class="vblank"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!fsS1MonthlyRetirementAnnuity}" /></apex:outputText></span></td>
+                            <td><span class="vblank"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!fsS1DifferenceInMonthlyAnnuity}" /></apex:outputText></span></td>
+                        </tr>
+                        <tr class="hd">
+                            <td class="l">Age at Retirement</td>
+                            <td>Current Monthly Income</td>
+                            <td>Monthly Retirement Annuity</td>
+                            <td>Difference in Monthly Annuity</td>
+                        </tr>
+                        <!-- Scenario 2 -->
+                        <tr>
+                            <td class="l"><span class="vblank"><apex:outputText value="{0, number, #0}"><apex:param value="{!fcS2RetirementAge}" /></apex:outputText></span></td>
+                            <td><span class="vblank"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!fsS2CurrentMonthlyIncome}" /></apex:outputText></span></td>
+                            <td><span class="vblank"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!fsS2MonthlyRetirementAnnuity}" /></apex:outputText></span></td>
+                            <td><span class="vblank"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!fsS2DifferenceInMonthlyAnnuity}" /></apex:outputText></span></td>
+                        </tr>
+                        <tr class="hd">
+                            <td class="l">Age at Retirement</td>
+                            <td>Current Monthly Income</td>
+                            <td>Monthly Retirement Annuity</td>
+                            <td>Difference in Monthly Annuity</td>
+                        </tr>
+                    </table>
+
+                    <!-- Section B: FERS - Survivor Benefit Annuity (married / registered partnership) -->
+                    <apex:outputPanel layout="none"
+                        rendered="{!Lead.Marital_Status__c == 'Married' || Lead.Marital_Status__c == 'Registered Partnership'}">
+                    <div class="gfgp-title">FERS - Survivor Benefit Annuity</div>
+                    <div class="gfgp-accent"></div>
+                    <p class="gfgp-p">Retiring federal employees under both the CSRS and FERS retirement systems have the opportunity to ensure continuation of benefits to survivors with an insurable interest. A person with an insurable interest is an insurance term applying to a person who would benefit financially by your continuation of life. Such persons would include, but are not limited to, a widow, widower, former spouse, and children.</p>
+                    <ul class="gfgp-red-ul">
+                        <li>May elect a survivor benefit of either 25% or 50% of their retirement annuity</li>
+                        <li>If 25% is elected, their annuity will be reduced by 5%</li>
+                        <li>If 50% is elected, their annuity will be reduced by 10%</li>
+                    </ul>
+                    <p class="gfgp-p">To provide a survivor annuity for a person who has an "insurable interest" in you, your annual annuity would be reduced from 10 to 40 percent, depending on the difference in your age and the age of the person named.</p>
+                    <p class="gfgp-p">Age of the person named in relation to the retiring employee and the corresponding reduction in annuity:</p>
+
+                    <table style="width:100%;"><tr>
+                        <td style="width:58%;vertical-align:top;">
+                            <ul class="gfgp-ul">
+                                <li>Older, same age, or less than 5 years younger 10% =</li>
+                                <li>5 but less than 10 years younger 15% =</li>
+                                <li>10 but less than 15 years younger 20% =</li>
+                                <li>15 but less than 20 years younger 25% =</li>
+                                <li>20 but less than 25 years younger 30% =</li>
+                                <li>25 but less than 30 years younger 35% =</li>
+                                <li>30 or more years younger 40%</li>
+                            </ul>
+                        </td>
+                        <td style="width:42%;vertical-align:top;padding-left:10px;">
+                            <div class="gfgp-callout">
+                                <div class="gfgp-callout-title">Points to Consider</div>
+                                If you opt out of the survivor benefit, your spouse or any other family member covered under FEHB will lose that coverage if you predecease them during retirement, unless they are otherwise eligible for coverage. In addition, they will lose the ability to initially enroll in FLTCIP coverage, unless otherwise eligible, although they could continue coverage if already enrolled.
+                            </div>
+                        </td>
+                    </tr></table>
+
+                    <!-- Minimum / Maximum Survivor Benefit boxes -->
+                    <table style="width:100%;margin-top:12pt;"><tr>
+                        <td style="width:50%;vertical-align:top;padding-right:14px;">
+                            <div class="gfgp-survbox">
+                                <div class="gfgp-survbox__title">Minimum Survivor Benefit Monthly Cost</div>
+                                <table class="gfgp-calc">
+                                    <tr><td>Monthly Annuity: $</td><td class="v"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fsMonthlyAnnuity}" /></apex:outputText></td></tr>
+                                    <tr><td>Minus 5%</td><td class="v"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fsMinus5Pct}" /></apex:outputText></td></tr>
+                                    <tr><td>Reduced Annuity: $</td><td class="v"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fsReducedMin}" /></apex:outputText></td></tr>
+                                </table>
+                                <div class="gfgp-survcap">25% Reduction<br/>Surviving Spouse Monthly Income<br/>$ <span class="u"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fsSurvivingSpouseMin}" /></apex:outputText></span></div>
+                            </div>
+                        </td>
+                        <td style="width:50%;vertical-align:top;">
+                            <div class="gfgp-survbox">
+                                <div class="gfgp-survbox__title">Maximum Survivor Benefit Monthly Cost</div>
+                                <table class="gfgp-calc">
+                                    <tr><td>Monthly Annuity: $</td><td class="v"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fsMonthlyAnnuity}" /></apex:outputText></td></tr>
+                                    <tr><td>Minus 10%</td><td class="v"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fsMinus10Pct}" /></apex:outputText></td></tr>
+                                    <tr><td>Reduced Annuity: $</td><td class="v"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fsReducedMax}" /></apex:outputText></td></tr>
+                                </table>
+                                <div class="gfgp-survcap">50% Reduction<br/>Surviving Spouse Monthly Income<br/>$ <span class="u"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fsSurvivingSpouseMax}" /></apex:outputText></span></div>
+                            </div>
+                        </td>
+                    </tr></table>
+                    </apex:outputPanel>
+                </td>
+                <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">8</div></td>
+            </tr>
+        </table>
+        </apex:outputPanel>
+
+        <!-- ============ Page 9: FERS Special Groups (Special Group only) ============ -->
+        <apex:outputPanel layout="none" rendered="{!Lead.Special_Group_Member__c == true}">
+        <table class="gfgp-sheet">
+            <tr>
+                <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">9</div></td>
+                <td class="gfgp-body">
+                    <div class="gfgp-title">FERS - Special Groups</div>
+                    <div class="gfgp-accent"></div>
+                    <p class="gfgp-p">Members of special groups, such as <u>law enforcement officers, firefighters and air traffic controllers</u>, pay different levels of employee contributions toward retirement and are eligible for retirement under age and service combinations that differ from those that apply for the standard retirement.</p>
+                    <p class="gfgp-p">Law enforcement officers and firefighters under the FERS system are defined to be classified as special group employees if the position held is limited to "young and vigorous" personnel. In addition, they must have occupied a primary, first-line law enforcement, or firefighter position for at least 3 years before moving to a secondary (administrative or supervisory) position.</p>
+
+                    <!-- Two-column block: bullets (left) + formula example (right) -->
+                    <table style="width:100%;margin-top:8pt;"><tr>
+                        <td style="width:48%;vertical-align:top;padding-right:12px;">
+                            <p class="gfgp-center" style="font-weight:bold;margin:0 0 4pt;">FERS Special Groups</p>
+                            <ul class="gfgp-ul">
+                                <li>You can retire with unreduced benefits at age 50, with at least 20 years of creditable service</li>
+                                <li>At any age, with at least 25 years of creditable service</li>
+                                <li class="gfgp-li-red">Age 50 with at least 20 years of service (unreduced benefit)</li>
+                                <li class="gfgp-li-red">Any age, with at least 25 years of creditable service (unreduced benefit)</li>
+                            </ul>
+                        </td>
+                        <td style="width:52%;vertical-align:top;">
+                            <p class="gfgp-eg" style="color:#B91C1C;font-weight:bold;">The formula for Special Groups is:</p>
+                            <p class="gfgp-eg">1.7% X high-three X (first) 20 years and 1% X high-three for any amount over 20 years</p>
+                            <p class="gfgp-eg">Example: A 53 year old with 23 years of service and a high-three of $115,000</p>
+                            <p class="gfgp-eg">1.7% X <b><u>$115,000</u></b> = <b><u>$1,955.00</u></b> X (first) 20 years of service = <b><u>$39,100</u></b></p>
+                            <p class="gfgp-eg">1% X <b><u>$115,000</u></b> high-three = <b><u>$1,150.00</u></b> X (remaining) three years = <b><u>$3,450</u></b></p>
+                            <p class="gfgp-eg-total">Total FERS Annuity ($39,100+$3,450) = $42,550.00 Annually</p>
+                        </td>
+                    </tr></table>
+
+                    <!-- Live calculation (this lead) -->
+                    <div class="gfgp-calc-section">
+                        <table class="gfgp-fcalc">
+                            <tr>
+                                <td>1.7% X</td>
+                                <td class="b"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!Lead.High_3_Salary__c}" /></apex:outputText><span class="sub">High-Three</span></td>
+                                <td>=</td>
+                                <td class="b"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!sgFactor17xHigh3}" /></apex:outputText></td>
+                                <td>X 20 Years =</td>
+                                <td class="b"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!sgBlock20YearAnnuity}" /></apex:outputText></td>
+                            </tr>
+                        </table>
+                        <table class="gfgp-fcalc">
+                            <tr>
+                                <td>1% X</td>
+                                <td class="b"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!Lead.High_3_Salary__c}" /></apex:outputText></td>
+                                <td>=</td>
+                                <td class="b"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!sgFactor01xHigh3}" /></apex:outputText></td>
+                                <td>X</td>
+                                <td class="b"><apex:outputText value="{0, number, #0.##}"><apex:param value="{!Lead.Remaining_Years__c}" /></apex:outputText></td>
+                                <td>Years =</td>
+                                <td class="b"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!sgFactor01xRemainingAnnuity}" /></apex:outputText></td>
+                            </tr>
+                        </table>
+                        <table class="gfgp-fcalc">
+                            <tr>
+                                <td>Total Annual Annuity:</td>
+                                <td class="b"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!sgTotalAnnual}" /></apex:outputText></td>
+                                <td>&#247; 12 =</td>
+                                <td class="b"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!sgTotalMonthly}" /></apex:outputText></td>
+                                <td>Monthly</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Air Traffic Controllers -->
+                    <div class="gfgp-center-h" style="margin-top:14pt;">Air Traffic Controllers</div>
+                    <p class="gfgp-p">Special Provisions: Vision 100 - Century Reauthorization Act was adopted February 10, 2004 and will impact the mandatory retirement calculation under CSRS and FERS.</p>
+                    <p class="gfgp-p" style="font-weight:bold;margin-bottom:0;">Highlights:</p>
+                    <ul class="gfgp-ul">
+                        <li>Second-level supervisor will not be subject to mandatory retirement</li>
+                        <li>Applies to active ATC with a date of birth prior to January 1, 1965</li>
+                        <li>Retires on MRA (MRA is between 55 and 57, depending on date of birth)</li>
+                        <li>With 30 years of service</li>
+                        <li>At least 5 years of service as an ATC</li>
+                        <li>Second-level supervisors under FERS will make additional deposits</li>
+                    </ul>
+                    <div class="gfgp-center-h">Calculating FERS Annuity Under Vision 100</div>
+                    <p class="gfgp-center">1.7% for all years of service (even those over 20 years) except military buyback</p>
+                    <p class="gfgp-center">Military buy back years will be calculated at 1%</p>
+                    <p class="gfgp-center">If a FERS ATC at 1.7% COLA will not start until age 62</p>
+                </td>
+            </tr>
+        </table>
+        </apex:outputPanel>
+
+        <!-- ============ Page 10: FERS Special Supplement (gated) ============ -->
+        <apex:outputPanel layout="none" rendered="{!ssShowSpecialSupp}">
+        <table class="gfgp-sheet">
+            <tr>
+                <td class="gfgp-body">
+                    <div class="gfgp-title">FERS - Special Supplement</div>
+                    <div class="gfgp-accent"></div>
+                    <p class="gfgp-p">Also known as the Special Retirement Supplement or SRS. It is designed to help bridge the income gap for certain FERS employees who retire before age 62. It will supplement your missing Social Security income until you reach age 62 and then stop. Since the SRS is not paid by Social Security, you do not have to start receiving benefits from Social Security at age 62. You may delay taking these benefits to help increase your future Social Security annuity.</p>
+                    <p class="gfgp-p">To be eligible, you must have a normal immediate retirement, not an early retirement (MRA+10). <span style="color:#B91C1C;">This means you must have 30 years of creditable service and meet your MRA, or you can have 20 years of creditable service and be age 60.</span></p>
+
+                    <p class="gfgp-center">To recap, you may be eligible if:</p>
+                    <p class="gfgp-center">You retire voluntarily | On an Immediate Annuity | Annuity not reduced for age</p>
+                    <p class="gfgp-center">You may still be eligible if you:</p>
+                    <p class="gfgp-center">Retire involuntarily before attaining MRA | Because of a major reorganization | Reduction in force</p>
+                    <p class="gfgp-center">You are <i>not</i> eligible if:</p>
+                    <p class="gfgp-center">You receive a deferred annuity benefit | Disability benefit | Immediate MRA + 10 annuity benefit</p>
+
+                    <hr class="gfgp-rule" />
+
+                    <p class="gfgp-center" style="color:#B91C1C;font-weight:bold;">Eligibility</p>
+                    <ul class="gfgp-ul">
+                        <li>You must be a FERS employee</li>
+                        <li>You must retire on a full immediate retirement</li>
+                        <li>Have 25 years of creditable service under Special Provisions and be any age or have 20 years of creditable service under Special Provisions and be at least 50 years old.</li>
+                    </ul>
+                    <p class="gfgp-p" style="color:#B91C1C;">Note: If you do not have enough years of creditable service under Special Provisions, you may qualify for the FERS Supplement, if you retire under the regular FERS immediate retirement rules, see above.</p>
+
+                    <hr class="gfgp-rule" />
+
+                    <div class="gfgp-center-h">How the Earnings Test affects your SRS</div>
+                    <p class="gfgp-p">Although the SRS is not paid by Social Security, it is subject to the Earnings Test. This is the amount of income allowed before Social Security benefits would be affected. This also applies to the SRS. For 2026, the exempt amount you can earn before Social Security benefit withholdings is $24,480 annually or $2,040 monthly if you are under full retirement age for the entire year. After reaching the exempt amount, benefits are reduced by $1.00 for every $2.00 earned over the limit.</p>
+                    <p class="gfgp-p">For current exempt amounts please visit: <a class="gfgp-link" href="https://www.ssa.gov/OACT/COLA/rtea.html">https://www.ssa.gov/OACT/COLA/rtea.html</a></p>
+
+                    <hr class="gfgp-rule" />
+
+                    <p class="gfgp-p">Example: your SRS is $1470 monthly and you earned an additional $2110 that month.</p>
+                    <p class="gfgp-p">$2110 (earned) - $2040 (exempt amount) = $70 over exempt amount divided by 2 = $35 Deducted from SRS payment.</p>
+                    <ul class="gfgp-ul">
+                        <li>The Earnings Test does not apply to Special Groups until they reach their regular FERS Minimum Retirement Age (MRA) at which point the Earnings Test will apply</li>
+                        <li>It is possible that your SRS could reduce to $0.00</li>
+                        <li>If you receive the SRS, you must report your earnings to OPM</li>
+                    </ul>
+
+                    <!-- FERS Special Supplement calculation -->
+                    <div class="gfgp-calc-section">
+                        <div class="gfgp-center-h" style="letter-spacing:1.5px;text-transform:uppercase;">FERS Special Supplement</div>
+                        <table class="gfgp-fcalc">
+                            <tr>
+                                <td>Years of Service:</td>
+                                <td class="b"><apex:outputText value="{0, number, #0.##}"><apex:param value="{!Lead.YOS_Special_Supplement__c}" /></apex:outputText></td>
+                                <td>&#247; 40 =</td>
+                                <td class="b"><apex:outputText value="{0, number, #0.0}"><apex:param value="{!ssSupplementPct}" /></apex:outputText></td>
+                                <td>%</td>
+                            </tr>
+                        </table>
+                        <table class="gfgp-fcalc">
+                            <tr>
+                                <td>Social Security @ 62</td>
+                                <td class="b"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!Lead.Predicted_Social_Security__c}" /></apex:outputText></td>
+                                <td>X</td>
+                                <td class="b"><apex:outputText value="{0, number, #0.0}"><apex:param value="{!ssSupplementPct}" /></apex:outputText></td>
+                                <td>% =</td>
+                                <td class="b" style="color:#B91C1C;border-bottom-color:#B91C1C;"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!ssSupplementDollars}" /></apex:outputText></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+                <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">10</div></td>
+            </tr>
+        </table>
+        </apex:outputPanel>
+
+        <!-- ============ Page 11: TSP, Resources, Forms ============ -->
+        <table class="gfgp-sheet">
+            <tr>
+                <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">11</div></td>
+                <td class="gfgp-body">
+                    <!-- Section A: TSP -->
+                    <div class="gfgp-title">TSP - Thrift Savings Plan</div>
+                    <div class="gfgp-accent"></div>
+                    <p class="gfgp-p">The Thrift Savings Plan (TSP) is a retirement savings and investment plan for Federal employees and members of the uniformed services, including the Ready Reserve. It was established by Congress in the Federal Employees' Retirement System Act of 1986. For FERS employees, TSP is one of a three-part retirement package that also includes your FERS basic annuity and Social Security. For a FERS employee to take full advantage of this plan, they should contribute 5% to receive the full matching benefit. CSRS employees receive no matching funds.</p>
+
+                    <table style="width:100%;margin-top:6pt;">
+                        <colgroup><col style="width:46%" /><col style="width:20%" /><col style="width:34%" /></colgroup>
+                        <tr>
+                            <!-- Column 1: Contribution Limits + Current -->
+                            <td style="vertical-align:top;padding-right:10px;">
+                                <table class="gfgp-contrib">
+                                    <tr><td class="gfgp-uhead">Contribution Limits</td><td class="gfgp-uhead" style="text-align:center;">Current</td></tr>
+                                    <tr><td>&#8226; Regular Contribution</td><td class="val"><apex:outputText value="{0, number, $###,###}"><apex:param value="{!tspRegularLimit}" /></apex:outputText></td></tr>
+                                    <tr><td>&#8226; Catch-Up Contribution<span class="sub"><br/>for employees over age 50</span></td><td class="val"><apex:outputText value="{0, number, $###,###}"><apex:param value="{!tspCatchUpLimit}" /></apex:outputText></td></tr>
+                                    <tr><td>&#8226; Total Contribution</td><td class="val"><apex:outputText value="{0, number, $###,###}"><apex:param value="{!tspTotalContribution}" /></apex:outputText></td></tr>
+                                </table>
+                                <p class="gfgp-tspnote">Visit <a class="gfgp-link" href="https://www.tsp.gov/making-contributions/contribution-limits/">https://www.tsp.gov/making-contributions/contribution-limits/</a> or scan the QR code for <u>current</u> Contribution Limits</p>
+                            </td>
+                            <!-- Column 2: QR code -->
+                            <td style="vertical-align:top;text-align:center;">
+                                <apex:image url="{!$Resource.Pg12GrovesQR}" width="100" height="100" alt="Current Contribution Limits QR" />
+                            </td>
+                            <!-- Column 3: Government Matching -->
+                            <td style="vertical-align:top;padding-left:10px;">
+                                <p class="gfgp-uhead">Government Matching Contributions</p>
+                                <ul class="gfgp-ul">
+                                    <li>CSRS and CSRS Offset employees receive no matching funds</li>
+                                    <li>FERS employees receive up to 5% of personal contributions
+                                        <ul class="gfgp-circ">
+                                            <li>1% agency automatic contribution</li>
+                                            <li>1%-3% of employee contributions are matched at 100%</li>
+                                            <li>4%-5% of employee contributions are matched at 50%</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- TSP Options in Retirement -->
+                    <div class="gfgp-center" style="margin-top:8pt;">
+                        <div class="gfgp-options-heading" style="color:#B91C1C;font-weight:bold;text-decoration:underline;font-size:11pt;margin-bottom:4pt;">TSP Options in Retirement</div>
+                        <table style="margin:0 auto;border-collapse:collapse;">
+                            <tr><td class="gfgp-tspopt" style="text-align:left;">Monthly Payments</td><td class="gfgp-tspopt" style="text-align:left;">Rollover</td></tr>
+                            <tr><td class="gfgp-tspopt" style="text-align:left;">Annuitize</td><td class="gfgp-tspopt" style="text-align:left;">Do Nothing</td></tr>
+                        </table>
+                    </div>
+
+                    <!-- Section B: Resources -->
+                    <div class="gfgp-title" style="margin-top:16pt;">Resources</div>
+                    <div class="gfgp-accent"></div>
+                    <p class="gfgp-p">Information in this workbook came from many sources (see below) and, due to time and space, has been condensed to offer you a basic overview. It is not meant to provide a detailed explanation of all benefits. Below are links with extensive information on the benefits which we covered during our review. Should you have additional questions, please review these links and contact us so we may assist you further.</p>
+                    <div class="gfgp-linkrow">Federal Retirement: <a class="gfgp-link" href="http://www.opm.gov/retirement-services/publications-forms/pamphlets/ri90-8.pdf">http://www.opm.gov/retirement-services/publications-forms/pamphlets/ri90-8.pdf</a></div>
+                    <div class="gfgp-linkrow">FERS: <a class="gfgp-link" href="http://www.opm.gov/retirement-services/fers-information/">http://www.opm.gov/retirement-services/fers-information/</a></div>
+                    <div class="gfgp-linkrow">CSRS: <a class="gfgp-link" href="http://www.opm.gov/retirement-services/csrs-information/">http://www.opm.gov/retirement-services/csrs-information/</a></div>
+                    <div class="gfgp-linkrow">FEGLI: <a class="gfgp-link" href="http://www.opm.gov/healthcare-insurance/life-insurance/">http://www.opm.gov/healthcare-insurance/life-insurance/</a></div>
+                    <div class="gfgp-linkrow">TSP: <a class="gfgp-link" href="https://www.tsp.gov/index.html">https://www.tsp.gov/index.html</a></div>
+                    <div class="gfgp-linkrow">Social Security: <a class="gfgp-link" href="https://www.ssa.gov/">https://www.ssa.gov/</a></div>
+                    <div class="gfgp-linkrow">Windfall Elimination Provision (WEP): <a class="gfgp-link" href="http://www.socialsecurity.gov/pubs/EN-05-10045.pdf">http://www.socialsecurity.gov/pubs/EN-05-10045.pdf</a></div>
+                    <div class="gfgp-linkrow">Government Pension Offset (GPO): <a class="gfgp-link" href="http://www.socialsecurity.gov/pubs/EN-05-10007.pdf">http://www.socialsecurity.gov/pubs/EN-05-10007.pdf</a></div>
+
+                    <!-- Section C: Forms For Collecting Benefits -->
+                    <div class="gfgp-title" style="margin-top:16pt;">Forms For Collecting Benefits</div>
+                    <div class="gfgp-accent"></div>
+                    <table class="gfgp-mtr">
+                        <tr><td class="hdr" colspan="2">MILITARY TIME RECAPTURE</td></tr>
+                        <tr><td class="branch">Army</td><td>DFAS - Indianapolis Center, ATTN: IN-FO-FC-A, 8899 E 56, Indianapolis, IN 46249-0875. Fax: 317-542-2779</td></tr>
+                        <tr><td class="branch">Navy</td><td>Director, DFAS - Cleveland Center-JJCS/FMCS, Anthony J. Celebreeze Federal Bldg., Cleveland, OH 44199-2055. Fax: 216-522-5974</td></tr>
+                        <tr><td class="branch">Air Force</td><td>DFAS-DE/FUPBC, 6760 East Irvington Place, Denver CO 80279-5000. Fax: 303-676-7408</td></tr>
+                        <tr><td class="branch">Marines</td><td>DFAS - Kansas City Center, 1500 East 95th Street, Kansas City, MO 64197-0001. Fax: 800-929-4207</td></tr>
+                        <tr><td class="branch">Coast Guard</td><td>Commanding Officer Settlements and Records, U.S. Coast Guard, Military Pay and Personnel Center, 444 SE Quincy Street, Topeka, KS 66683-3591</td></tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <!-- ============ Page 12: Financial Snapshot ============ -->
+        <table class="gfgp-sheet">
+            <tr>
+                <td class="gfgp-body">
+                    <div class="gfgp-title">Financial Snapshot</div>
+                    <div class="gfgp-accent"></div>
+
+                    <!-- Top row: logo (left) + date (right) -->
+                    <table style="width:100%;margin-bottom:8pt;">
+                        <tr>
+                            <td style="vertical-align:middle;"><apex:image url="{!$Resource.Pg13GrovesLogo}" width="200" alt="Groves Financial Group" /></td>
+                            <td style="vertical-align:middle;text-align:right;font-size:10.5pt;">Date: <span style="display:inline-block;min-width:80pt;border-bottom:1px solid #2b2b2b;text-align:center;"><apex:outputText value="{0, date, MM/dd/yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></span></td>
+                        </tr>
+                    </table>
+
+                    <!-- Employee + Spouse name -->
+                    <table class="gfgp-snap" style="margin-bottom:4pt;">
+                        <tr>
+                            <td class="lab">Employee Name:</td>
+                            <td class="uval" style="width:28%;"><apex:outputField value="{!Lead.Name}" /></td>
+                            <td class="extra">Spouse Name: <span class="u"><apex:outputField value="{!Lead.Spouse_Name__r.Name}" /></span></td>
+                        </tr>
+                    </table>
+
+                    <!-- Current Age / Age at Retirement -->
+                    <table class="gfgp-snap" style="margin-bottom:6pt;">
+                        <tr>
+                            <td style="width:50%;">Current Age:
+                                <span style="display:inline-block;min-width:36pt;border-bottom:1px solid #2b2b2b;text-align:center;"><apex:outputText value="{0, number, #0}"><apex:param value="{!Lead.Contact_Age__c}" /></apex:outputText></span>
+                            </td>
+                            <td style="width:50%;">Age at Retirement:
+                                <span style="display:inline-block;min-width:36pt;border-bottom:1px solid #2b2b2b;text-align:center;">
+                                    <apex:outputText value="{0, number, #0}" rendered="{!Lead.Scenario1_Primary__c == true}"><apex:param value="{!Lead.Scenario1_Retirement_Age__c}" /></apex:outputText>
+                                    <apex:outputText value="{0, number, #0}" rendered="{!Lead.Scenario2_Primary__c == true}"><apex:param value="{!Lead.Scenario2_Retirement_Age__c}" /></apex:outputText>
+                                    <apex:outputText value="{0, number, #0}" rendered="{!AND(Lead.Scenario1_Primary__c == false, Lead.Scenario2_Primary__c == false)}"><apex:param value="{!Lead.Expected_Retirement_Age__c}" /></apex:outputText>
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Section A: Monthly Expenses -->
+                    <div class="gfgp-seclabel">Monthly Expenses</div>
+                    <table class="gfgp-snap">
+                        <tr>
+                            <td class="lab">Pension:</td>
+                            <td class="sign">&#160;</td>
+                            <td class="uval"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!snapPensionBase}" /></apex:outputText></td>
+                            <td class="extra">
+                                <apex:outputPanel layout="none" rendered="{!snapIsMarried}">Surviving Spouse Benefit:
+                                    <span class="u">
+                                        <apex:outputText value="$0.00" rendered="{!snapSpouseBenefitOptedOut}" />
+                                        <apex:outputText value="{0, number, $#,##0.00}" rendered="{!NOT(snapSpouseBenefitOptedOut)}"><apex:param value="{!snapSurvivingSpouseBenefit}" /></apex:outputText>
+                                    </span><apex:outputText value=" OPTED OUT" styleClass="opt" rendered="{!snapSpouseBenefitOptedOut}" />
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="lab">Taxes: 12% 15% 20% 25%</td>
+                            <td class="sign">-</td>
+                            <td class="uval"><apex:outputField value="{!Lead.taxRate3_Picklist__c}" /></td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                        <tr>
+                            <td class="lab">Health:</td>
+                            <td class="sign">-</td>
+                            <td class="uval"><apex:outputField value="{!Lead.Total_Health__c}" /></td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                        <tr>
+                            <td class="lab">Additional Insurance:</td>
+                            <td class="sign">-</td>
+                            <td class="uval"><apex:outputField value="{!Lead.Additional_Insurance__c}" /></td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                        <tr class="tot">
+                            <td class="lab">Total:</td>
+                            <td class="sign">=</td>
+                            <td class="uval"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!snapExpenseTotal}" /></apex:outputText></td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                    </table>
+
+                    <!-- Section B: Retirement Income -->
+                    <div class="gfgp-seclabel">Retirement Income</div>
+                    <table class="gfgp-snap">
+                        <apex:outputPanel layout="none" rendered="{!snapYosFormulaVisible}">
+                        <tr>
+                            <td class="lab">Formula Years of Service:</td>
+                            <td class="sign">&#160;</td>
+                            <td class="uval"><apex:outputField value="{!Lead.YOS_Special_Supplement__c}" /></td>
+                            <td class="extra">&#247; 40 = <span class="u"><apex:outputText value="{0, number, #0.0}"><apex:param value="{!snapYosPercent}" /></apex:outputText>%</span></td>
+                        </tr>
+                        </apex:outputPanel>
+                        <tr>
+                            <td class="lab">FERS Special Supplement:</td>
+                            <td class="sign">+</td>
+                            <td class="uval">
+                                <apex:outputText value="{0, number, $#,##0.00}" rendered="{!snapFersSupplementEligible}"><apex:param value="{!snapFersSupplementDisplay}" /></apex:outputText>
+                                <apex:outputText value="Not Eligible" styleClass="ne" rendered="{!NOT(snapFersSupplementEligible)}" />
+                            </td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                        <tr>
+                            <td class="lab">Social Security:</td>
+                            <td class="sign">+</td>
+                            <td class="uval">
+                                <apex:outputField value="{!Lead.Predicted_Social_Security__c}" rendered="{!snapSocialSecurityEligible}" />
+                                <apex:outputText value="Not Eligible" styleClass="ne" rendered="{!NOT(snapSocialSecurityEligible)}" />
+                            </td>
+                            <td class="extra">Start Age:
+                                <span class="u">
+                                    <apex:outputText value="{0, number, #0}" rendered="{!Lead.Scenario1_Primary__c == true}"><apex:param value="{!Lead.Scenario1_Retirement_Age__c}" /></apex:outputText>
+                                    <apex:outputText value="{0, number, #0}" rendered="{!Lead.Scenario2_Primary__c == true}"><apex:param value="{!Lead.Scenario2_Retirement_Age__c}" /></apex:outputText>
+                                    <apex:outputText value="{0, number, #0}" rendered="{!AND(Lead.Scenario1_Primary__c == false, Lead.Scenario2_Primary__c == false)}"><apex:param value="{!Lead.Expected_Retirement_Age__c}" /></apex:outputText>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="lab">Spouse Social Security:</td>
+                            <td class="sign">+</td>
+                            <td class="uval"><apex:outputField value="{!Lead.Spouse_Social_Security__c}" /></td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                        <tr>
+                            <td class="lab">Military Retirement:</td>
+                            <td class="sign">+</td>
+                            <td class="uval"><apex:outputField value="{!Lead.Military_Retirement__c}" /></td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                        <tr>
+                            <td class="lab">Disability Retirement:</td>
+                            <td class="sign">+</td>
+                            <td class="uval"><apex:outputField value="{!Lead.Disability_in_Retirement__c}" /></td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                        <tr>
+                            <td class="lab">Additional Income:</td>
+                            <td class="sign">+</td>
+                            <td class="uval"><apex:outputField value="{!Lead.Additional_Income1__c}" /></td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                        <tr>
+                            <td class="lab">Additional Income:</td>
+                            <td class="sign">+</td>
+                            <td class="uval"><apex:outputField value="{!Lead.Additional_Income2__c}" /></td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                        <tr class="tot">
+                            <td class="lab">Total:</td>
+                            <td class="sign">=</td>
+                            <td class="uval"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!snapIncomeTotal}" /></apex:outputText></td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                        <tr>
+                            <td class="lab">Current Net:</td>
+                            <td class="sign">-</td>
+                            <td class="uval"><apex:outputField value="{!Lead.currentNET__c}" /></td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                        <tr class="tot">
+                            <td class="lab">Difference:</td>
+                            <td class="sign">=</td>
+                            <td class="uval"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!snapDifference}" /></apex:outputText></td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                        <tr>
+                            <td class="lab">TSP:</td>
+                            <td class="sign">+</td>
+                            <td class="uval"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!snapTspDisplay}" /></apex:outputText></td>
+                            <td class="extra">Annual Withdrawal &#8212; Traditional: <span class="u"><apex:outputField value="{!Lead.AnnualWithdraw1__c}" /></span>&#160; Roth: <span class="u"><apex:outputField value="{!Lead.AnnualWithdraw2__c}" /></span>&#160; Tax Rate: <span class="u"><apex:outputField value="{!Lead.taxRate5_Picklist__c}" /></span></td>
+                        </tr>
+                        <tr class="tot">
+                            <td class="lab">Bottom Line:</td>
+                            <td class="sign">=</td>
+                            <td class="uval"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!snapBottomLine}" /></apex:outputText></td>
+                            <td class="extra">&#160;</td>
+                        </tr>
+                    </table>
+
+                    <p class="gfgp-center gfgp-italic" style="font-size:9pt;margin-top:14pt;">The information &amp; values shown are for illustration purposes only. These values are not guaranteed as shown.</p>
+                </td>
+                <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">12</div></td>
+            </tr>
+        </table>
+
+        <!-- ============ Pages 13 &amp; 14: Notes ============ -->
+        <table class="gfgp-sheet">
+            <tr>
+                <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">13</div></td>
+                <td class="gfgp-body">
+                    <div class="gfgp-title">Notes</div>
+                    <div class="gfgp-accent"></div>
+                    <div style="border:1px solid #d0d0d0;min-height:560pt;padding:8pt;white-space:pre-wrap;font-size:11pt;"><apex:outputField value="{!Lead.Description}" /></div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- ============ Page 15: Back cover ============ -->
+        <div class="gfgp-cover" style="page-break-after:auto;">
+            <apex:image url="{!$Resource.Pg16GrovesFedForm}"
+                alt="Groves Financial Group" />
+        </div>
+
     </body>
-
     </html>
 </apex:page>

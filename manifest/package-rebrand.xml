@@ -15,6 +15,7 @@
 		<members>FedWorkbook_FinancialSnapshotExt</members>
 		<members>FedWorkbook_NotesExt</members>
 		<members>FedWorkbook_PreviewExt</members>
+		<members>FedWorkbook_PDFExt</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
