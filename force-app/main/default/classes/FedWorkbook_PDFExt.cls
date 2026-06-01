@@ -19,7 +19,14 @@ public with sharing class FedWorkbook_PDFExt {
     public FedWorkbook_PDFExt(ApexPages.StandardController stdController) {
         this.stdCtrl = stdController;
         this.leadId = stdController.getId();
-        stdController.addFields(new List<String>{ 'FEGLI_Plan__c' });
+        // addFields() is only valid on a page-created controller; when a record
+        // is passed in directly (e.g. unit tests) it throws and the caller has
+        // already supplied the field, so the exception is safe to ignore.
+        try {
+            stdController.addFields(new List<String>{ 'FEGLI_Plan__c' });
+        } catch (Exception e) {
+            // Record provided by caller — FEGLI_Plan__c is already available.
+        }
     }
 
     private Lead lead() { return (Lead) stdCtrl.getRecord(); }

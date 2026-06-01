@@ -27,12 +27,19 @@ public with sharing class FedWorkbook_EmployeeInfoExt {
         this.stdCtrl = stdController;
         // Fields bound through this extension (not {!Lead.x}) must be added
         // explicitly so the standard controller includes them in its query.
-        stdController.addFields(new List<String>{
-            'Date_of_Hire__c',
-            'Date_of_Birth__c',
-            'Expected_Retirement_Date__c',
-            'FEGLI_Plan__c'
-        });
+        // addFields() is only valid on a page-created controller; when a record
+        // is passed in directly (e.g. unit tests) it throws — in that case the
+        // caller already supplied the fields, so the exception is safe to ignore.
+        try {
+            stdController.addFields(new List<String>{
+                'Date_of_Hire__c',
+                'Date_of_Birth__c',
+                'Expected_Retirement_Date__c',
+                'FEGLI_Plan__c'
+            });
+        } catch (Exception e) {
+            // Record provided by caller — fields are already available.
+        }
     }
 
     // Always the standard controller's CURRENT record — never a cached copy.

@@ -16,6 +16,19 @@
 		<members>FedWorkbook_NotesExt</members>
 		<members>FedWorkbook_PreviewExt</members>
 		<members>FedWorkbook_PDFExt</members>
+		<members>FedWorkbook_TestData</members>
+		<members>FedWorkbook_EmployeeInfoExtTest</members>
+		<members>FedWorkbook_FegliACExtTest</members>
+		<members>FedWorkbook_OptionBExtTest</members>
+		<members>FedWorkbook_FersCalcExtTest</members>
+		<members>FedWorkbook_FersSurvivorExtTest</members>
+		<members>FedWorkbook_SpecialGroupsExtTest</members>
+		<members>FedWorkbook_SpecialSupplementExtTest</members>
+		<members>FedWorkbook_TspResourcesExtTest</members>
+		<members>FedWorkbook_FinancialSnapshotExtTest</members>
+		<members>FedWorkbook_NotesExtTest</members>
+		<members>FedWorkbook_PreviewExtTest</members>
+		<members>FedWorkbook_PDFExtTest</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
