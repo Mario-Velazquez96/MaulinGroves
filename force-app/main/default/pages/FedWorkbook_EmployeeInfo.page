@@ -93,6 +93,8 @@
         .gfg2-check { margin: 0 4px 0 0; vertical-align: middle; }
         .gfg2-ml { margin-left: 14px; }
         .gfg2-link { color: #3A5754; font-weight: 700; text-decoration: underline; cursor: pointer; }
+        /* Red "+ 5% Govt. Match" indicator next to the TSP contribution input */
+        .gfg2-match { color: #B91C1C; font-weight: 700; padding-left: 6px; white-space: nowrap; }
 
         .gfg2-disclaimer {
             text-align: center;
@@ -139,7 +141,16 @@
 
             <apex:form id="gfg2form">
                 <!-- Every editable field calls this onchange to auto-save silently -->
-                <apex:actionFunction name="gfg2Save" action="{!saveLead}" reRender="gfg2msgs,gfg2spouse" />
+                <apex:actionFunction name="gfg2Save" action="{!saveLead}" reRender="gfg2msgs,gfg2spouse,gfg2tsp" />
+                <!-- Retirement System (FERS / Special Groups) toggles add or remove
+                     whole workbook sections and their navigation links. Those live
+                     outside this included form (in FedWorkbook_Preview), so a partial
+                     reRender can't refresh them. After saving the toggle we reload the
+                     page so every rendered gate re-evaluates — matching the legacy
+                     GPIS_Federal_Workbook behavior where save() reRenders the nav bar
+                     and the Special Groups section. -->
+                <apex:actionFunction name="gfg2SaveReload" action="{!saveLead}" reRender="gfg2msgs"
+                    oncomplete="window.location.reload();" />
                 <!-- AJAX target: silent on success; displays any save/validation error -->
                 <apex:outputPanel id="gfg2msgs"><apex:pageMessages /></apex:outputPanel>
                 <!-- <apex:actionStatus id="gfg2status"
@@ -272,6 +283,10 @@
                         <label>Federal Employee:</label>
                         <apex:inputField value="{!Lead.Federal_Employee__c}" styleClass="gfg2-check" onchange="gfg2Save();" />
                     </span>
+                    <span class="gfg2-field">
+                        <label>Affiliation:</label>
+                        <apex:inputField value="{!Lead.Affiliation__c}" styleClass="gfg2-input" onchange="gfg2Save();" />
+                    </span>
                 </div>
 
                 <!-- Base Salary + Retirement System -->
@@ -283,49 +298,143 @@
                             <apex:inputField value="{!Lead.Base_Salary__c}" styleClass="gfg2-input" onchange="gfg2Save();" />
                         </span>
                     </span>
+                    <span class="gfg2-field">
+                        <label>Salary Interval:</label>
+                        <apex:inputField value="{!Lead.Salary_Interval__c}" styleClass="gfg2-input" onchange="gfg2Save();" />
+                    </span>
                     <span class="gfg2-field" id="gfg2-retsys-group">
                         <label>Retirement System:</label>
-                        <apex:inputField value="{!Lead.CSRS__c}" styleClass="gfg2-check" onchange="gfg2RetSys(this); gfg2Save();" /> CSRS
-                        <apex:inputField value="{!Lead.CSRS_Offset__c}" styleClass="gfg2-check" style="margin-left:14px" onchange="gfg2RetSys(this); gfg2Save();" /> CSRS Offset
-                        <apex:inputField value="{!Lead.FERS__c}" styleClass="gfg2-check" style="margin-left:14px" onchange="gfg2RetSys(this); gfg2Save();" /> FERS
+                        <apex:inputField value="{!Lead.FERS__c}" styleClass="gfg2-check" onchange="gfg2RetSys(this); gfg2SaveReload();" /> FERS
+                        <apex:inputField value="{!Lead.Special_Group_Member__c}" styleClass="gfg2-check" style="margin-left:14px" onchange="gfg2RetSys(this); gfg2SaveReload();" /> Special Groups
                     </span>
                 </div>
 
-                <!-- TSP -->
-                <div class="gfg2-row">
-                    <span class="gfg2-field">
-                        <label>TSP Contribution:</label>
-                        <span class="gfg2-affix">
-                            <apex:inputField value="{!Lead.TSP_Contribution__c}" styleClass="gfg2-input" style="min-width:90px" onchange="gfg2Save();" />
-                            <span class="gfg2-sym">%</span>
-                        </span>
-                    </span>
-                    <span class="gfg2-field">
-                        <label>TSP Balance:</label>
-                        <span class="gfg2-affix">
-                            <span class="gfg2-sym">$</span>
-                            <apex:inputField value="{!Lead.TSP_Total__c}" styleClass="gfg2-input" onchange="gfg2Save();" />
-                        </span>
-                    </span>
-                </div>
+                <!-- TSP balances + contribution mode (% or $) — replicated from the
+                     legacy GPIS_Federal_Workbook page. Each balance has a % and a $
+                     mode checkbox; the % box reveals a percent contribution input and
+                     the $ box reveals a dollar (monthly) contribution input. The panel
+                     reRenders via gfg2Save so the toggles re-evaluate on auto-save. -->
+                <apex:outputPanel id="gfg2tsp" layout="block">
 
-                <!-- FEGLI Code + FEHB/PSHB (new field) -->
+                    <!-- TSP Balance ($) -->
+                    <div class="gfg2-row">
+                        <span class="gfg2-field">
+                            <label>TSP Balance ($):</label>
+                            <span class="gfg2-affix">
+                                <span class="gfg2-sym">$</span>
+                                <apex:inputField value="{!Lead.TSP_Total__c}" styleClass="gfg2-input" style="min-width:100px" onchange="gfg2Save();" />
+                            </span>
+                        </span>
+                        <span class="gfg2-field">
+                            <apex:inputField value="{!Lead.percTSP__c}" styleClass="gfg2-check" onchange="gfg2Save();" /> %
+                            <apex:inputField value="{!Lead.dollarTSP__c}" styleClass="gfg2-check gfg2-ml" onchange="gfg2Save();" /> $
+                        </span>
+                        <apex:outputPanel layout="none" rendered="{!Lead.percTSP__c == true}">
+                            <span class="gfg2-field">
+                                <label>TSP Contribution (%):</label>
+                                <span class="gfg2-affix">
+                                    <apex:inputField value="{!Lead.TSP_Contribution__c}" styleClass="gfg2-input" style="min-width:60px" onchange="gfg2Save();" />
+                                    <span class="gfg2-sym">%</span>
+                                </span>
+                            </span>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="none" rendered="{!Lead.dollarTSP__c == true}">
+                            <span class="gfg2-field">
+                                <label>TSP Contribution ($):</label>
+                                <span class="gfg2-affix">
+                                    <span class="gfg2-sym">$</span>
+                                    <apex:inputField value="{!Lead.Monthly_Contribution__c}" styleClass="gfg2-input" style="min-width:80px" onchange="gfg2Save();" />
+                                </span>
+                            </span>
+                        </apex:outputPanel>
+                        <apex:outputText styleClass="gfg2-match" value="+ 5% Govt. Match"
+                            rendered="{!(Lead.TSP_Contribution__c != null && Lead.TSP_Contribution__c >= 0.05 && Lead.percTSP__c == true) || (Lead.ROTH_TSP_Contribution__c != null && Lead.ROTH_TSP_Contribution__c >= 0.05 && Lead.percROTH__c == true)}" />
+                    </div>
+
+                    <!-- Tax-Free (Roth) TSP Balance ($) -->
+                    <div class="gfg2-row">
+                        <span class="gfg2-field">
+                            <label>Tax-Free TSP Balance ($):</label>
+                            <span class="gfg2-affix">
+                                <span class="gfg2-sym">$</span>
+                                <apex:inputField value="{!Lead.ROTH_Total__c}" styleClass="gfg2-input" style="min-width:100px" onchange="gfg2Save();" />
+                            </span>
+                        </span>
+                        <span class="gfg2-field">
+                            <apex:inputField value="{!Lead.percROTH__c}" styleClass="gfg2-check" onchange="gfg2Save();" /> %
+                            <apex:inputField value="{!Lead.dollarROTH__c}" styleClass="gfg2-check gfg2-ml" onchange="gfg2Save();" /> $
+                        </span>
+                        <apex:outputPanel layout="none" rendered="{!Lead.percROTH__c == true}">
+                            <span class="gfg2-field">
+                                <label>ROTH TSP Contribution (%):</label>
+                                <span class="gfg2-affix">
+                                    <apex:inputField value="{!Lead.ROTH_TSP_Contribution__c}" styleClass="gfg2-input" style="min-width:60px" onchange="gfg2Save();" />
+                                    <span class="gfg2-sym">%</span>
+                                </span>
+                            </span>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="none" rendered="{!Lead.dollarROTH__c == true}">
+                            <span class="gfg2-field">
+                                <label>ROTH TSP Contribution ($):</label>
+                                <span class="gfg2-affix">
+                                    <span class="gfg2-sym">$</span>
+                                    <apex:inputField value="{!Lead.Monthly_ROTH_Contribution__c}" styleClass="gfg2-input" style="min-width:80px" onchange="gfg2Save();" />
+                                </span>
+                            </span>
+                        </apex:outputPanel>
+                    </div>
+                </apex:outputPanel>
+
+                <!-- FEGLI Code -->
                 <div class="gfg2-row">
                     <span class="gfg2-field">
                         <label>FEGLI Code:</label>
-                        <apex:inputField value="{!Lead.FEGLI_Code_Picklist__c}" styleClass="gfg2-input" onchange="gfg2Save();" />
+                        <apex:inputField value="{!Lead.FEGLI_Code_Picklist__c}" styleClass="gfg2-input" onchange="gfg2SaveReload();" />
                     </span>
                 </div>
 
-                <!-- FEGLI Plan: read-only (per client request) -->
+                <!-- FEGLI Plan: replicated from the legacy GPIS_Federal_Workbook page.
+                     When no FEGLI code is set (== '--') the Basic / Option A / B / C
+                     checkboxes are EDITABLE (bound to Lead.Basic__c / OptionA__c /
+                     OptionB__c / OptionC__c). When a FEGLI code IS set, the checkboxes
+                     become read-only and their checked state is DERIVED from the code's
+                     letters/digits via the same CONTAINS logic the legacy page uses. -->
                 <div class="gfg2-row">
                     <span class="gfg2-field">
                         <label>FEGLI Plan:</label>
-                        <apex:inputCheckbox value="{!planBasic}" styleClass="gfg2-check" disabled="true" /> Basic
-                        <apex:inputCheckbox value="{!planOptionA}" styleClass="gfg2-check gfg2-ml" disabled="true" /> Option A
-                        <apex:inputCheckbox value="{!planOptionB}" styleClass="gfg2-check gfg2-ml" disabled="true" /> Option B
+
+                        <!-- Basic -->
+                        <apex:inputField value="{!Lead.Basic__c}" styleClass="gfg2-check"
+                            rendered="{!Lead.FEGLI_Code_Picklist__c == '--'}" onchange="gfg2SaveReload();" />
+                        <apex:inputCheckbox value="{!Lead.Basic__c}" selected="false" styleClass="gfg2-check" disabled="true"
+                            rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && (Lead.FEGLI_Code_Picklist__c == 'Ao' || Lead.FEGLI_Code_Picklist__c == 'Bo')}" />
+                        <apex:inputCheckbox value="{!Lead.Basic__c}" selected="true" styleClass="gfg2-check" disabled="true"
+                            rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && Lead.FEGLI_Code_Picklist__c != 'Ao' && Lead.FEGLI_Code_Picklist__c != 'Bo'}" /> Basic
+
+                        <!-- Option A -->
+                        <apex:inputField value="{!Lead.OptionA__c}" styleClass="gfg2-check gfg2-ml"
+                            rendered="{!Lead.FEGLI_Code_Picklist__c == '--'}" onchange="gfg2SaveReload();" />
+                        <apex:inputCheckbox value="{!Lead.OptionA__c}" selected="false" styleClass="gfg2-check gfg2-ml" disabled="true"
+                            rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && Lead.FEGLI_Code_Picklist__c != 'Ho' && Lead.FEGLI_Code_Picklist__c != 'Do' && Lead.FEGLI_Code_Picklist__c != 'Lo' && NOT( CONTAINS(Lead.FEGLI_Code_Picklist__c, 'R')) && NOT( CONTAINS(Lead.FEGLI_Code_Picklist__c, 'J')) && (Lead.FEGLI_Code_Picklist__c == 'Ao' || Lead.FEGLI_Code_Picklist__c == 'Bo' || Lead.FEGLI_Code_Picklist__c == 'Co' || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'E') || NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'F')) || Lead.FEGLI_Code_Picklist__c == 'Go' || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'I') || Lead.FEGLI_Code_Picklist__c == 'Ko' || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'M') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Q') || Lead.FEGLI_Code_Picklist__c == 'So' || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'U') || Lead.FEGLI_Code_Picklist__c == 'Wo' || Lead.FEGLI_Code_Picklist__c == 'Xo' || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Y'))}" />
+                        <apex:inputCheckbox value="{!Lead.OptionA__c}" selected="true" styleClass="gfg2-check gfg2-ml" disabled="true"
+                            rendered="{!(Lead.FEGLI_Code_Picklist__c != '' && Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != 'Ao' && Lead.FEGLI_Code_Picklist__c != 'Bo' && Lead.FEGLI_Code_Picklist__c != 'Co' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'E')) && Lead.FEGLI_Code_Picklist__c != 'Go' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'I')) && Lead.FEGLI_Code_Picklist__c != 'Ko' && Lead.FEGLI_Code_Picklist__c != 'Lo' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'M')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Q')) && Lead.FEGLI_Code_Picklist__c != 'So' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'U')) && Lead.FEGLI_Code_Picklist__c != 'Wo' && Lead.FEGLI_Code_Picklist__c != 'Xo' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Y'))) || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'F') || Lead.FEGLI_Code_Picklist__c == 'Ho' || Lead.FEGLI_Code_Picklist__c == 'Do' || Lead.FEGLI_Code_Picklist__c == 'Lo'}" /> Option A
+
+                        <!-- Option B -->
+                        <apex:inputField value="{!Lead.OptionB__c}" styleClass="gfg2-check gfg2-ml"
+                            rendered="{!Lead.FEGLI_Code_Picklist__c == '--'}" onchange="gfg2SaveReload();" />
+                        <apex:inputCheckbox value="{!Lead.OptionB__c}" selected="false" styleClass="gfg2-check gfg2-ml" disabled="true"
+                            rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'G')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'H')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'I')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'J')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'K')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'L')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'M')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'N')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'P')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Q')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'R')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'S')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'T')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'U')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'V')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'W')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'X')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Y')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Z'))}" />
+                        <apex:inputCheckbox value="{!Lead.OptionB__c}" selected="true" styleClass="gfg2-check gfg2-ml" disabled="true"
+                            rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && (CONTAINS(Lead.FEGLI_Code_Picklist__c, 'G') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'H') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'I') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'J') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'K') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'L') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'M') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'N') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'P') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Q') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'R') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'S') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'T') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'U') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'V') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'W') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'X') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Y') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Z'))}" /> Option B
                         <apex:outputField value="{!Lead.Option_B_Choice_Selection__c}" styleClass="gfg2-ro" />
-                        <apex:inputCheckbox value="{!planOptionC}" styleClass="gfg2-check gfg2-ml" disabled="true" /> Option C
+
+                        <!-- Option C -->
+                        <apex:inputField value="{!Lead.OptionC__c}" styleClass="gfg2-check gfg2-ml"
+                            rendered="{!Lead.FEGLI_Code_Picklist__c == '--'}" onchange="gfg2SaveReload();" />
+                        <apex:inputCheckbox value="{!Lead.OptionC__c}" selected="false" styleClass="gfg2-check gfg2-ml" disabled="true"
+                            rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c , '1')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c , '2')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c , '3')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c , '4')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c , '5'))}" />
+                        <apex:inputCheckbox value="{!Lead.OptionC__c}" selected="true" styleClass="gfg2-check gfg2-ml" disabled="true"
+                            rendered="{!Lead.FEGLI_Code_Picklist__c != '' && Lead.FEGLI_Code_Picklist__c != '--' && (CONTAINS(Lead.FEGLI_Code_Picklist__c, '1') || CONTAINS( Lead.FEGLI_Code_Picklist__c, '2') || CONTAINS(Lead.FEGLI_Code_Picklist__c, '3') || CONTAINS( Lead.FEGLI_Code_Picklist__c, '4') || CONTAINS( Lead.FEGLI_Code_Picklist__c, '5' ))}" /> Option C
                         <apex:outputField value="{!Lead.Option_C_Choice_Selection__c}" styleClass="gfg2-ro" />
                     </span>
                 </div>
@@ -375,17 +484,20 @@
     </div>
 
     <script type="text/javascript">
-        // Retirement System: CSRS / CSRS Offset / FERS are mutually exclusive.
-        // Invoked inline from each checkbox's onchange BEFORE gfg2Save(), so the
-        // other boxes are un-checked before the auto-save posts the form.
+        // Retirement System: FERS and Special Groups are mutually exclusive and
+        // complementary — exactly one is selected, mirroring the legacy
+        // GPIS_Federal_Workbook save() logic (FERS__c and Special_Group_Member__c
+        // are always set opposite). Invoked inline from each checkbox's onchange
+        // BEFORE gfg2Save(), so the other box is toggled before the auto-save
+        // posts the form.
         function gfg2RetSys(clicked) {
-            if (!clicked || !clicked.checked) { return; }
+            if (!clicked) { return; }
             var group = document.getElementById('gfg2-retsys-group');
             if (!group) { return; }
             var inputs = group.getElementsByTagName('input');
             for (var i = 0; i < inputs.length; i++) {
                 if (inputs[i].type === 'checkbox' && inputs[i] !== clicked) {
-                    inputs[i].checked = false;
+                    inputs[i].checked = !clicked.checked;
                 }
             }
         }

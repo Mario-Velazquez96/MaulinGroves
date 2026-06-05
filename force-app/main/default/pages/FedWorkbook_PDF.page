@@ -307,25 +307,52 @@
                         </tr>
                         <tr>
                             <td class="gfgp-lbl">Federal Employee:</td>
-                            <td class="gfgp-val" colspan="3"><apex:outputField value="{!Lead.Federal_Employee__c}" /></td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Federal_Employee__c}" /></td>
+                            <td class="gfgp-lbl">Affiliation:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Affiliation__c}" /></td>
                         </tr>
-                        <!-- Base Salary + Retirement System -->
+                        <!-- Base Salary + Salary Interval -->
                         <tr>
                             <td class="gfgp-lbl">Base Salary:</td>
                             <td class="gfgp-val"><apex:outputField value="{!Lead.Base_Salary__c}" /></td>
+                            <td class="gfgp-lbl">Salary Interval:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.Salary_Interval__c}" /></td>
+                        </tr>
+                        <!-- Retirement System -->
+                        <tr>
                             <td class="gfgp-lbl">Retirement System:</td>
-                            <td class="gfgp-val">
-                                CSRS [<apex:outputText value="{!IF(Lead.CSRS__c, 'X', ' ')}" />]
-                                CSRS Offset [<apex:outputText value="{!IF(Lead.CSRS_Offset__c, 'X', ' ')}" />]
+                            <td class="gfgp-val" colspan="3">
                                 FERS [<apex:outputText value="{!IF(Lead.FERS__c, 'X', ' ')}" />]
+                                Special Groups [<apex:outputText value="{!IF(Lead.Special_Group_Member__c, 'X', ' ')}" />]
                             </td>
                         </tr>
-                        <!-- TSP -->
+                        <!-- TSP Balance ($) + contribution (% or $ mode) -->
                         <tr>
-                            <td class="gfgp-lbl">TSP Contribution:</td>
-                            <td class="gfgp-val"><apex:outputField value="{!Lead.TSP_Contribution__c}" /></td>
                             <td class="gfgp-lbl">TSP Balance:</td>
                             <td class="gfgp-val"><apex:outputField value="{!Lead.TSP_Total__c}" /></td>
+                            <td class="gfgp-lbl">
+                                <apex:outputText value="TSP Contribution (%):" rendered="{!Lead.percTSP__c == true}" />
+                                <apex:outputText value="TSP Contribution ($):" rendered="{!Lead.dollarTSP__c == true}" />
+                            </td>
+                            <td class="gfgp-val">
+                                <apex:outputField value="{!Lead.TSP_Contribution__c}" rendered="{!Lead.percTSP__c == true}" />
+                                <apex:outputField value="{!Lead.Monthly_Contribution__c}" rendered="{!Lead.dollarTSP__c == true}" />
+                                <apex:outputText value=" + 5% Govt. Match" styleClass="gfgp-cost"
+                                    rendered="{!(Lead.TSP_Contribution__c != null && Lead.TSP_Contribution__c >= 0.05 && Lead.percTSP__c == true) || (Lead.ROTH_TSP_Contribution__c != null && Lead.ROTH_TSP_Contribution__c >= 0.05 && Lead.percROTH__c == true)}" />
+                            </td>
+                        </tr>
+                        <!-- Tax-Free (Roth) TSP Balance ($) + contribution (% or $ mode) -->
+                        <tr>
+                            <td class="gfgp-lbl">Tax-Free TSP Balance:</td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.ROTH_Total__c}" /></td>
+                            <td class="gfgp-lbl">
+                                <apex:outputText value="ROTH TSP Contribution (%):" rendered="{!Lead.percROTH__c == true}" />
+                                <apex:outputText value="ROTH TSP Contribution ($):" rendered="{!Lead.dollarROTH__c == true}" />
+                            </td>
+                            <td class="gfgp-val">
+                                <apex:outputField value="{!Lead.ROTH_TSP_Contribution__c}" rendered="{!Lead.percROTH__c == true}" />
+                                <apex:outputField value="{!Lead.Monthly_ROTH_Contribution__c}" rendered="{!Lead.dollarROTH__c == true}" />
+                            </td>
                         </tr>
                         <!-- FEGLI Code -->
                         <tr>
@@ -336,11 +363,14 @@
                         <tr>
                             <td class="gfgp-lbl">FEGLI Plan:</td>
                             <td class="gfgp-val" colspan="3">
-                                Basic [<apex:outputText value="{!planBasicMark}" />]&#160;&#160;
-                                Option A [<apex:outputText value="{!planOptionAMark}" />]&#160;&#160;
-                                Option B [<apex:outputText value="{!planOptionBMark}" />]
+                                <!-- Marks derived the same way as the interactive page: when no FEGLI code
+                                     ('--') the stored Basic__c/OptionA__c/OptionB__c/OptionC__c booleans drive
+                                     the X; when a code is set the X is derived from the code's letters/digits. -->
+                                Basic [<apex:outputText value="{!IF(Lead.FEGLI_Code_Picklist__c == '--', IF(Lead.Basic__c, 'X', ' '), IF(Lead.FEGLI_Code_Picklist__c != '' && Lead.FEGLI_Code_Picklist__c != 'Ao' && Lead.FEGLI_Code_Picklist__c != 'Bo', 'X', ' '))}" />]&#160;&#160;
+                                Option A [<apex:outputText value="{!IF(Lead.FEGLI_Code_Picklist__c == '--', IF(Lead.OptionA__c, 'X', ' '), IF((Lead.FEGLI_Code_Picklist__c != '' && Lead.FEGLI_Code_Picklist__c != 'Ao' && Lead.FEGLI_Code_Picklist__c != 'Bo' && Lead.FEGLI_Code_Picklist__c != 'Co' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'E')) && Lead.FEGLI_Code_Picklist__c != 'Go' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'I')) && Lead.FEGLI_Code_Picklist__c != 'Ko' && Lead.FEGLI_Code_Picklist__c != 'Lo' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'M')) && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Q')) && Lead.FEGLI_Code_Picklist__c != 'So' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'U')) && Lead.FEGLI_Code_Picklist__c != 'Wo' && Lead.FEGLI_Code_Picklist__c != 'Xo' && NOT(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Y'))) || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'F') || Lead.FEGLI_Code_Picklist__c == 'Ho' || Lead.FEGLI_Code_Picklist__c == 'Do' || Lead.FEGLI_Code_Picklist__c == 'Lo', 'X', ' '))}" />]&#160;&#160;
+                                Option B [<apex:outputText value="{!IF(Lead.FEGLI_Code_Picklist__c == '--', IF(Lead.OptionB__c, 'X', ' '), IF(CONTAINS(Lead.FEGLI_Code_Picklist__c, 'G') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'H') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'I') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'J') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'K') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'L') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'M') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'N') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'P') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Q') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'R') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'S') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'T') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'U') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'V') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'W') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'X') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Y') || CONTAINS(Lead.FEGLI_Code_Picklist__c, 'Z'), 'X', ' '))}" />]
                                 <apex:outputField value="{!Lead.Option_B_Choice_Selection__c}" />&#160;&#160;
-                                Option C [<apex:outputText value="{!planOptionCMark}" />]
+                                Option C [<apex:outputText value="{!IF(Lead.FEGLI_Code_Picklist__c == '--', IF(Lead.OptionC__c, 'X', ' '), IF(CONTAINS(Lead.FEGLI_Code_Picklist__c, '1') || CONTAINS(Lead.FEGLI_Code_Picklist__c, '2') || CONTAINS(Lead.FEGLI_Code_Picklist__c, '3') || CONTAINS(Lead.FEGLI_Code_Picklist__c, '4') || CONTAINS(Lead.FEGLI_Code_Picklist__c, '5'), 'X', ' '))}" />]
                                 <apex:outputField value="{!Lead.Option_C_Choice_Selection__c}" />
                             </td>
                         </tr>
