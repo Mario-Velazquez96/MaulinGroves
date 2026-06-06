@@ -44,6 +44,9 @@ public with sharing class FedWorkbook_PDFExt {
     private FedWorkbook_OptionBExt obExt;
     private FedWorkbook_OptionBExt ob() { if (obExt == null) obExt = new FedWorkbook_OptionBExt(sc()); return obExt; }
 
+    private FedWorkbook_BasicLifeExt blExt;
+    private FedWorkbook_BasicLifeExt bl() { if (blExt == null) blExt = new FedWorkbook_BasicLifeExt(sc()); return blExt; }
+
     private FedWorkbook_FersCalcExt fcExt;
     private FedWorkbook_FersCalcExt fc() { if (fcExt == null) fcExt = new FedWorkbook_FersCalcExt(sc()); return fcExt; }
 
@@ -75,6 +78,12 @@ public with sharing class FedWorkbook_PDFExt {
     public String getPlanOptionAMark() { return planHas('Option A') ? 'X' : ''; }
     public String getPlanOptionBMark() { return planHas('Option B') ? 'X' : ''; }
     public String getPlanOptionCMark() { return planHas('Option C') ? 'X' : ''; }
+
+    // ----- Page 3: Basic Life — Extra Benefit / Total Current Benefit ------
+    public Decimal getBlExtraBenefit()              { return bl().getExtraBenefit(); }
+    public Decimal getBlTotalCurrentBenefit()       { return bl().getTotalCurrentBenefit(); }
+    public Boolean getBlShowYearsRemaining()        { return bl().getShowYearsRemaining(); }
+    public Decimal getBlExtraBenefitYearsRemaining() { return bl().getExtraBenefitYearsRemaining(); }
 
     // ----- Page 4: FEGLI Option A / C -------------------------------------
     public Decimal getAcOptionACost()          { return ac().getOptionACost(); }

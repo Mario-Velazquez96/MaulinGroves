@@ -475,10 +475,15 @@
                     <table style="width:100%;"><tr>
                         <td style="width:55%;vertical-align:top;padding-right:10px;">
                             <table class="gfgp-calc">
+                                <tr>
+                                    <td><apex:outputText value="Current Age:" rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && Lead.Basic__c == true}" /><apex:outputText value="Starting Age:" rendered="{!Lead.FEGLI_Code_Picklist__c == '--' && Lead.Basic__c == true}" /></td>
+                                    <td class="v"><apex:outputText value="{!Lead.Contact_Age__c}" rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && Lead.Basic__c == true}" /><apex:outputText value="{!Lead.Age_Option_Basic_Manual__c}" rendered="{!Lead.FEGLI_Code_Picklist__c == '--' && Lead.Basic__c == true}" /></td>
+                                </tr>
                                 <tr><td>Base Pay Round Up:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!Lead.formula_basePay__c}" /></apex:outputText></td></tr>
                                 <tr><td>Add $2000 = BIA Amount:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!Lead.formula_basePay__c + 2000}" /></apex:outputText></td></tr>
-                                <tr><td>Extra Benefit Factor (Age 45 &amp; under):</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!Lead.Total_Basic_Benefit__c - (Lead.formula_basePay__c + 2000)}" /></apex:outputText></td></tr>
-                                <tr><td><b>Total Current Benefit:</b></td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!Lead.Total_Basic_Benefit__c}" /></apex:outputText></td></tr>
+                                <tr><td>Extra Benefit Factor (Age 45 &amp; under):</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}" rendered="{!blExtraBenefit != null}"><apex:param value="{!blExtraBenefit}" /></apex:outputText><apex:outputText value="--" rendered="{!blExtraBenefit == null}" /></td></tr>
+                                <tr><td><b>Total Current Benefit:</b></td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!blTotalCurrentBenefit}" /></apex:outputText></td></tr>
+                                <apex:outputPanel layout="none" rendered="{!blShowYearsRemaining}"><tr><td>Extra Benefit Years Remaining:</td><td class="v"><apex:outputText value="{0, number, #,##0}"><apex:param value="{!blExtraBenefitYearsRemaining}" /></apex:outputText></td></tr></apex:outputPanel>
                             </table>
                         </td>
                         <td style="width:45%;vertical-align:top;">

@@ -1,4 +1,4 @@
-<apex:page id="basicForm3" standardController="Lead"
+<apex:page id="basicForm3" standardController="Lead" extensions="FedWorkbook_BasicLifeExt"
     showHeader="false" sidebar="false" standardStylesheets="false"
     applyHtmlTag="false" applyBodyTag="false"
     docType="html-5.0" title="Federal Employee Group Life Insurance"
@@ -90,6 +90,19 @@
             color: #1f3b38;
             font-weight: 700;
         }
+        /* Editable Starting Age input (manual-age path, FEGLI code == '--') */
+        .gfg3-input {
+            border: 0;
+            border-bottom: 1px solid #9aa6a3;
+            background: transparent;
+            font: inherit;
+            color: #1f3b38;
+            font-weight: 700;
+            padding: 1px 4px;
+            min-width: 90px;
+        }
+        .gfg3-input:focus { outline: none; border-bottom: 2px solid #3A5754; }
+        .gfg3-msgs { margin: 6px 0; }
 
         .gfg3-calc__table { flex: 0 0 auto; text-align: center; }
         .gfg3-table-title { font-size: 18px; color: #2b2b2b; margin: 0 0 6px; }
@@ -190,8 +203,36 @@
             </p>
 
             <!-- Calculation grid: left fields + right Extra Benefit Factor table -->
+            <apex:form id="gfg3form">
+                <!-- The Starting Age input persists Age_Option_Basic_Manual__c and
+                     reRenders the calc panel so the Extra Benefit Factor, Total
+                     Current Benefit, and Years Remaining recompute from the new
+                     age. actionFunction (not actionSupport) is used because
+                     actionSupport does not fire reliably when this page is
+                     rendered via apex:include in FedWorkbook_Preview. -->
+                <apex:actionFunction name="gfg3Save" action="{!saveLead}"
+                    reRender="gfg3msgs,gfg3calc" />
+                <apex:outputPanel id="gfg3msgs" styleClass="gfg3-msgs"><apex:pageMessages /></apex:outputPanel>
             <div class="gfg3-calc">
-                <div class="gfg3-calc__rows">
+                <apex:outputPanel id="gfg3calc" layout="block" styleClass="gfg3-calc__rows">
+                    <!-- Current Age (read-only) when a FEGLI code is set; otherwise
+                         an editable Starting Age (manual-age path) — mirrors the
+                         legacy BasicLife.page age cell. -->
+                    <div class="gfg3-calc__row">
+                        <span class="gfg3-label">
+                            <apex:outputText value="Current Age:"
+                                rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && Lead.Basic__c == true}" />
+                            <apex:outputText value="Starting Age:"
+                                rendered="{!Lead.FEGLI_Code_Picklist__c == '--' && Lead.Basic__c == true}" />
+                        </span>
+                        <span class="gfg3-blank">
+                            <apex:outputField value="{!Lead.Contact_Age__c}"
+                                rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && Lead.Basic__c == true}" />
+                            <apex:inputField value="{!Lead.Age_Option_Basic_Manual__c}" styleClass="gfg3-input"
+                                rendered="{!Lead.FEGLI_Code_Picklist__c == '--' && Lead.Basic__c == true}"
+                                onchange="gfg3Save();" />
+                        </span>
+                    </div>
                     <div class="gfg3-calc__row">
                         <span class="gfg3-label">Base Pay Round Up:</span>
                         <span class="gfg3-blank">
@@ -211,33 +252,35 @@
                     <div class="gfg3-calc__row">
                         <span class="gfg3-label">Extra Benefit Factor<br/>(Age 45 &amp; under):</span>
                         <span class="gfg3-blank">
-                            <!-- Show the dollar amount when EITHER age source applies:
-                                 the manual picklist is set, OR Contact_Age is 1..44 -->
+                            <!-- Computed by the extension from the manual Starting Age
+                                 or the derived Contact Age. Null -> show "--". -->
                             <apex:outputText value="{0, number, $###,###,##0.00}"
-                                rendered="{!Lead.Base_Salary__c >= 0 && (NOT(ISBLANK(Lead.Age_Option_Basic_Manual__c)) || (Lead.Contact_Age__c > 0 && Lead.Contact_Age__c <= 44))}">
-                                <apex:param value="{!Lead.Total_Basic_Benefit__c - (Lead.formula_basePay__c + 2000)}" />
+                                rendered="{!extraBenefit != null}">
+                                <apex:param value="{!extraBenefit}" />
                             </apex:outputText>
-                            <!-- "--" only when NEITHER age source is usable -->
-                            <apex:outputText value="--"
-                                rendered="{!ISBLANK(Lead.Age_Option_Basic_Manual__c) && (ISBLANK(Lead.Contact_Age__c) || Lead.Contact_Age__c <= 0 || Lead.Contact_Age__c > 44)}" />
+                            <apex:outputText value="--" rendered="{!extraBenefit == null}" />
                         </span>
                     </div>
                     <div class="gfg3-calc__row">
                         <span class="gfg3-label">Total Current Benefit:</span>
                         <span class="gfg3-blank">
-                            <!-- Prefer the formula field; fall back to BIA if it returns blank
-                                 (e.g. field not yet deployed or no age info -> no extra benefit) -->
-                            <apex:outputText value="{0, number, $###,###,##0.00}"
-                                rendered="{!Lead.Base_Salary__c >= 0 && NOT(ISBLANK(Lead.Total_Basic_Benefit__c)) && Lead.Total_Basic_Benefit__c > 0}">
-                                <apex:param value="{!Lead.Total_Basic_Benefit__c}" />
-                            </apex:outputText>
-                            <apex:outputText value="{0, number, $###,###,##0.00}"
-                                rendered="{!Lead.Base_Salary__c >= 0 && (ISBLANK(Lead.Total_Basic_Benefit__c) || Lead.Total_Basic_Benefit__c <= 0)}">
-                                <apex:param value="{!Lead.formula_basePay__c + 2000}" />
+                            <apex:outputText value="{0, number, $###,###,##0.00}">
+                                <apex:param value="{!totalCurrentBenefit}" />
                             </apex:outputText>
                         </span>
                     </div>
-                </div>
+                    <!-- Extra Benefit Years Remaining — appears only while the
+                         extra-benefit coverage is still in effect (through age 45),
+                         mirroring the legacy page. -->
+                    <apex:outputPanel layout="block" styleClass="gfg3-calc__row" rendered="{!showYearsRemaining}">
+                        <span class="gfg3-label">Extra Benefit Years Remaining:</span>
+                        <span class="gfg3-blank">
+                            <apex:outputText value="{0, number, ###,###,##0}">
+                                <apex:param value="{!extraBenefitYearsRemaining}" />
+                            </apex:outputText>
+                        </span>
+                    </apex:outputPanel>
+                </apex:outputPanel>
 
                 <div class="gfg3-calc__table">
                     <div class="gfg3-table-title">Extra Benefit Factor</div>
@@ -257,6 +300,7 @@
                     </table>
                 </div>
             </div>
+            </apex:form>
 
             <h2 class="gfg3-retire-h">Your Basic coverage, costs and options in retirement</h2>
             <p class="gfg3-retire-sub">
