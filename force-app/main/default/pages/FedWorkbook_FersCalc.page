@@ -124,6 +124,47 @@
         .gfg8-calc__row > .gfg8-blank--sm input.gfg8-age-input:focus {
             border-bottom: 1px solid #3A5754;
         }
+
+        /* ----- Top "current values" summary banner ----- */
+        .gfg8-summary {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 6px 18px;
+            margin: 26px 18px 4px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #8FA68C;
+        }
+        .gfg8-summary__item { font-size: 13px; color: #4B5563; white-space: nowrap; }
+        .gfg8-summary__item b { color: #3A5754; }
+        .gfg8-summary__val { color: #1f3b38; font-weight: 700; padding-left: 4px; }
+
+        /* ----- Scenario header with Primary selector ----- */
+        .gfg8-calc__head .gfg8-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #B91C1C;
+            padding-left: 8px;
+        }
+        .gfg8-calc__head .gfg8-primary input { margin: 0; vertical-align: middle; }
+
+        /* ----- Projected YOS subline beneath the Retirement Age input ----- */
+        .gfg8-calc__cell { display: flex; flex-direction: column; gap: 2px; }
+        .gfg8-calc__sub {
+            display: flex; align-items: baseline; gap: 6px;
+            font-size: 12px; color: #4B5563;
+        }
+        .gfg8-calc__sub > .gfg8-blank--sm {
+            flex: 0 0 60px; min-width: 60px;
+            border-bottom: 1px solid #9aa6a3;
+            text-align: center; font-weight: 700; color: #1f3b38;
+        }
+
+        /* Monthly Retirement Annuity emphasized in red (legacy parity) */
+        .gfg8-calc__label--red, .gfg8-row-red .gfg8-blank { color: #B91C1C; }
     </style>
 
     <div class="gfg8-doc">
@@ -226,190 +267,161 @@
 
             <!-- ===== Scenario calculation grid (editable) ===== -->
             <apex:form id="gfg8form">
-                <!-- Auto-save on field change; reRenders both computed output panels -->
-                <apex:actionFunction name="gfg8Save" action="{!saveLead}" reRender="gfg8row1,gfg8row1b,gfg8row1c,gfg8row1d,gfg8row1yos1,gfg8row1yos2,gfg8row2,gfg8row2b,gfg8row2c,gfg8row2d,gfg8row2yos1,gfg8row2yos2,gfg8msgs" />
+                <!-- Auto-save on field change; reRenders the computed panels. -->
+                <apex:actionFunction name="gfg8Save" action="{!saveLead}" reRender="gfg8grid,gfg8msgs" />
+                <!-- Retirement-age change additionally seeds the projected YOS. -->
+                <apex:actionFunction name="gfg8SaveS1Age" action="{!saveS1Age}" reRender="gfg8grid,gfg8msgs" />
+                <apex:actionFunction name="gfg8SaveS2Age" action="{!saveS2Age}" reRender="gfg8grid,gfg8msgs" />
+                <!-- Primary selection (mutually exclusive). -->
+                <apex:actionFunction name="gfg8Primary1" action="{!setPrimary1}" reRender="gfg8grid,gfg8msgs" />
+                <apex:actionFunction name="gfg8Primary2" action="{!setPrimary2}" reRender="gfg8grid,gfg8msgs" />
                 <apex:outputPanel id="gfg8msgs"><apex:pageMessages /></apex:outputPanel>
 
+                <apex:outputPanel id="gfg8grid" layout="block">
+
+                <!-- Top summary: the employee's current values (read-only) -->
+                <div class="gfg8-summary">
+                    <span class="gfg8-summary__item"><b>Current Age:</b>
+                        <span class="gfg8-summary__val"><apex:outputText value="{0, number, #0}"><apex:param value="{!currentAge}" /></apex:outputText></span>
+                    </span>
+                    <span class="gfg8-summary__item"><b>Expected Retirement Age:</b>
+                        <span class="gfg8-summary__val"><apex:outputText value="{0, number, #0}"><apex:param value="{!expectedRetirementAge}" /></apex:outputText></span>
+                    </span>
+                    <span class="gfg8-summary__item"><b>Current YOS:</b>
+                        <span class="gfg8-summary__val"><apex:outputText value="{0, number, #0.##}"><apex:param value="{!currentYOS}" /></apex:outputText></span>
+                    </span>
+                    <span class="gfg8-summary__item"><b>Current Base Pay:</b>
+                        <span class="gfg8-summary__val"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!currentBasePay}" /></apex:outputText></span>
+                    </span>
+                </div>
+
                 <div class="gfg8-calc">
-                    <!-- Row 1: headers -->
+                    <!-- Row 1: scenario headers with the Primary selector -->
                     <div></div>
-                    <div class="gfg8-calc__head">Scenario 1</div>
-                    <div class="gfg8-calc__head">Scenario 2</div>
-
-                    <!-- Row 2: Current Age (read-only) -->
-                    <div></div>
-                    <div class="gfg8-calc__row">
-                        <span class="gfg8-calc__rlabel">Current Age:</span>
-                        <span class="gfg8-blank gfg8-blank--sm">
-                            <apex:outputText value="{0, number, #0}"><apex:param value="{!currentAge}" /></apex:outputText>
-                        </span>
+                    <div class="gfg8-calc__head">Scenario 1
+                        <apex:outputPanel layout="none" rendered="{!s1HasRetAge}">
+                            <span class="gfg8-primary">
+                                <apex:inputField value="{!lead.Scenario1_Primary__c}" onchange="gfg8Primary1();" /> Primary
+                            </span>
+                        </apex:outputPanel>
                     </div>
-                    <div class="gfg8-calc__row">
-                        <span class="gfg8-calc__rlabel">Current Age:</span>
-                        <span class="gfg8-blank gfg8-blank--sm">
-                            <apex:outputText value="{0, number, #0}"><apex:param value="{!currentAge}" /></apex:outputText>
-                        </span>
+                    <div class="gfg8-calc__head">Scenario 2
+                        <apex:outputPanel layout="none" rendered="{!s2HasRetAge}">
+                            <span class="gfg8-primary">
+                                <apex:inputField value="{!lead.Scenario2_Primary__c}" onchange="gfg8Primary2();" /> Primary
+                            </span>
+                        </apex:outputPanel>
                     </div>
 
-                    <!-- Row 3: empty left + Retirement Age (editable, both scenarios) -->
+                    <!-- Row 2: Retirement Age (editable) + projected YOS subline -->
                     <div></div>
-                    <!-- Editable: Retirement Age Scenario 1 -->
-                    <div class="gfg8-calc__row">
-                        <span class="gfg8-calc__rlabel">Retirement Age:</span>
-                        <span class="gfg8-blank gfg8-blank--sm">
-                            <apex:inputField value="{!lead.Scenario1_Retirement_Age__c}"
-                                styleClass="gfg8-age-input"
-                                onchange="gfg8Save();" />
-                        </span>
+                    <div class="gfg8-calc__cell">
+                        <div class="gfg8-calc__row">
+                            <span class="gfg8-calc__rlabel">Retirement Age:</span>
+                            <span class="gfg8-blank gfg8-blank--sm">
+                                <apex:inputField value="{!lead.Scenario1_Retirement_Age__c}"
+                                    styleClass="gfg8-age-input" onchange="gfg8SaveS1Age();" />
+                            </span>
+                        </div>
+                        <div class="gfg8-calc__sub">
+                            <span class="gfg8-calc__rlabel">YOS:</span>
+                            <span class="gfg8-blank--sm">
+                                <apex:outputText value="{0, number, #0.##}" rendered="{!s1HasRetAge}"><apex:param value="{!s1ProjectedYOS}" /></apex:outputText>
+                            </span>
+                        </div>
                     </div>
-                    <!-- Editable: Retirement Age Scenario 2 -->
-                    <div class="gfg8-calc__row">
-                        <span class="gfg8-calc__rlabel">Retirement Age:</span>
-                        <span class="gfg8-blank gfg8-blank--sm">
-                            <apex:inputField value="{!lead.Scenario2_Retirement_Age__c}"
-                                styleClass="gfg8-age-input"
-                                onchange="gfg8Save();" />
-                        </span>
+                    <div class="gfg8-calc__cell">
+                        <div class="gfg8-calc__row">
+                            <span class="gfg8-calc__rlabel">Retirement Age:</span>
+                            <span class="gfg8-blank gfg8-blank--sm">
+                                <apex:inputField value="{!lead.Scenario2_Retirement_Age__c}"
+                                    styleClass="gfg8-age-input" onchange="gfg8SaveS2Age();" />
+                            </span>
+                        </div>
+                        <div class="gfg8-calc__sub">
+                            <span class="gfg8-calc__rlabel">YOS:</span>
+                            <span class="gfg8-blank--sm">
+                                <apex:outputText value="{0, number, #0.##}" rendered="{!s2HasRetAge}"><apex:param value="{!s2ProjectedYOS}" /></apex:outputText>
+                            </span>
+                        </div>
                     </div>
 
-                    <!-- Row 4: empty + Years of Service (read-only) -->
-                    <div></div>
-                    <apex:outputPanel id="gfg8row1yos1" layout="none">
-                    <div class="gfg8-calc__row">
-                        <span class="gfg8-calc__rlabel">Years of Service:</span>
-                        <span class="gfg8-blank gfg8-blank--sm">
-                            <apex:outputText value="{0, number, #0.##}"><apex:param value="{!s1YearsOfService}" /></apex:outputText>
-                        </span>
-                    </div>
-                    </apex:outputPanel>
-                    <apex:outputPanel id="gfg8row2yos1" layout="none">
-                    <div class="gfg8-calc__row">
-                        <span class="gfg8-calc__rlabel">Years of Service:</span>
-                        <span class="gfg8-blank gfg8-blank--sm">
-                            <apex:outputText value="{0, number, #0.##}"><apex:param value="{!s2YearsOfService}" /></apex:outputText>
-                        </span>
-                    </div>
-                    </apex:outputPanel>
-
-                    <!-- Row 5: Annual Rate High-3 Average (editable, both scenarios) -->
+                    <!-- Row 3: Annual Rate High-3 Average (editable) -->
                     <div class="gfg8-calc__label">Annual Rate High-3 Average:</div>
-                    <!-- Editable: High-3 Salary Scenario 1 -->
                     <div class="gfg8-calc__row">
                         <span class="gfg8-calc__op">$</span>
                         <span class="gfg8-blank">
                             <apex:inputField value="{!lead.High_3_Salary__c}"
-                                styleClass="gfg8-age-input"
-                                onchange="gfg8Save();" />
+                                styleClass="gfg8-age-input" onchange="gfg8Save();" />
                         </span>
                     </div>
-                    <!-- Editable: High-3 Salary Scenario 2 -->
                     <div class="gfg8-calc__row">
                         <span class="gfg8-calc__op">$</span>
                         <span class="gfg8-blank">
                             <apex:inputField value="{!lead.High_3_Salary2__c}"
-                                styleClass="gfg8-age-input"
-                                onchange="gfg8Save();" />
+                                styleClass="gfg8-age-input" onchange="gfg8Save();" />
                         </span>
                     </div>
 
-                    <!-- Row 6: Factor 1% / 1.1% (read-only, rerendered) -->
-                    <div class="gfg8-calc__label">Time Your Factor: 1% 1.1%:</div>
-                    <apex:outputPanel id="gfg8row1" layout="none">
+                    <!-- Row 4: Times (x) Your Factor (1% / 1.1%) -->
+                    <div class="gfg8-calc__label">Times (x) Your Factor:</div>
                     <div class="gfg8-calc__row">
                         <span class="gfg8-blank">
                             <apex:outputText value="{0, number, #0.0}"><apex:param value="{!s1Factor}" /></apex:outputText>%
                         </span>
                     </div>
-                    </apex:outputPanel>
-                    <apex:outputPanel id="gfg8row2" layout="none">
                     <div class="gfg8-calc__row">
-                        <span class="gfg8-calc__op">1% 1.1%</span>
                         <span class="gfg8-blank">
                             <apex:outputText value="{0, number, #0.0}"><apex:param value="{!s2Factor}" /></apex:outputText>%
                         </span>
                     </div>
-                    </apex:outputPanel>
 
-                    <!-- Row 7: = intermediate (Factor x High-3) (read-only, rerendered) -->
-                    <div></div>
-                    <apex:outputPanel id="gfg8row1b" layout="none">
-                    <div class="gfg8-calc__row">
-                        <span class="gfg8-calc__op">=</span>
-                        <span class="gfg8-blank">
-                            <apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!s1FactorTimesHighThree}" /></apex:outputText>
-                        </span>
-                    </div>
-                    </apex:outputPanel>
-                    <apex:outputPanel id="gfg8row2b" layout="none">
-                    <div class="gfg8-calc__row">
-                        <span class="gfg8-calc__op">=</span>
-                        <span class="gfg8-blank">
-                            <apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!s2FactorTimesHighThree}" /></apex:outputText>
-                        </span>
-                    </div>
-                    </apex:outputPanel>
-
-                    <!-- Row 8: Times Years of Service (editable duplicate, both scenarios) -->
-                    <div class="gfg8-calc__label">Times Years of Service:</div>
-                    <!-- Editable: YOS Scenario 1 (second occurrence — same field, syncs via rerender) -->
-                    <apex:outputPanel id="gfg8row1yos2" layout="none">
+                    <!-- Row 5: Times (x) Years of Service (editable) -->
+                    <div class="gfg8-calc__label">Times (x) Years of Service:</div>
                     <div class="gfg8-calc__row">
                         <span class="gfg8-blank">
                             <apex:inputField value="{!lead.Scenario1_YOS__c}"
-                                styleClass="gfg8-age-input"
-                                onchange="gfg8Save();" />
+                                styleClass="gfg8-age-input" onchange="gfg8Save();" />
                         </span>
                     </div>
-                    </apex:outputPanel>
-                    <!-- Editable: YOS Scenario 2 (second occurrence — same field, syncs via rerender) -->
-                    <apex:outputPanel id="gfg8row2yos2" layout="none">
                     <div class="gfg8-calc__row">
                         <span class="gfg8-blank">
                             <apex:inputField value="{!lead.Scenario2_YOS__c}"
-                                styleClass="gfg8-age-input"
-                                onchange="gfg8Save();" />
+                                styleClass="gfg8-age-input" onchange="gfg8Save();" />
                         </span>
                     </div>
-                    </apex:outputPanel>
 
-                    <!-- Row 9: Annual Retirement Annuity (read-only, rerendered) -->
+                    <!-- Row 6: Annual Retirement Annuity (computed) -->
                     <div class="gfg8-calc__label">Annual Retirement Annuity:</div>
-                    <apex:outputPanel id="gfg8row1c" layout="none">
                     <div class="gfg8-calc__row">
                         <span class="gfg8-calc__op">$</span>
                         <span class="gfg8-blank">
                             <apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!s1AnnualAnnuity}" /></apex:outputText>
                         </span>
                     </div>
-                    </apex:outputPanel>
-                    <apex:outputPanel id="gfg8row2c" layout="none">
                     <div class="gfg8-calc__row">
                         <span class="gfg8-calc__op">$</span>
                         <span class="gfg8-blank">
                             <apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!s2AnnualAnnuity}" /></apex:outputText>
                         </span>
                     </div>
-                    </apex:outputPanel>
 
-                    <!-- Row 10: Monthly Retirement Annuity (read-only, rerendered) -->
-                    <div class="gfg8-calc__label">Monthly Retirement Annuity:</div>
-                    <apex:outputPanel id="gfg8row1d" layout="none">
-                    <div class="gfg8-calc__row">
+                    <!-- Row 7: Monthly Retirement Annuity (computed, emphasized) -->
+                    <div class="gfg8-calc__label gfg8-calc__label--red">Monthly Retirement Annuity:</div>
+                    <div class="gfg8-calc__row gfg8-row-red">
                         <span class="gfg8-calc__op">$</span>
                         <span class="gfg8-blank">
                             <apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!s1MonthlyAnnuity}" /></apex:outputText>
                         </span>
                     </div>
-                    </apex:outputPanel>
-                    <apex:outputPanel id="gfg8row2d" layout="none">
-                    <div class="gfg8-calc__row">
+                    <div class="gfg8-calc__row gfg8-row-red">
                         <span class="gfg8-calc__op">$</span>
                         <span class="gfg8-blank">
                             <apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!s2MonthlyAnnuity}" /></apex:outputText>
                         </span>
                     </div>
-                    </apex:outputPanel>
                 </div>
+                </apex:outputPanel>
             </apex:form>
 
         </div>

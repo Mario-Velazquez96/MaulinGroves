@@ -37,6 +37,13 @@ public with sharing class FedWorkbook_FersCalcExt {
         return [
             SELECT FERS__c,
                    Contact_Age__c,
+                   Expected_Retirement_Age__c,
+                   Years_of_Employment__c,
+                   Base_Salary__c,
+                   Date_of_Birth__c,
+                   Date_of_Hire__c,
+                   Scenario1_Primary__c,
+                   Scenario2_Primary__c,
                    Scenario1_Retirement_Age__c,
                    Scenario2_Retirement_Age__c,
                    Scenario1_YOS__c,
@@ -62,9 +69,64 @@ public with sharing class FedWorkbook_FersCalcExt {
         return null;
     }
 
-    // ---- Shared ------------------------------------------------------------
+    // ---- Top summary (read-only "current" values) --------------------------
     public Decimal getCurrentAge() {
         return lead.Contact_Age__c == null ? 0 : lead.Contact_Age__c;
+    }
+    public Decimal getExpectedRetirementAge() {
+        return lead.Expected_Retirement_Age__c == null ? 0 : lead.Expected_Retirement_Age__c;
+    }
+    public Decimal getCurrentYOS() {
+        return lead.Years_of_Employment__c == null ? 0 : lead.Years_of_Employment__c;
+    }
+    public Decimal getCurrentBasePay() {
+        return lead.Base_Salary__c == null ? 0 : lead.Base_Salary__c;
+    }
+
+    // ---- Primary scenario selection (mutually exclusive) -------------------
+    // Mirrors the legacy setprimary1 / setprimary2: checking one clears the
+    // other. The checkboxes render only once a retirement age is entered.
+    public Boolean getS1HasRetAge() {
+        return lead.Scenario1_Retirement_Age__c != null && lead.Scenario1_Retirement_Age__c != 0;
+    }
+    public Boolean getS2HasRetAge() {
+        return lead.Scenario2_Retirement_Age__c != null && lead.Scenario2_Retirement_Age__c != 0;
+    }
+    public PageReference setPrimary1() {
+        if (lead.Scenario1_Primary__c == true) { lead.Scenario2_Primary__c = false; }
+        return saveLead();
+    }
+    public PageReference setPrimary2() {
+        if (lead.Scenario2_Primary__c == true) { lead.Scenario1_Primary__c = false; }
+        return saveLead();
+    }
+
+    // ---- Projected Years of Service at retirement --------------------------
+    // Legacy: RetirementAge - ageAtHire, where ageAtHire is derived from the
+    // hire/birth dates. Shown read-only beneath each Retirement Age input.
+    private Decimal projectedYos(Decimal retAge) {
+        if (retAge == null || retAge == 0
+                || lead.Date_of_Birth__c == null || lead.Date_of_Hire__c == null) {
+            return 0;
+        }
+        Integer ageAtHire = (Integer) Math.floor(
+            lead.Date_of_Birth__c.daysBetween(lead.Date_of_Hire__c) / 365.25);
+        return retAge - Math.abs(ageAtHire);
+    }
+    public Decimal getS1ProjectedYOS() { return projectedYos(lead.Scenario1_Retirement_Age__c); }
+    public Decimal getS2ProjectedYOS() { return projectedYos(lead.Scenario2_Retirement_Age__c); }
+
+    // Retirement-age change seeds the editable "Times Years of Service" with the
+    // projected YOS (legacy scenario1XYOS = RetAge - ageAtHire), then saves.
+    public PageReference saveS1Age() {
+        Decimal proj = projectedYos(lead.Scenario1_Retirement_Age__c);
+        if (proj != 0) { lead.Scenario1_YOS__c = proj; }
+        return saveLead();
+    }
+    public PageReference saveS2Age() {
+        Decimal proj = projectedYos(lead.Scenario2_Retirement_Age__c);
+        if (proj != 0) { lead.Scenario2_YOS__c = proj; }
+        return saveLead();
     }
 
     // ---- Scenario 1 --------------------------------------------------------
