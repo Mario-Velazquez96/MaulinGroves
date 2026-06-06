@@ -92,6 +92,8 @@ public with sharing class FedWorkbook_FersCalcExt {
     public Boolean getS2HasRetAge() {
         return lead.Scenario2_Retirement_Age__c != null && lead.Scenario2_Retirement_Age__c != 0;
     }
+    public Boolean getS1Primary() { return lead.Scenario1_Primary__c == true; }
+    public Boolean getS2Primary() { return lead.Scenario2_Primary__c == true; }
     public PageReference setPrimary1() {
         if (lead.Scenario1_Primary__c == true) { lead.Scenario2_Primary__c = false; }
         return saveLead();

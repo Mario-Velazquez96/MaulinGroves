@@ -123,6 +123,15 @@ public with sharing class FedWorkbook_PDFExt {
 
     // ----- Page 7: Calculating FERS Retirement ---------------------------
     public Decimal getFcCurrentAge()            { return fc().getCurrentAge(); }
+    public Decimal getFcExpectedRetirementAge() { return fc().getExpectedRetirementAge(); }
+    public Decimal getFcCurrentYOS()            { return fc().getCurrentYOS(); }
+    public Decimal getFcCurrentBasePay()        { return fc().getCurrentBasePay(); }
+    public Boolean getFcS1Primary()             { return fc().getS1Primary(); }
+    public Boolean getFcS2Primary()             { return fc().getS2Primary(); }
+    public Boolean getFcS1HasRetAge()           { return fc().getS1HasRetAge(); }
+    public Boolean getFcS2HasRetAge()           { return fc().getS2HasRetAge(); }
+    public Decimal getFcS1ProjectedYOS()        { return fc().getS1ProjectedYOS(); }
+    public Decimal getFcS2ProjectedYOS()        { return fc().getS2ProjectedYOS(); }
     public Decimal getFcS1RetirementAge()       { return fc().getS1RetirementAge(); }
     public Decimal getFcS1YearsOfService()      { return fc().getS1YearsOfService(); }
     public Decimal getFcS1HighThree()           { return fc().getS1HighThree(); }

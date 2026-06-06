@@ -158,6 +158,15 @@
             .gfgp-scin .lab { text-align: left; white-space: nowrap; }
             .gfgp-scin .op { white-space: nowrap; }
             .gfgp-scin .blank { border-bottom: 1px solid #2b2b2b; text-align: center; font-weight: bold; color: #1f3b38; width: 60%; }
+            .gfgp-scin .blank.red { color: #B91C1C; }
+            .gfgp-scin .sub { text-align: left; font-size: 8.5pt; font-style: italic; color: #4B5563; white-space: nowrap; }
+            .gfgp-sc .lhead.red { color: #B91C1C; }
+            .gfgp-sc .schead .pri { display: block; font-size: 9pt; font-weight: bold; color: #B91C1C; }
+            /* Top "current values" summary banner above the scenario grid */
+            .gfgp-scsum { width: 100%; border-collapse: collapse; margin: 14pt 0 0; }
+            .gfgp-scsum td { border: none; border-bottom: 1.5pt solid #8FA68C; padding: 3pt 6pt 7pt; font-size: 10pt; text-align: center; }
+            .gfgp-scsum td b { color: #3A5754; }
+            .gfgp-scsum .v { color: #1f3b38; font-weight: bold; }
 
             /* ---- FERS survivor: 4-column comparison grid ---- */
             .gfgp-cmp { width: 100%; border-collapse: collapse; margin: 10pt 0 14pt; }
@@ -959,17 +968,22 @@
                     </table>
                     <p class="gfgp-p gfgp-italic" style="font-size:8.5pt;">*MRA = Minimum Retirement Age (between 55 and 57, based on your year of birth, per the table above).</p>
 
+                    <!-- Top summary: the employee's current values (read-only) -->
+                    <table class="gfgp-scsum">
+                        <tr>
+                            <td><b>Current Age:</b> <span class="v"><apex:outputText value="{0, number, #0}"><apex:param value="{!fcCurrentAge}" /></apex:outputText></span></td>
+                            <td><b>Expected Retirement Age:</b> <span class="v"><apex:outputText value="{0, number, #0}"><apex:param value="{!fcExpectedRetirementAge}" /></apex:outputText></span></td>
+                            <td><b>Current YOS:</b> <span class="v"><apex:outputText value="{0, number, #0.##}"><apex:param value="{!fcCurrentYOS}" /></apex:outputText></span></td>
+                            <td><b>Current Base Pay:</b> <span class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!fcCurrentBasePay}" /></apex:outputText></span></td>
+                        </tr>
+                    </table>
+
                     <table class="gfgp-sc">
                         <colgroup><col style="width:26%" /><col style="width:37%" /><col style="width:37%" /></colgroup>
                         <tr>
                             <td>&#160;</td>
-                            <td class="schead">Scenario 1</td>
-                            <td class="schead">Scenario 2</td>
-                        </tr>
-                        <tr>
-                            <td>&#160;</td>
-                            <td><table class="gfgp-scin"><tr><td class="lab">Current Age:</td><td class="blank"><apex:outputText value="{0, number, #0}"><apex:param value="{!fcCurrentAge}" /></apex:outputText></td></tr></table></td>
-                            <td><table class="gfgp-scin"><tr><td class="lab">Current Age:</td><td class="blank"><apex:outputText value="{0, number, #0}"><apex:param value="{!fcCurrentAge}" /></apex:outputText></td></tr></table></td>
+                            <td class="schead">Scenario 1<apex:outputPanel layout="none" rendered="{!fcS1Primary}"><span class="pri">&#10003; Primary</span></apex:outputPanel></td>
+                            <td class="schead">Scenario 2<apex:outputPanel layout="none" rendered="{!fcS2Primary}"><span class="pri">&#10003; Primary</span></apex:outputPanel></td>
                         </tr>
                         <tr>
                             <td>&#160;</td>
@@ -978,8 +992,8 @@
                         </tr>
                         <tr>
                             <td>&#160;</td>
-                            <td><table class="gfgp-scin"><tr><td class="lab">Years of Service:</td><td class="blank"><apex:outputText value="{0, number, #0.##}"><apex:param value="{!fcS1YearsOfService}" /></apex:outputText></td></tr></table></td>
-                            <td><table class="gfgp-scin"><tr><td class="lab">Years of Service:</td><td class="blank"><apex:outputText value="{0, number, #0.##}"><apex:param value="{!fcS2YearsOfService}" /></apex:outputText></td></tr></table></td>
+                            <td><table class="gfgp-scin"><tr><td class="sub">YOS:</td><td class="blank"><apex:outputText value="{0, number, #0.##}" rendered="{!fcS1HasRetAge}"><apex:param value="{!fcS1ProjectedYOS}" /></apex:outputText></td></tr></table></td>
+                            <td><table class="gfgp-scin"><tr><td class="sub">YOS:</td><td class="blank"><apex:outputText value="{0, number, #0.##}" rendered="{!fcS2HasRetAge}"><apex:param value="{!fcS2ProjectedYOS}" /></apex:outputText></td></tr></table></td>
                         </tr>
                         <tr>
                             <td class="lhead">Annual Rate High-3 Average:</td>
@@ -987,17 +1001,12 @@
                             <td><table class="gfgp-scin"><tr><td class="op">$</td><td class="blank"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fcS2HighThree}" /></apex:outputText></td></tr></table></td>
                         </tr>
                         <tr>
-                            <td class="lhead">Time Your Factor: 1% 1.1%:</td>
+                            <td class="lhead">Times (x) Your Factor:</td>
                             <td><table class="gfgp-scin"><tr><td class="blank"><apex:outputText value="{0, number, #0.0}"><apex:param value="{!fcS1Factor}" /></apex:outputText>%</td></tr></table></td>
-                            <td><table class="gfgp-scin"><tr><td class="op">1% 1.1%</td><td class="blank"><apex:outputText value="{0, number, #0.0}"><apex:param value="{!fcS2Factor}" /></apex:outputText>%</td></tr></table></td>
+                            <td><table class="gfgp-scin"><tr><td class="blank"><apex:outputText value="{0, number, #0.0}"><apex:param value="{!fcS2Factor}" /></apex:outputText>%</td></tr></table></td>
                         </tr>
                         <tr>
-                            <td>&#160;</td>
-                            <td><table class="gfgp-scin"><tr><td class="op">=</td><td class="blank"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!fcS1FactorTimesHighThree}" /></apex:outputText></td></tr></table></td>
-                            <td><table class="gfgp-scin"><tr><td class="op">=</td><td class="blank"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!fcS2FactorTimesHighThree}" /></apex:outputText></td></tr></table></td>
-                        </tr>
-                        <tr>
-                            <td class="lhead">Times Years of Service:</td>
+                            <td class="lhead">Times (x) Years of Service:</td>
                             <td><table class="gfgp-scin"><tr><td class="blank"><apex:outputText value="{0, number, #0.##}"><apex:param value="{!fcS1YearsOfService}" /></apex:outputText></td></tr></table></td>
                             <td><table class="gfgp-scin"><tr><td class="blank"><apex:outputText value="{0, number, #0.##}"><apex:param value="{!fcS2YearsOfService}" /></apex:outputText></td></tr></table></td>
                         </tr>
@@ -1007,9 +1016,9 @@
                             <td><table class="gfgp-scin"><tr><td class="op">$</td><td class="blank"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fcS2AnnualAnnuity}" /></apex:outputText></td></tr></table></td>
                         </tr>
                         <tr>
-                            <td class="lhead">Monthly Retirement Annuity:</td>
-                            <td><table class="gfgp-scin"><tr><td class="op">$</td><td class="blank"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fcS1MonthlyAnnuity}" /></apex:outputText></td></tr></table></td>
-                            <td><table class="gfgp-scin"><tr><td class="op">$</td><td class="blank"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fcS2MonthlyAnnuity}" /></apex:outputText></td></tr></table></td>
+                            <td class="lhead red">Monthly Retirement Annuity:</td>
+                            <td><table class="gfgp-scin"><tr><td class="op">$</td><td class="blank red"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fcS1MonthlyAnnuity}" /></apex:outputText></td></tr></table></td>
+                            <td><table class="gfgp-scin"><tr><td class="op">$</td><td class="blank red"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fcS2MonthlyAnnuity}" /></apex:outputText></td></tr></table></td>
                         </tr>
                     </table>
                 </td>
