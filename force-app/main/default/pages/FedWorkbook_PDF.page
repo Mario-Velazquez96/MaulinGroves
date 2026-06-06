@@ -105,6 +105,37 @@
             .gfgp-proj tfoot td { background-color: #4B5563; color: #ffffff; font-weight: bold; }
             .gfgp-rate-note { text-align: center; font-size: 9pt; font-weight: bold; margin: 4pt 0 10pt; }
 
+            /* ---- Option B Coverage projection (page 5b) ---- */
+            .gfgp-obproj { width: 100%; border-collapse: collapse; margin: 6pt 0 2pt; font-size: 9pt; }
+            .gfgp-obproj th, .gfgp-obproj td { padding: 4pt 5pt; text-align: center; border: 1px solid #ffffff; }
+            .gfgp-obproj thead th { background-color: #3A5754; color: #ffffff; font-weight: bold; }
+            .gfgp-obproj thead th.title { background-color: #8FA68C; color: #2b2b2b; }
+            .gfgp-obproj thead th.ageband { background-color: #B91C1C; }
+            .gfgp-obproj tbody td { background-color: #A5BFA1; color: #2b2b2b; }
+            .gfgp-obproj tbody td.age { background-color: #B91C1C; color: #ffffff; font-weight: bold; }
+            .gfgp-obproj tbody td.yrs { background-color: #ffffff; color: #2b2b2b; }
+            .gfgp-obproj tfoot td { background-color: #3A5754; color: #ffffff; font-weight: bold; }
+            .gfgp-obproj tfoot td.yrs { background-color: #A5BFA1; color: #2b2b2b; }
+            .gfgp-obproj tfoot td.grand { background-color: #B91C1C; color: #ffffff; }
+
+            .gfgp-obcmp { width: 100%; border-collapse: collapse; margin: 6pt 0; font-size: 9.5pt; }
+            .gfgp-obcmp td, .gfgp-obcmp th { padding: 5pt 8pt; border: 1px solid #ffffff; }
+            .gfgp-obcmp th { background-color: #3A5754; color: #ffffff; font-weight: bold; text-align: center; }
+            .gfgp-obcmp td.lbl { background-color: #FDE700; color: #2b2b2b; text-align: right; font-weight: bold; }
+            .gfgp-obcmp td.yrs { background-color: #A5BFA1; color: #2b2b2b; text-align: center; font-weight: bold; }
+            .gfgp-obcmp td.val { background-color: #A5BFA1; color: #2b2b2b; text-align: center; font-weight: bold; }
+            .gfgp-obcmp td.save { background-color: #51D235; color: #ffffff; text-align: center; font-weight: bold; }
+            .gfgp-obcmp td.benefit { background-color: #ffffff; color: #2b2b2b; text-align: center; font-weight: bold; }
+
+            .gfgp-obprop { width: 100%; border-collapse: collapse; margin: 10pt 0 2pt; font-size: 8.5pt; }
+            .gfgp-obprop td, .gfgp-obprop th { padding: 5pt 5pt; text-align: center; border: 1px solid #ffffff; }
+            .gfgp-obprop th { background-color: #8FA68C; color: #2b2b2b; font-weight: bold; }
+            .gfgp-obprop td.title { background-color: #3A5754; color: #ffffff; font-weight: bold; }
+            .gfgp-obprop td.years { background-color: #A5BFA1; color: #2b2b2b; font-weight: bold; }
+            .gfgp-obprop td.rowlabel { background-color: #8FA68C; color: #2b2b2b; font-weight: bold; }
+            .gfgp-obprop td.calc { background-color: #A5BFA1; color: #2b2b2b; font-weight: bold; }
+            .gfgp-obprop td.save { background-color: #51D235; color: #ffffff; font-weight: bold; }
+
             /* ---- FERS red factor bullets ---- */
             ul.gfgp-red-ul { margin: 4pt 0 4pt 18pt; padding: 0; color: #B91C1C; }
             ul.gfgp-red-ul li { margin: 3pt 0; font-weight: bold; }
@@ -678,6 +709,98 @@
                             <td class="lbl">Monthly Cost</td>
                             <td class="cell">$<apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!obTotalMonthlyCost}" /></apex:outputText></td>
                             <td>&#160;</td>
+                        </tr>
+                    </table>
+
+                    <p class="gfgp-bottom-note">Rates are subject to change and are not guaranteed upon approval.<br/>FEGLI rates are based on current rates.</p>
+                </td>
+                <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">5</div></td>
+            </tr>
+        </table>
+        </apex:outputPanel>
+
+        <!-- ============ Page 5b: Option B Coverage projection (Option B only) ============ -->
+        <apex:outputPanel layout="none" rendered="{!Lead.OptionB__c == true}">
+        <table class="gfgp-sheet">
+            <tr>
+                <td class="gfgp-body">
+                    <div class="gfgp-title">FEGLI - Option B Coverage</div>
+                    <div class="gfgp-accent"></div>
+
+                    <table class="gfgp-calc">
+                        <tr><td>Prepared for:</td><td class="v"><apex:outputText value="{!Lead.Name}" /></td></tr>
+                        <tr><td>Annual Rate of Base Pay Rounded Up:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obAnnualRatePay}" /></apex:outputText></td></tr>
+                        <tr><td>Current Age:</td><td class="v"><apex:outputText value="{!Lead.Contact_Age__c}" /></td></tr>
+                        <tr><td>Your Multiplier:</td><td class="v"><apex:outputText value="{!obMultiplier}" /></td></tr>
+                        <tr><td>Option B Coverage:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obOptionBCoverage}" /></apex:outputText></td></tr>
+                        <tr><td>Starting Age:</td><td class="v"><apex:outputText value="{!obStartingAge}" /></td></tr>
+                    </table>
+
+                    <div class="gfgp-h3">Your Option B Cost Projection</div>
+                    <table class="gfgp-obproj">
+                        <thead>
+                            <tr><th class="title" colspan="5">OPTION B</th></tr>
+                            <tr><th class="ageband">Age Groups</th><th>Bi-Weekly Rates</th><th>Annual Cost</th><th>Years</th><th>Total</th></tr>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!obProjectionRows}" var="row">
+                                <tr>
+                                    <td class="age">{!row.ageLabel}</td>
+                                    <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!row.biWeekly}" /></apex:outputText></td>
+                                    <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!row.annual}" /></apex:outputText></td>
+                                    <td class="yrs"><apex:outputText value="{0, number, #,##0}"><apex:param value="{!row.years}" /></apex:outputText></td>
+                                    <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!row.total}" /></apex:outputText></td>
+                                </tr>
+                            </apex:repeat>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" style="text-align:right;">Years Covered &#187;</td>
+                                <td class="yrs"><apex:outputText value="{0, number, #,##0}"><apex:param value="{!obProjTotalYears}" /></apex:outputText>+</td>
+                                <td class="grand"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obProjFegliTotal}" /></apex:outputText></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <table class="gfgp-obcmp">
+                        <tr><th>&#160;</th><th>YEARS</th><th>TOTAL FEGLI COST</th></tr>
+                        <tr>
+                            <td class="lbl">Your Total FEGLI Cost Over:</td>
+                            <td class="yrs"><apex:outputText value="{0, number, #,##0}"><apex:param value="{!obProjTotalYears}" /></apex:outputText></td>
+                            <td class="val"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obProjFegliTotal}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="lbl">Alternative Insurance Cost Over:</td>
+                            <td class="yrs"><apex:outputText value="{0, number, #,##0}"><apex:param value="{!obProjTotalYears}" /></apex:outputText></td>
+                            <td class="val"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obProjAltTotal}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="lbl">Savings Over Current FEGLI Coverage:</td>
+                            <td class="yrs"><apex:outputText value="{0, number, #,##0}"><apex:param value="{!obProjTotalYears}" /></apex:outputText></td>
+                            <td class="save"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obProjSavings}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="lbl">Based Upon Your Current FEGLI Benefit:</td>
+                            <td class="benefit" colspan="2"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obCurrentBenefit}" /></apex:outputText></td>
+                        </tr>
+                    </table>
+
+                    <p class="gfgp-rate-note">Alternative rates are Term Insurance field-written estimates only. FEGLI rates are subject to change.</p>
+
+                    <table class="gfgp-obprop">
+                        <tr>
+                            <td class="title">PROPOSED OPTION</td>
+                            <td class="years" colspan="6">for <apex:outputText value="{0, number, #,##0}"><apex:param value="{!obProjTotalYears}" /></apex:outputText> years of coverage</td>
+                        </tr>
+                        <tr><th>TERM LIFE</th><th>FACE AMOUNT</th><th>MONTHLY COST</th><th>BI-WEEKLY</th><th>ANNUAL</th><th>TOTAL COST</th><th>SAVINGS</th></tr>
+                        <tr>
+                            <td class="rowlabel">Alternative Insurance</td>
+                            <td>$<apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!obFaceAmount}" /></apex:outputText></td>
+                            <td>$<apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!obMonthlyPremium}" /></apex:outputText></td>
+                            <td class="calc"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obAltBiWeekly}" /></apex:outputText></td>
+                            <td class="calc"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obAltAnnual}" /></apex:outputText></td>
+                            <td class="calc"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obProjAltTotal}" /></apex:outputText></td>
+                            <td class="save"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obProjSavings}" /></apex:outputText></td>
                         </tr>
                     </table>
 

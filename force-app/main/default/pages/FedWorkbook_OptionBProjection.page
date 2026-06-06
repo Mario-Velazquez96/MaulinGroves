@@ -1,0 +1,428 @@
+<apex:page id="formB5b" standardController="Lead" extensions="FedWorkbook_OptionBExt"
+    showHeader="false" sidebar="false" standardStylesheets="false"
+    applyHtmlTag="false" applyBodyTag="false"
+    docType="html-5.0" title="FEGLI - Option B Coverage"
+    rendered="{!Lead.OptionB__c == true || CONTAINS(Lead.FEGLI_Plan__c, 'Option B')}">
+    <!--
+      ============================================================
+      FedWorkbook_OptionBProjection  (Option B Coverage)
+      Personalized escalating Option B cost projection, moved out of
+      FedWorkbook_OptionB so the two sit on separate pages. Replicates
+      the legacy GPIS_Federal_Workbook page-6 "Option B Coverage":
+        - editable Your Multiplier (Multiples_B_Manual__c / code-derived)
+        - Starting Age lock (Starting_Age_Set__c)
+        - 11-band escalating Years projection (Years_34__c .. Years_80__c)
+        - FEGLI vs. alternative private-insurance comparison
+      Shares the FedWorkbook_OptionBExt extension with FedWorkbook_OptionB.
+      Renders under the same criteria as the Option B page.
+      ============================================================
+    -->
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=PT+Serif:wght@400;700&amp;display=swap');
+
+        .gfg5-doc {
+            position: relative;
+            background: #ffffff;
+            color: #2b2b2b;
+            font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.55;
+            margin: 0 auto 24px;
+            width: 850px;
+            max-width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        }
+        /* Right-side sidebar */
+        .gfg5-sidebar { position: absolute; right: 0; top: 0; bottom: 0; width: 54px; background: #3A5754; }
+        .gfg5-pagenum {
+            position: absolute; bottom: 18px; right: 0; width: 54px;
+            text-align: center; color: #ffffff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 30px; font-weight: 800;
+        }
+        .gfg5-main { margin-right: 54px; padding: 26px 38px 30px; }
+
+        .gfg5-title {
+            margin: 0 0 8px;
+            color: #3A5754;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 33px;
+            font-weight: 800;
+            letter-spacing: .2px;
+        }
+        .gfg5-accent { height: 9px; background: #8FA68C; margin: 0 0 18px; }
+
+        .gfg5-row { margin: 12px 0; display: flex; align-items: baseline; gap: 10px; }
+        .gfg5-row > .gfg5-label { flex: 0 0 auto; }
+        .gfg5-row > .gfg5-blank {
+            flex: 1 1 auto;
+            min-width: 130px;
+            border-bottom: 1px solid #9aa6a3;
+            text-align: right;
+            padding: 0 6px;
+            color: #1f3b38;
+            font-weight: 700;
+        }
+
+        .gfg5-rate-note { text-align: center; font-size: 12px; font-weight: 700; margin: 4px 0 16px; }
+
+        .gfg5-summary-h {
+            margin: 18px 0 12px;
+            color: #2b2b2b;
+            font-family: 'PT Serif', Georgia, serif;
+            font-weight: 400;
+            font-size: 22px;
+        }
+
+        /* Pricing projection table */
+        .gfg5-proj { width: 100%; border-collapse: collapse; margin: 18px 0 4px; font-size: 13px; }
+        .gfg5-proj th, .gfg5-proj td { padding: 6px 10px; text-align: center; border: 1px solid #ffffff; }
+        .gfg5-proj thead th { background: #3A5754; color: #ffffff; font-weight: 700; }
+        .gfg5-proj thead th.gfg5-proj__title { background: #8FA68C; color: #2b2b2b; font-size: 16px; letter-spacing: .5px; }
+        .gfg5-proj thead th.gfg5-proj__ageband { background: #B91C1C; }
+        .gfg5-proj tbody td { background: #A5BFA1; color: #2b2b2b; }
+        .gfg5-proj tbody td.gfg5-proj__age { background: #B91C1C; color: #ffffff; font-weight: 700; }
+        .gfg5-proj tfoot td { background: #4B5563; color: #ffffff; font-weight: 700; padding: 10px; }
+
+        /* Personalized escalating cost projection */
+        .gfg5-projhead { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin: 6px 0 12px; }
+        .gfg5-projhead .gfg5-label { font-weight: 700; }
+        .gfg5-startage input { width: 60px; text-align: center; }
+        .gfg5-btn {
+            display: inline-block; border: none; cursor: pointer;
+            font-family: 'Montserrat', Arial, sans-serif; font-size: 12px; font-weight: 700;
+            color: #ffffff; padding: 5px 14px; border-radius: 3px;
+        }
+        .gfg5-btn--unlock { background: #3A5754; }
+        .gfg5-btn--reset { background: #B91C1C; }
+        .gfg5-projedit th, .gfg5-projedit td { padding: 5px 8px; }
+        .gfg5-projedit tbody td.gfg5-yrs { background: #ffffff; color: #2b2b2b; }
+        .gfg5-projedit td.gfg5-yrs select,
+        .gfg5-projedit td.gfg5-yrs input { width: 70px; text-align: center; }
+        .gfg5-projedit tfoot td { background: #3A5754; color: #ffffff; font-weight: 700; }
+        .gfg5-projedit tfoot td.gfg5-yrs { background: #A5BFA1; color: #2b2b2b; }
+        .gfg5-projedit tfoot td.gfg5-grand { background: #B91C1C; color: #ffffff; }
+
+        /* Comparison block: label | years | value (legacy shape, new palette) */
+        .gfg5-cmp { width: 100%; border-collapse: collapse; margin: 0 0 4px; font-size: 13px; }
+        .gfg5-cmp td, .gfg5-cmp th { padding: 7px 12px; border: 1px solid #ffffff; }
+        .gfg5-cmp th { background: #3A5754; color: #ffffff; font-weight: 700; text-align: center; }
+        .gfg5-cmp td.gfg5-cmp__label { background: #FDE700; color: #2b2b2b; text-align: right; font-weight: 700; }
+        .gfg5-cmp td.gfg5-cmp__yrs { background: #A5BFA1; color: #2b2b2b; text-align: center; font-weight: 700; width: 110px; }
+        .gfg5-cmp td.gfg5-cmp__val { background: #A5BFA1; color: #2b2b2b; text-align: center; font-weight: 700; width: 150px; }
+        .gfg5-cmp td.gfg5-cmp__val--save { background: #51D235; color: #ffffff; }
+        .gfg5-cmp td.gfg5-cmp__val--benefit { background: #ffffff; }
+
+        /* Proposed alternative-insurance option table (new palette) */
+        .gfg5-prop { width: 100%; border-collapse: collapse; margin: 16px 0 4px; font-size: 13px; }
+        .gfg5-prop td, .gfg5-prop th { padding: 7px 10px; border: 1px solid #ffffff; text-align: center; }
+        .gfg5-prop th { background: #8FA68C; color: #2b2b2b; font-weight: 700; }
+        .gfg5-prop td.gfg5-prop__title { background: #3A5754; color: #ffffff; font-weight: 700; font-size: 15px; }
+        .gfg5-prop td.gfg5-prop__years { background: #A5BFA1; color: #2b2b2b; font-weight: 700; }
+        .gfg5-prop td.gfg5-prop__rowlabel { background: #8FA68C; color: #2b2b2b; font-weight: 700; }
+        .gfg5-prop td.gfg5-prop__in { background: #ffffff; }
+        .gfg5-prop td.gfg5-prop__calc { background: #A5BFA1; color: #2b2b2b; font-weight: 700; }
+        .gfg5-prop td.gfg5-prop__save { background: #51D235; color: #ffffff; font-weight: 700; }
+        .gfg5-prop input { width: 80px; text-align: right; }
+
+        .gfg5-bottom-note {
+            text-align: center; font-size: 12px; margin: 14px 0 0;
+            background: #f6f1e9; padding: 10px;
+        }
+    </style>
+
+    <div class="gfg5-doc">
+        <div class="gfg5-sidebar"><span class="gfg5-pagenum">5</span></div>
+
+        <div class="gfg5-main">
+          <apex:form id="ob6form">
+
+            <apex:pageMessages id="ob6msgs" />
+
+            <!-- Auto-save hooks. apex:actionFunction (called from each input's
+                 onchange) fires reliably inside the apex:include used by the
+                 preview, where a child apex:actionSupport does not. -->
+            <apex:actionFunction name="ob6Save" action="{!saveLead}" reRender="ob6proj,ob6calc,ob6msgs" />
+            <apex:actionFunction name="ob6Lock" action="{!lockStartingAge}" reRender="ob6proj,ob6msgs" />
+            <apex:actionFunction name="ob6Unlock" action="{!unlockStartingAge}" reRender="ob6proj,ob6msgs" />
+            <apex:actionFunction name="ob6Reset" action="{!resetProjection}" reRender="ob6proj,ob6calc,ob6msgs" />
+
+            <h1 class="gfg5-title">FEGLI- Option B Coverage</h1>
+            <div class="gfg5-accent"></div>
+
+            <!-- Option B Coverage card (legacy page-6 header) -->
+            <apex:outputPanel id="ob6calc" layout="block">
+                <div class="gfg5-row">
+                    <span class="gfg5-label">Prepared for:</span>
+                    <span class="gfg5-blank"><apex:outputField value="{!Lead.Name}" /></span>
+                </div>
+                <div class="gfg5-row">
+                    <span class="gfg5-label">Annual Rate of Base Pay Rounded Up:</span>
+                    <span class="gfg5-blank">
+                        <apex:outputText value="{0, number, $#,##0.00}">
+                            <apex:param value="{!annualRatePay}" />
+                        </apex:outputText>
+                    </span>
+                </div>
+                <div class="gfg5-row">
+                    <span class="gfg5-label">Current Age:</span>
+                    <span class="gfg5-blank"><apex:outputField value="{!Lead.Contact_Age__c}" /></span>
+                </div>
+                <div class="gfg5-row">
+                    <span class="gfg5-label">Your Multiplier:</span>
+                    <span class="gfg5-blank">
+                        <!-- Editable when no FEGLI code is on file; otherwise the
+                             multiplier (1-5) is derived from the code. -->
+                        <apex:inputField value="{!Lead.Multiples_B_Manual__c}"
+                            rendered="{!Lead.FEGLI_Code_Picklist__c == '--' && Lead.OptionB__c == true}"
+                            style="width:55px;text-align:right;" onchange="ob6Save();" />
+                        <apex:outputText value="{0, number, #0}"
+                            rendered="{!Lead.FEGLI_Code_Picklist__c != '--'}">
+                            <apex:param value="{!multiplier}" />
+                        </apex:outputText>
+                    </span>
+                </div>
+                <div class="gfg5-row">
+                    <span class="gfg5-label">Option B Coverage:</span>
+                    <span class="gfg5-blank">
+                        <apex:outputText value="{0, number, $#,##0.00}">
+                            <apex:param value="{!optionBCoverage}" />
+                        </apex:outputText>
+                    </span>
+                </div>
+            </apex:outputPanel>
+
+            <!-- Personalized escalating cost projection (legacy page 6) -->
+            <h2 class="gfg5-summary-h">Your Option B Cost Projection</h2>
+
+            <apex:outputPanel id="ob6proj" layout="block">
+
+                <div class="gfg5-projhead">
+                    <span class="gfg5-label">Starting Age:</span>
+                    <span class="gfg5-startage">
+                        <apex:outputField value="{!Lead.Starting_Age__c}" rendered="{!startingAgeLocked}" />
+                        <apex:inputField value="{!Lead.Starting_Age__c}" rendered="{!NOT(startingAgeLocked)}"
+                            onchange="ob6Lock();" />
+                    </span>
+                    <apex:outputPanel layout="none" rendered="{!startingAgeLocked}">
+                        <a class="gfg5-btn gfg5-btn--unlock" href="javascript:void(0)" onclick="ob6Unlock();">Unlock</a>
+                    </apex:outputPanel>
+                    <a class="gfg5-btn gfg5-btn--reset" href="javascript:void(0)" onclick="ob6Reset();">Reset</a>
+                </div>
+
+                <apex:outputPanel layout="block" rendered="{!NOT(startingAgeLocked)}">
+                    <p class="gfg5-rate-note" style="text-align:left;font-weight:400;">
+                        Enter the number of years spent in each age band (in the Years
+                        column), then set a Starting Age to lock the projection. Use
+                        <b>Unlock</b> to edit again or <b>Reset</b> to clear.
+                    </p>
+                </apex:outputPanel>
+
+                <!-- Single integrated projection table: rates, inline Years entry,
+                     and the running totals (mirrors the legacy page-6 shape). -->
+                <table class="gfg5-proj gfg5-projedit">
+                    <thead>
+                        <tr><th class="gfg5-proj__title" colspan="5">OPTION B</th></tr>
+                        <tr>
+                            <th class="gfg5-proj__ageband">Age Groups</th>
+                            <th>Bi-Weekly Rates</th>
+                            <th>Annual Cost</th>
+                            <th>Years</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="gfg5-proj__age">34</td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[0].biWeekly}" /></apex:outputText></td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[0].annual}" /></apex:outputText></td>
+                            <td class="gfg5-yrs">
+                                <apex:inputField value="{!Lead.Years_34__c}" rendered="{!NOT(startingAgeLocked)}" onchange="ob6Save();" />
+                                <apex:outputText value="{0, number, #,##0}" rendered="{!startingAgeLocked}"><apex:param value="{!projectionRows[0].years}" /></apex:outputText>
+                            </td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[0].total}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="gfg5-proj__age">35-39</td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[1].biWeekly}" /></apex:outputText></td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[1].annual}" /></apex:outputText></td>
+                            <td class="gfg5-yrs">
+                                <apex:inputField value="{!Lead.Years_35_39__c}" rendered="{!NOT(startingAgeLocked)}" onchange="ob6Save();" />
+                                <apex:outputText value="{0, number, #,##0}" rendered="{!startingAgeLocked}"><apex:param value="{!projectionRows[1].years}" /></apex:outputText>
+                            </td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[1].total}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="gfg5-proj__age">40-44</td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[2].biWeekly}" /></apex:outputText></td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[2].annual}" /></apex:outputText></td>
+                            <td class="gfg5-yrs">
+                                <apex:inputField value="{!Lead.Years_40_44__c}" rendered="{!NOT(startingAgeLocked)}" onchange="ob6Save();" />
+                                <apex:outputText value="{0, number, #,##0}" rendered="{!startingAgeLocked}"><apex:param value="{!projectionRows[2].years}" /></apex:outputText>
+                            </td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[2].total}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="gfg5-proj__age">45-49</td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[3].biWeekly}" /></apex:outputText></td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[3].annual}" /></apex:outputText></td>
+                            <td class="gfg5-yrs">
+                                <apex:inputField value="{!Lead.Years_45_49__c}" rendered="{!NOT(startingAgeLocked)}" onchange="ob6Save();" />
+                                <apex:outputText value="{0, number, #,##0}" rendered="{!startingAgeLocked}"><apex:param value="{!projectionRows[3].years}" /></apex:outputText>
+                            </td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[3].total}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="gfg5-proj__age">50-54</td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[4].biWeekly}" /></apex:outputText></td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[4].annual}" /></apex:outputText></td>
+                            <td class="gfg5-yrs">
+                                <apex:inputField value="{!Lead.Years_50_54__c}" rendered="{!NOT(startingAgeLocked)}" onchange="ob6Save();" />
+                                <apex:outputText value="{0, number, #,##0}" rendered="{!startingAgeLocked}"><apex:param value="{!projectionRows[4].years}" /></apex:outputText>
+                            </td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[4].total}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="gfg5-proj__age">55-59</td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[5].biWeekly}" /></apex:outputText></td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[5].annual}" /></apex:outputText></td>
+                            <td class="gfg5-yrs">
+                                <apex:inputField value="{!Lead.Years_55_59__c}" rendered="{!NOT(startingAgeLocked)}" onchange="ob6Save();" />
+                                <apex:outputText value="{0, number, #,##0}" rendered="{!startingAgeLocked}"><apex:param value="{!projectionRows[5].years}" /></apex:outputText>
+                            </td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[5].total}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="gfg5-proj__age">60-64</td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[6].biWeekly}" /></apex:outputText></td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[6].annual}" /></apex:outputText></td>
+                            <td class="gfg5-yrs">
+                                <apex:inputField value="{!Lead.Years_60_64__c}" rendered="{!NOT(startingAgeLocked)}" onchange="ob6Save();" />
+                                <apex:outputText value="{0, number, #,##0}" rendered="{!startingAgeLocked}"><apex:param value="{!projectionRows[6].years}" /></apex:outputText>
+                            </td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[6].total}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="gfg5-proj__age">65-69</td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[7].biWeekly}" /></apex:outputText></td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[7].annual}" /></apex:outputText></td>
+                            <td class="gfg5-yrs">
+                                <apex:inputField value="{!Lead.Years_65_69__c}" rendered="{!NOT(startingAgeLocked)}" onchange="ob6Save();" />
+                                <apex:outputText value="{0, number, #,##0}" rendered="{!startingAgeLocked}"><apex:param value="{!projectionRows[7].years}" /></apex:outputText>
+                            </td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[7].total}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="gfg5-proj__age">70-74</td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[8].biWeekly}" /></apex:outputText></td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[8].annual}" /></apex:outputText></td>
+                            <td class="gfg5-yrs">
+                                <apex:inputField value="{!Lead.Years_70_74__c}" rendered="{!NOT(startingAgeLocked)}" onchange="ob6Save();" />
+                                <apex:outputText value="{0, number, #,##0}" rendered="{!startingAgeLocked}"><apex:param value="{!projectionRows[8].years}" /></apex:outputText>
+                            </td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[8].total}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="gfg5-proj__age">75-79</td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[9].biWeekly}" /></apex:outputText></td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[9].annual}" /></apex:outputText></td>
+                            <td class="gfg5-yrs">
+                                <apex:inputField value="{!Lead.Years_75_79__c}" rendered="{!NOT(startingAgeLocked)}" onchange="ob6Save();" />
+                                <apex:outputText value="{0, number, #,##0}" rendered="{!startingAgeLocked}"><apex:param value="{!projectionRows[9].years}" /></apex:outputText>
+                            </td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[9].total}" /></apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="gfg5-proj__age">80+</td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[10].biWeekly}" /></apex:outputText></td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[10].annual}" /></apex:outputText></td>
+                            <td class="gfg5-yrs">
+                                <apex:inputField value="{!Lead.Years_80__c}" rendered="{!NOT(startingAgeLocked)}" onchange="ob6Save();" />
+                                <apex:outputText value="{0, number, #,##0}" rendered="{!startingAgeLocked}"><apex:param value="{!projectionRows[10].years}" /></apex:outputText>
+                            </td>
+                            <td><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projectionRows[10].total}" /></apex:outputText></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="gfg5-proj__age" colspan="3" style="text-align:right;">Years Covered &#187;</td>
+                            <td class="gfg5-yrs"><apex:outputText value="{0, number, #,##0}"><apex:param value="{!projTotalYears}" /></apex:outputText>+</td>
+                            <td class="gfg5-grand"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projFegliTotal}" /></apex:outputText></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <!-- FEGLI vs. alternative comparison (label | years | value) -->
+                <table class="gfg5-cmp">
+                    <tr>
+                        <th></th>
+                        <th>YEARS</th>
+                        <th>TOTAL FEGLI COST</th>
+                    </tr>
+                    <tr>
+                        <td class="gfg5-cmp__label">Your Total FEGLI Cost Over:</td>
+                        <td class="gfg5-cmp__yrs"><apex:outputText value="{0, number, #,##0}"><apex:param value="{!projTotalYears}" /></apex:outputText></td>
+                        <td class="gfg5-cmp__val"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projFegliTotal}" /></apex:outputText></td>
+                    </tr>
+                    <tr>
+                        <td class="gfg5-cmp__label">Alternative Insurance Cost Over:</td>
+                        <td class="gfg5-cmp__yrs"><apex:outputText value="{0, number, #,##0}"><apex:param value="{!projTotalYears}" /></apex:outputText></td>
+                        <td class="gfg5-cmp__val"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projAltTotal}" /></apex:outputText></td>
+                    </tr>
+                    <tr>
+                        <td class="gfg5-cmp__label">Savings Over Current FEGLI Coverage:</td>
+                        <td class="gfg5-cmp__yrs"><apex:outputText value="{0, number, #,##0}"><apex:param value="{!projTotalYears}" /></apex:outputText></td>
+                        <td class="gfg5-cmp__val gfg5-cmp__val--save"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projSavings}" /></apex:outputText></td>
+                    </tr>
+                    <tr>
+                        <td class="gfg5-cmp__label">Based Upon Your Current FEGLI Benefit:</td>
+                        <td class="gfg5-cmp__val gfg5-cmp__val--benefit" colspan="2"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!currentBenefit}" /></apex:outputText></td>
+                    </tr>
+                </table>
+
+                <p class="gfg5-rate-note">
+                    Alternative rates are Term Insurance field-written estimates only.
+                    FEGLI rates are subject to change.
+                </p>
+
+                <!-- Proposed alternative-insurance option -->
+                <table class="gfg5-prop">
+                    <tr>
+                        <td class="gfg5-prop__title">PROPOSED OPTION</td>
+                        <td class="gfg5-prop__years" colspan="6">for
+                            <apex:outputText value="{0, number, #,##0}"><apex:param value="{!projTotalYears}" /></apex:outputText>
+                            years of coverage</td>
+                    </tr>
+                    <tr>
+                        <th>TERM LIFE</th>
+                        <th>FACE AMOUNT</th>
+                        <th>MONTHLY COST</th>
+                        <th>BI-WEEKLY</th>
+                        <th>ANNUAL</th>
+                        <th>TOTAL COST</th>
+                        <th>SAVINGS</th>
+                    </tr>
+                    <tr>
+                        <td class="gfg5-prop__rowlabel">Alternative Insurance</td>
+                        <td class="gfg5-prop__in">$ <apex:inputField value="{!Lead.Standard_Amount__c}" onchange="ob6Save();" /></td>
+                        <td class="gfg5-prop__in">$ <apex:inputField value="{!Lead.Standard_Monthly__c}" onchange="ob6Save();" /></td>
+                        <td class="gfg5-prop__calc"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!altBiWeekly}" /></apex:outputText></td>
+                        <td class="gfg5-prop__calc"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!altAnnual}" /></apex:outputText></td>
+                        <td class="gfg5-prop__calc"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projAltTotal}" /></apex:outputText></td>
+                        <td class="gfg5-prop__save"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!projSavings}" /></apex:outputText></td>
+                    </tr>
+                </table>
+
+            </apex:outputPanel>
+
+            <p class="gfg5-bottom-note">
+                Rates are subject to change and are not guaranteed upon approval.<br/>
+                FEGLI rates are based on current rates.
+            </p>
+
+          </apex:form>
+        </div>
+    </div>
+</apex:page>

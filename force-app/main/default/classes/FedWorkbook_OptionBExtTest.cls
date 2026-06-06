@@ -43,6 +43,42 @@ private class FedWorkbook_OptionBExtTest {
     }
 
     @isTest
+    static void testProjectionAndActions() {
+        Lead l = FedWorkbook_TestData.fegliManual();
+        // Years_*__c are restricted picklists; resolve valid values via describe.
+        l.Years_34__c = FedWorkbook_TestData.pickVal(
+            Lead.Years_34__c, new Set<String>{ '5', '4', '3', '2', '1' }, '5');
+        l.Years_80__c = FedWorkbook_TestData.pickVal(
+            Lead.Years_80__c, new Set<String>{ '3', '2', '1' }, '3');
+        l.Standard_Monthly__c = 25;
+        update l;
+
+        Test.startTest();
+        // Pass the populated record so live() (the projection's editable source)
+        // sees the Years / premium values, as it would on the live page.
+        FedWorkbook_OptionBExt ext =
+            new FedWorkbook_OptionBExt(new ApexPages.StandardController(l));
+
+        Decimal expectedYears = Decimal.valueOf(l.Years_34__c) + Decimal.valueOf(l.Years_80__c);
+        System.assertEquals(11, ext.getProjectionRows().size(), '11 projection bands');
+        System.assertEquals(expectedYears, ext.getProjTotalYears(), 'Years summed from live record');
+        System.assertNotEquals(null, ext.getProjFegliTotal(), 'FEGLI total');
+        System.assertNotEquals(null, ext.getProjAltTotal(), 'Alternative total');
+        System.assertNotEquals(null, ext.getProjSavings(), 'Savings');
+        System.assertNotEquals(null, ext.getCurrentBenefit(), 'Current benefit');
+        System.assertNotEquals(null, ext.getLeadRecord(), 'Lead record');
+
+        ext.saveLead();
+        ext.lockStartingAge();
+        System.assertEquals(true, ext.getStartingAgeLocked(), 'Locked after lock');
+        ext.unlockStartingAge();
+        System.assertEquals(false, ext.getStartingAgeLocked(), 'Unlocked');
+        ext.resetProjection();
+        System.assertEquals(0, ext.getProjTotalYears(), 'Reset clears years');
+        Test.stopTest();
+    }
+
+    @isTest
     static void testNullId() {
         Test.startTest();
         FedWorkbook_OptionBExt ext =

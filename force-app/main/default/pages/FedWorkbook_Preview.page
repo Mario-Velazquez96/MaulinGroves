@@ -66,6 +66,10 @@
                         <a href="#nav-optionb"
                             style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">Option B</a>
                     </apex:outputPanel>
+                    <apex:outputPanel rendered="{!Lead.OptionB__c}" layout="none">
+                        <a href="#nav-optionb-coverage"
+                            style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">Option B Coverage</a>
+                    </apex:outputPanel>
                     <apex:outputPanel rendered="{!Lead.OptionC__c}" layout="none">
                         <a href="#nav-fegliac"
                             style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">Option C</a>
@@ -146,6 +150,11 @@
             <!-- Page 5: FEGLI Option B (renders when Option B is active) -->
             <div id="nav-optionb" class="gfg-anchor">
                 <apex:include pageName="FedWorkbook_OptionB" />
+            </div>
+
+            <!-- Page 5: FEGLI Option B Coverage projection (renders when Option B is active) -->
+            <div id="nav-optionb-coverage" class="gfg-anchor">
+                <apex:include pageName="FedWorkbook_OptionBProjection" />
             </div>
 
             <!-- Page 6: FERS - Federal Employee Retirement System (renders when FERS__c is true) -->

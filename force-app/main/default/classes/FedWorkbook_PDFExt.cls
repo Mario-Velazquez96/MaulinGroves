@@ -99,6 +99,19 @@ public with sharing class FedWorkbook_PDFExt {
     public Decimal getObTotalBiWeeklyCost() { return ob().getTotalBiWeeklyCost(); }
     public Decimal getObTotalMonthlyCost()  { return ob().getTotalMonthlyCost(); }
 
+    // ----- Page 5b: Option B Coverage projection (read-only) --------------
+    public List<FedWorkbook_OptionBExt.ProjRow> getObProjectionRows() { return ob().getProjectionRows(); }
+    public Decimal getObProjTotalYears()  { return ob().getProjTotalYears(); }
+    public Decimal getObProjFegliTotal()  { return ob().getProjFegliTotal(); }
+    public Decimal getObProjAltTotal()    { return ob().getProjAltTotal(); }
+    public Decimal getObProjSavings()     { return ob().getProjSavings(); }
+    public Decimal getObCurrentBenefit()  { return ob().getCurrentBenefit(); }
+    public Decimal getObAltBiWeekly()     { return ob().getAltBiWeekly(); }
+    public Decimal getObAltAnnual()       { return ob().getAltAnnual(); }
+    public Decimal getObStartingAge()     { return ob().getStartingAge(); }
+    public Decimal getObFaceAmount()      { return ob().getFaceAmount(); }
+    public Decimal getObMonthlyPremium()  { return ob().getMonthlyPremium(); }
+
     // ----- Page 7: Calculating FERS Retirement ---------------------------
     public Decimal getFcCurrentAge()            { return fc().getCurrentAge(); }
     public Decimal getFcS1RetirementAge()       { return fc().getS1RetirementAge(); }
