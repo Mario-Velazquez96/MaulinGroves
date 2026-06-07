@@ -48,6 +48,27 @@ private class FedWorkbook_FersSurvivorExtTest {
     }
 
     @isTest
+    static void testMinMaxElection() {
+        Lead l = FedWorkbook_TestData.fersBefore62();
+        Test.startTest();
+        FedWorkbook_FersSurvivorExt ext =
+            new FedWorkbook_FersSurvivorExt(FedWorkbook_TestData.sc(l.Id));
+
+        // Electing Min clears Max.
+        ext.lead.Min__c = true;
+        ext.setMin();
+        System.assertEquals(true, ext.getMinSelected(), 'Min is selected');
+        System.assertEquals(false, ext.getMaxSelected(), 'Max cleared when Min chosen');
+
+        // Electing Max clears Min.
+        ext.lead.Max__c = true;
+        ext.setMax();
+        System.assertEquals(true, ext.getMaxSelected(), 'Max is selected');
+        System.assertEquals(false, ext.getMinSelected(), 'Min cleared when Max chosen');
+        Test.stopTest();
+    }
+
+    @isTest
     static void testNullId() {
         Test.startTest();
         FedWorkbook_FersSurvivorExt ext =

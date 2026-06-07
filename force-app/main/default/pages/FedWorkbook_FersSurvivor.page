@@ -188,6 +188,18 @@
             text-align: center;
             margin: 0 0 12px;
         }
+        /* Min/Max election checkbox shown alongside the box title */
+        .gfg9-box__title .gfg9-box__chk {
+            margin: 0 6px 0 0;
+            vertical-align: middle;
+            accent-color: #3A5754;
+        }
+        /* A selected box gets a subtle sage frame + tint to signal the election */
+        .gfg9-box.is-selected {
+            border-color: #3A5754;
+            box-shadow: inset 0 0 0 1px #3A5754;
+            background: #f3f7f2;
+        }
         .gfg9-box__row {
             display: flex;
             align-items: baseline;
@@ -389,11 +401,21 @@
                 </ul>
 
                 <!-- Minimum / Maximum Survivor Benefit boxes -->
-                <div class="gfg9-boxes">
+                <apex:form id="gfg9form2">
+                    <!-- Min / Max are mutually exclusive: choosing one clears the
+                         other (legacy setmin / setmax). reRenders both boxes. -->
+                    <apex:actionFunction name="gfg9SetMin" action="{!setMin}" reRender="gfg9boxes,gfg9msgs2" />
+                    <apex:actionFunction name="gfg9SetMax" action="{!setMax}" reRender="gfg9boxes,gfg9msgs2" />
+                    <apex:outputPanel id="gfg9msgs2"><apex:pageMessages /></apex:outputPanel>
+
+                <apex:outputPanel id="gfg9boxes" layout="block" styleClass="gfg9-boxes">
 
                     <!-- Left box: Minimum Survivor Benefit Monthly Cost -->
-                    <div class="gfg9-box">
-                        <p class="gfg9-box__title">Minimum Survivor Benefit Monthly Cost</p>
+                    <div class="gfg9-box {!IF(minSelected, 'is-selected', '')}">
+                        <p class="gfg9-box__title">
+                            <apex:inputField value="{!lead.Min__c}" styleClass="gfg9-box__chk" onchange="gfg9SetMin();" />
+                            Minimum Survivor Benefit Monthly Cost
+                        </p>
 
                         <div class="gfg9-box__row">
                             <span class="gfg9-box__lbl">Monthly Annuity: $</span>
@@ -434,8 +456,11 @@
                     </div>
 
                     <!-- Right box: Maximum Survivor Benefit Monthly Cost -->
-                    <div class="gfg9-box">
-                        <p class="gfg9-box__title">Maximum Survivor Benefit Monthly Cost</p>
+                    <div class="gfg9-box {!IF(maxSelected, 'is-selected', '')}">
+                        <p class="gfg9-box__title">
+                            <apex:inputField value="{!lead.Max__c}" styleClass="gfg9-box__chk" onchange="gfg9SetMax();" />
+                            Maximum Survivor Benefit Monthly Cost
+                        </p>
 
                         <div class="gfg9-box__row">
                             <span class="gfg9-box__lbl">Monthly Annuity: $</span>
@@ -475,7 +500,8 @@
                         </div>
                     </div>
 
-                </div><!-- /gfg9-boxes -->
+                </apex:outputPanel><!-- /gfg9-boxes -->
+                </apex:form>
 
             </div><!-- /gfg9-section -->
             </apex:outputPanel>

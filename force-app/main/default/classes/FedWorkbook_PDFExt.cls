@@ -154,6 +154,8 @@ public with sharing class FedWorkbook_PDFExt {
     public Decimal getFsS2CurrentMonthlyIncome()      { return fs().getS2CurrentMonthlyIncome(); }
     public Decimal getFsS2MonthlyRetirementAnnuity()  { return fs().getS2MonthlyRetirementAnnuity(); }
     public Decimal getFsS2DifferenceInMonthlyAnnuity(){ return fs().getS2DifferenceInMonthlyAnnuity(); }
+    public Boolean getFsMinSelected()       { return fs().getMinSelected(); }
+    public Boolean getFsMaxSelected()       { return fs().getMaxSelected(); }
     public Decimal getFsMonthlyAnnuity()    { return fs().getMonthlyAnnuity(); }
     public Decimal getFsMinus5Pct()         { return fs().getMinus5Pct(); }
     public Decimal getFsReducedMin()        { return fs().getReducedMin(); }

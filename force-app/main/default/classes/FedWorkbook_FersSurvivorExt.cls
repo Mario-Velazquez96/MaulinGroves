@@ -65,7 +65,10 @@ public with sharing class FedWorkbook_FersSurvivorExt {
                    High_3_Salary2__c,
                    Base_Salary__c,
                    Expected_Retirement_Age__c,
-                   Years_of_Employment__c
+                   Years_of_Employment__c,
+                   Min__c,
+                   Max__c,
+                   Snapshot_Flow_Completed__c
             FROM Lead
             WHERE Id = :this.leadId
             LIMIT 1
@@ -83,6 +86,33 @@ public with sharing class FedWorkbook_FersSurvivorExt {
                 ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;
+    }
+
+    // =========================================================================
+    // Survivor benefit election (Min / Max — mutually exclusive)
+    //
+    // Mirrors the legacy setmin / setmax (Federal_LeadControllerExtension):
+    // choosing one clears the other and resets Snapshot_Flow_Completed__c so
+    // the downstream financial snapshot recomputes with the new election.
+    // =========================================================================
+
+    public Boolean getMinSelected() { return lead.Min__c == true; }
+    public Boolean getMaxSelected() { return lead.Max__c == true; }
+
+    public PageReference setMin() {
+        if (lead.Min__c == true) {
+            lead.Max__c = false;
+            lead.Snapshot_Flow_Completed__c = false;
+        }
+        return saveLead();
+    }
+
+    public PageReference setMax() {
+        if (lead.Max__c == true) {
+            lead.Min__c = false;
+            lead.Snapshot_Flow_Completed__c = false;
+        }
+        return saveLead();
     }
 
     // =========================================================================
