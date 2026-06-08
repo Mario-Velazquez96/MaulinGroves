@@ -13,6 +13,8 @@ private class FedWorkbook_FinancialSnapshotExtTest {
         System.assertNotEquals(null, ext.getFersSupplementDisplay(), 'FERS supplement display');
         System.assertNotEquals(null, ext.getFersSupplementEligible(), 'FERS supplement eligible');
         System.assertNotEquals(null, ext.getTspDisplay(), 'TSP display');
+        System.assertNotEquals(null, ext.getTotalTaxes(), 'Total taxes');
+        System.assertNotEquals(null, ext.getTspPreTaxTotal(), 'TSP pre-tax total');
         System.assertNotEquals(null, ext.getIncomeTotal(), 'Income total');
         System.assertNotEquals(null, ext.getDifference(), 'Difference');
         System.assertNotEquals(null, ext.getBottomLine(), 'Bottom line');

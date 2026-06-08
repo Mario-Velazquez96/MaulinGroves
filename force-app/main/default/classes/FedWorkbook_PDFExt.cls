@@ -193,6 +193,8 @@ public with sharing class FedWorkbook_PDFExt {
     public Boolean getSnapIsMarried()               { return snap().getIsMarried(); }
     public Boolean getSnapSpouseBenefitOptedOut()   { return snap().getSpouseBenefitOptedOut(); }
     public Decimal getSnapExpenseTotal()            { return snap().getExpenseTotal(); }
+    public Decimal getSnapTotalTaxes()              { return snap().getTotalTaxes(); }
+    public Decimal getSnapTspPreTaxTotal()          { return snap().getTspPreTaxTotal(); }
     public Decimal getSnapYosPercent()              { return snap().getYosPercent(); }
     public Boolean getSnapYosFormulaVisible()       { return snap().getYosFormulaVisible(); }
     public Decimal getSnapFersSupplementDisplay()   { return snap().getFersSupplementDisplay(); }

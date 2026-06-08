@@ -337,6 +337,25 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
     }
 
     // -----------------------------------------------------------------------
+    // getTotalTaxes()
+    // The "Total Taxes" deduction line shown beneath the tax-rate selector
+    // (legacy line 1237). = taxRate × pension. Displayed as a positive dollar
+    // amount preceded by a "-" sign, like Health / Additional Insurance.
+    // -----------------------------------------------------------------------
+    public Decimal getTotalTaxes() {
+        return taxRate() * pensionBase();
+    }
+
+    // -----------------------------------------------------------------------
+    // getTspPreTaxTotal()
+    // The right-hand "Pre-Tax Total" of the TSP panel (legacy line 2988) — the
+    // same pre-tax monthly TSP income shown on the "TSP:" line.
+    // -----------------------------------------------------------------------
+    public Decimal getTspPreTaxTotal() {
+        return tspCalculateValue();
+    }
+
+    // -----------------------------------------------------------------------
     // getYosPercent()
     // YOS / 40 * 100, displayed as #0.0 percent.
     // Legacy lines 1979-1981: (Lead.YOS_Special_Supplement__c / 40) * 100
@@ -388,11 +407,14 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
 
     // -----------------------------------------------------------------------
     // getTspDisplay()
-    // TSP monthly income (read-only display).
-    // Legacy lines 2998-3005.
+    // The "TSP:" line value. Legacy displays {!TspCalculateValue} here
+    // (Federal_LeadControllerExtension lines 663-672) — the TAX-ADJUSTED
+    // monthly TSP income (the traditional portion is reduced by taxRate5; the
+    // Roth portion is untaxed). The pre-tax figure is shown separately as the
+    // panel's "Pre-Tax Total" (getTspPreTaxTotal).
     // -----------------------------------------------------------------------
     public Decimal getTspDisplay() {
-        return tspCalculateValue();
+        return tspBottomLineValue();
     }
 
     // -----------------------------------------------------------------------
@@ -429,11 +451,13 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
 
     // -----------------------------------------------------------------------
     // getBottomLine()
-    // = Difference + tax-adjusted TSP monthly income.
-    // Legacy Bottom Line adds the controller's tax-adjusted TspCalculateValue
-    // (controller lines 663-677), not the pre-tax display value.
+    // = Income Total + tax-adjusted TSP monthly income.
+    // Legacy Bottom Line (page line 3034) sums the full income expression
+    // (= getIncomeTotal()) plus the controller's tax-adjusted TspCalculateValue
+    // (controller lines 663-677). It does NOT subtract Current Net — that only
+    // feeds the GAP Difference line.
     // -----------------------------------------------------------------------
     public Decimal getBottomLine() {
-        return getDifference() + tspBottomLineValue();
+        return getIncomeTotal() + tspBottomLineValue();
     }
 }

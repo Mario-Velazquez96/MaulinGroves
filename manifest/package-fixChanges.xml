@@ -10,6 +10,7 @@
 		<members>FedWorkbook_OptionBProjection</members>
 		<members>FedWorkbook_FersCalc</members>
 		<members>FedWorkbook_FersSurvivor</members>
+		<members>FedWorkbook_FinancialSnapshot</members>
 		<members>FedWorkbook_Preview</members>
 		<members>FedWorkbook_PDF</members>
 		<name>ApexPage</name>
@@ -21,6 +22,8 @@
 		<members>FedWorkbook_FersCalcExtTest</members>
 		<members>FedWorkbook_FersSurvivorExt</members>
 		<members>FedWorkbook_FersSurvivorExtTest</members>
+		<members>FedWorkbook_FinancialSnapshotExt</members>
+		<members>FedWorkbook_FinancialSnapshotExtTest</members>
 		<members>FedWorkbook_OptionBExt</members>
 		<members>FedWorkbook_OptionBExtTest</members>
 		<members>FedWorkbook_PDFExt</members>

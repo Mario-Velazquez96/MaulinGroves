@@ -305,6 +305,80 @@
         .gfg13-spacer-30 { height: 30px; }
         .gfg13-spacer-20 { height: 20px; }
         .gfg13-spacer-10 { height: 10px; }
+
+        /* ---- Two-column body: running calc (left) + TSP panel (right).
+               The TSP panel is bottom-aligned so it sits in the lower-right of
+               the page, next to the GAP/TSP/Bottom Line rows. ---- */
+        .gfg13-cols {
+            display: flex;
+            gap: 28px;
+            align-items: flex-end;
+        }
+        .gfg13-col-left { flex: 1 1 auto; min-width: 0; }
+        .gfg13-col-right { flex: 0 0 250px; }
+
+        /* ---- TSP panel (right column) ---- */
+        .gfg13-tsp-card {
+            border: 1px solid #d0d0d0;
+            border-top: 4px solid #3A5754;
+            background: #f7f9f6;
+            padding: 14px 16px 16px;
+            box-sizing: border-box;
+        }
+        .gfg13-tsp-card__title {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #3A5754;
+            margin: 0 0 10px;
+        }
+        .gfg13-tsp-field { margin: 8px 0; }
+        .gfg13-tsp-field__label {
+            display: block;
+            font-size: 11px;
+            color: #2b2b2b;
+            margin-bottom: 2px;
+        }
+        .gfg13-tsp-field__inline {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            font-size: 11px;
+            color: #2b2b2b;
+            margin: 8px 0;
+            flex-wrap: wrap;
+        }
+        .gfg13-tsp-money { display: flex; align-items: baseline; gap: 4px; }
+        .gfg13-tsp-money .gfg13-sym { font-weight: 700; color: #1f3b38; }
+        .gfg13-tsp-taxfree {
+            font-style: italic;
+            text-decoration: underline;
+            color: #3A5754;
+            font-weight: 700;
+        }
+        .gfg13-tsp-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-top: 1px solid #c7d2cb;
+            margin-top: 12px;
+            padding-top: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #3A5754;
+        }
+        /* Blank/inputs sized for the narrow TSP panel */
+        .gfg13-tsp-card .gfg13-blank { width: 120px; }
+        .gfg13-tsp-card .gfg13-blank--pick { width: 64px; }
+        select.gfg13-pick { max-width: 64px; }
+
+        @media (max-width: 720px) {
+            .gfg13-cols { flex-direction: column; }
+            .gfg13-col-right { flex-basis: auto; width: 100%; }
+            .gfg13-tsp-card { margin-top: 8px; }
+        }
     </style>
 
     <div class="gfg13-doc">
@@ -371,6 +445,9 @@
                      ================================================ -->
                 <apex:outputPanel id="gfg13calc" layout="block">
 
+                <div class="gfg13-cols">
+                <div class="gfg13-col-left">
+
                     <!-- ============================================
                          SECTION A - Monthly Expenses (full width).
                          Pension row carries Surviving Spouse Benefit
@@ -432,13 +509,24 @@
                         </apex:outputPanel>
                     </div>
 
-                    <!-- Taxes (editable picklist — tax rate selector) -->
+                    <!-- Taxes (editable picklist — tax rate selector, no sign) -->
                     <div class="gfg13-calc-row">
-                        <span class="gfg13-row-label gfg13-row-label--wide">Taxes: 12% 15% 20% 25%</span>
-                        <span class="gfg13-sign">-</span>
+                        <span class="gfg13-row-label gfg13-row-label--wide">Taxes:</span>
+                        <span class="gfg13-sign">&#160;</span>
                         <span class="gfg13-blank">
                             <apex:inputField value="{!lead.taxRate3_Picklist__c}" styleClass="gfg13-num-input"
                                 onchange="gfg13Save();" />
+                        </span>
+                    </div>
+
+                    <!-- Total Taxes (computed = taxRate × pension), legacy line 1237 -->
+                    <div class="gfg13-calc-row">
+                        <span class="gfg13-row-label gfg13-row-label--wide">Total Taxes:</span>
+                        <span class="gfg13-sign">-</span>
+                        <span class="gfg13-blank">
+                            <apex:outputText value="{0, number, $#,##0.00}">
+                                <apex:param value="{!totalTaxes}" />
+                            </apex:outputText>
                         </span>
                     </div>
 
@@ -617,7 +705,7 @@
                     <!-- Difference (computed)
                          getDifference() = incomeTotal - currentNET, legacy line 2664 -->
                     <div class="gfg13-calc-row">
-                        <span class="gfg13-row-label gfg13-row-label--wide" style="font-weight:700;">Difference:</span>
+                        <span class="gfg13-row-label gfg13-row-label--wide" style="font-weight:700;">GAP Difference:</span>
                         <span class="gfg13-sign">=</span>
                         <span class="gfg13-blank">
                             <apex:outputText value="{0, number, $#,##0.00}">
@@ -626,7 +714,9 @@
                         </span>
                     </div>
 
-                    <!-- TSP (computed read-only) + Annual Withdrawal % inline (editable)
+                    <!-- TSP (computed read-only). The editable TSP / ROTH balances and
+                         their Annual Withdraw % / Tax Rate live in the right-hand TSP
+                         panel, matching the legacy two-column layout.
                          getTspDisplay() - legacy lines 2998-3005 -->
                     <div class="gfg13-calc-row">
                         <span class="gfg13-row-label gfg13-row-label--wide">TSP:</span>
@@ -635,24 +725,6 @@
                             <apex:outputText value="{0, number, $#,##0.00}">
                                 <apex:param value="{!tspDisplay}" />
                             </apex:outputText>
-                        </span>
-                        <span class="gfg13-tsp-extras">
-                            <span class="gfg13-inline-extra">
-                                <span class="gfg13-extra-label-sm">Annual Withdrawal &#8212; Traditional:</span>
-                                <apex:inputField value="{!lead.AnnualWithdraw1__c}" styleClass="gfg13-pick"
-                                    onchange="gfg13Save();" />
-                            </span>
-                            <span class="gfg13-inline-extra">
-                                Roth:
-                                <apex:inputField value="{!lead.AnnualWithdraw2__c}" styleClass="gfg13-pick"
-                                    onchange="gfg13Save();" />
-                            </span>
-                            <!-- Tax rate applied to the traditional TSP portion in the Bottom Line only -->
-                            <span class="gfg13-inline-extra">
-                                Tax Rate:
-                                <apex:inputField value="{!lead.taxRate5_Picklist__c}" styleClass="gfg13-pick"
-                                    onchange="gfg13Save();" />
-                            </span>
                         </span>
                     </div>
 
@@ -667,6 +739,71 @@
                             </apex:outputText>
                         </span>
                     </div>
+
+                </div><!-- /.gfg13-col-left -->
+
+                <!-- ============================================
+                     RIGHT COLUMN - TSP panel (editable balances).
+                     Mirrors the legacy right-hand TSP inputs:
+                       TSP Balance ($)      + Annual Withdraw (%) + Tax Rate
+                       ROTH TSP Balance ($) + Annual Withdraw (%) + Tax-Free
+                       Pre-Tax Total (computed)
+                     ============================================ -->
+                <div class="gfg13-col-right">
+                    <div class="gfg13-tsp-card">
+                        <div class="gfg13-tsp-card__title">TSP</div>
+
+                        <!-- Traditional TSP -->
+                        <div class="gfg13-tsp-field">
+                            <span class="gfg13-tsp-field__label">TSP Balance ($):</span>
+                            <span class="gfg13-tsp-money">
+                                <span class="gfg13-sym">$</span>
+                                <span class="gfg13-blank">
+                                    <apex:inputField value="{!lead.TSP_Balance_No_Match__c}" styleClass="gfg13-num-input"
+                                        onchange="gfg13Save();" />
+                                </span>
+                            </span>
+                        </div>
+                        <div class="gfg13-tsp-field__inline">
+                            <span>Annual Withdraw (%):</span>
+                            <apex:inputField value="{!lead.AnnualWithdraw1__c}" styleClass="gfg13-pick"
+                                onchange="gfg13Save();" />
+                            <span>Tax Rate:</span>
+                            <apex:inputField value="{!lead.taxRate5_Picklist__c}" styleClass="gfg13-pick"
+                                onchange="gfg13Save();" />
+                        </div>
+
+                        <!-- Roth TSP -->
+                        <div class="gfg13-tsp-field">
+                            <span class="gfg13-tsp-field__label">ROTH TSP Balance ($):</span>
+                            <span class="gfg13-tsp-money">
+                                <span class="gfg13-sym">$</span>
+                                <span class="gfg13-blank">
+                                    <apex:inputField value="{!lead.ROTH_Contributions__c}" styleClass="gfg13-num-input"
+                                        onchange="gfg13Save();" />
+                                </span>
+                            </span>
+                        </div>
+                        <div class="gfg13-tsp-field__inline">
+                            <span>Annual Withdraw (%):</span>
+                            <apex:inputField value="{!lead.AnnualWithdraw2__c}" styleClass="gfg13-pick"
+                                onchange="gfg13Save();" />
+                            <span class="gfg13-tsp-taxfree">Tax-Free</span>
+                        </div>
+
+                        <!-- Pre-Tax Total (computed, matches the TSP: line) -->
+                        <div class="gfg13-tsp-total">
+                            <span>Pre-Tax Total:</span>
+                            <span>
+                                <apex:outputText value="{0, number, $#,##0.00}">
+                                    <apex:param value="{!tspPreTaxTotal}" />
+                                </apex:outputText>
+                            </span>
+                        </div>
+                    </div>
+                </div><!-- /.gfg13-col-right -->
+
+                </div><!-- /.gfg13-cols -->
 
                 </apex:outputPanel><!-- /#gfg13calc -->
 
