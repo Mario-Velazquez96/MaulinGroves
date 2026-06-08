@@ -82,6 +82,145 @@
             .gfgp-lbl { font-weight: bold; }
             .gfgp-val { border-bottom: 1px solid #9aa6a3; }
 
+            /* ---- Page 2 (Employee Info): compact fonts/spacing so the whole
+                    section fits on a single printed page. Scoped to this page
+                    only (gfgp-info / gfgp-p / gfgp-h2 / gfgp-ul are shared). ---- */
+            .gfgp-p2body .gfgp-title { font-size: 18pt; }
+            .gfgp-p2body .gfgp-accent { margin-bottom: 8pt; }
+            .gfgp-p2body .gfgp-info td { padding: 1pt 6pt 1pt 0; font-size: 9.5pt; }
+            .gfgp-p2body .gfgp-p { font-size: 9.5pt; margin: 4pt 0; }
+            .gfgp-p2body .gfgp-h2 { font-size: 12pt; margin: 7pt 0 3pt; }
+            .gfgp-p2body .gfgp-rule { margin: 7pt 0; }
+            .gfgp-p2body ul.gfgp-ul { margin: 2pt 0 2pt 18pt; }
+            .gfgp-p2body ul.gfgp-ul li { margin: 1.5pt 0; font-size: 10pt; }
+
+            /* ---- Page 3 (FEGLI Basic Life): near-normal sizing with slightly
+                    trimmed vertical spacing so the section fills, and fits on,
+                    one printed page. Scoped so other pages are untouched. ---- */
+            .gfgp-p3body .gfgp-accent { margin-bottom: 12pt; }
+            .gfgp-p3body .gfgp-p { margin: 6pt 0; }
+            .gfgp-p3body p.gfgp-center { margin: 5pt 0; }
+            .gfgp-p3body .gfgp-center-h { margin: 10pt 0 4pt; }
+            .gfgp-p3body .gfgp-calc td { padding: 2.5pt 4pt; }
+            .gfgp-p3body .gfgp-tab { margin: 6pt 0; }
+            .gfgp-p3body ul.gfgp-ul li { margin: 2.5pt 0; }
+
+            /* ---- Page 4 (FEGLI Option A and C): two rate tables + heavy copy, so
+                    compact fonts/spacing to fit one printed page. Scoped. ---- */
+            .gfgp-p4body .gfgp-title { font-size: 18pt; }
+            .gfgp-p4body .gfgp-accent { margin-bottom: 8pt; }
+            .gfgp-p4body .gfgp-p { font-size: 9.5pt; margin: 4pt 0; }
+            .gfgp-p4body p.gfgp-center { margin: 4pt 0; }
+            .gfgp-p4body .gfgp-center-h { font-size: 12pt; margin: 6pt 0 3pt; }
+            .gfgp-p4body .gfgp-calc td { padding: 2pt 4pt; font-size: 9.5pt; }
+            .gfgp-p4body .gfgp-tab { margin: 5pt 0; font-size: 8.5pt; }
+            .gfgp-p4body .gfgp-tab th { padding: 3pt 6pt; }
+            .gfgp-p4body .gfgp-tab td { padding: 2pt 6pt; }
+
+            /* ---- Page 5 (FEGLI Option B): factor table + projection table +
+                    summary table, so compact to fit one printed page. Scoped. ---- */
+            .gfgp-p5body .gfgp-title { font-size: 18pt; }
+            .gfgp-p5body .gfgp-accent { margin-bottom: 8pt; }
+            .gfgp-p5body .gfgp-p { font-size: 9.5pt; margin: 4pt 0; }
+            .gfgp-p5body .gfgp-calc td { padding: 2pt 4pt; font-size: 9.5pt; }
+            .gfgp-p5body .gfgp-tab { margin: 5pt 0; font-size: 8.5pt; }
+            .gfgp-p5body .gfgp-tab th { padding: 3pt 6pt; }
+            .gfgp-p5body .gfgp-tab td { padding: 2pt 6pt; }
+            .gfgp-p5body .gfgp-proj { margin: 6pt 0 2pt; font-size: 8.5pt; }
+            .gfgp-p5body .gfgp-proj th, .gfgp-p5body .gfgp-proj td { padding: 3pt 5pt; }
+            .gfgp-p5body .gfgp-rate-note { margin: 3pt 0 6pt; }
+            .gfgp-p5body .gfgp-h3 { font-size: 11pt; margin: 7pt 0 3pt; }
+            .gfgp-p5body .gfgp-summary { margin: 4pt 0; }
+            .gfgp-p5body .gfgp-summary td { padding: 2.5pt 6pt; font-size: 9.5pt; }
+
+            /* ---- Page 5b (Option B Coverage projection): header card + 11-band
+                    table + comparison + proposed-option, so compact to fit one
+                    printed page. Scoped. ---- */
+            .gfgp-p5bbody .gfgp-title { font-size: 18pt; }
+            .gfgp-p5bbody .gfgp-accent { margin-bottom: 8pt; }
+            .gfgp-p5bbody .gfgp-calc td { padding: 1.5pt 4pt; font-size: 9.5pt; }
+            .gfgp-p5bbody .gfgp-h3 { font-size: 11pt; margin: 6pt 0 3pt; }
+            .gfgp-p5bbody .gfgp-obproj { margin: 4pt 0 2pt; font-size: 8pt; }
+            .gfgp-p5bbody .gfgp-obproj th, .gfgp-p5bbody .gfgp-obproj td { padding: 2.5pt 5pt; }
+            .gfgp-p5bbody .gfgp-obcmp { margin: 4pt 0; font-size: 8.5pt; }
+            .gfgp-p5bbody .gfgp-obcmp td, .gfgp-p5bbody .gfgp-obcmp th { padding: 3pt 8pt; }
+            .gfgp-p5bbody .gfgp-obprop { margin: 5pt 0 2pt; font-size: 8pt; }
+            .gfgp-p5bbody .gfgp-obprop td, .gfgp-p5bbody .gfgp-obprop th { padding: 3pt 5pt; }
+            .gfgp-p5bbody .gfgp-rate-note { margin: 3pt 0 4pt; }
+            .gfgp-p5bbody .gfgp-bottom-note { margin: 6pt 0 0; padding: 6pt; }
+
+            /* ---- Page 6 (FERS overview): text-heavy page that spills onto a
+                    second sheet, so shrink fonts and trim spacing to fit one
+                    printed page. Scoped. ---- */
+            .gfgp-p6body .gfgp-title { font-size: 18pt; }
+            .gfgp-p6body .gfgp-accent { margin-bottom: 8pt; }
+            .gfgp-p6body .gfgp-p { font-size: 9.5pt; margin: 4pt 0; }
+            .gfgp-p6body .gfgp-h2 { font-size: 12pt; margin: 7pt 0 3pt; }
+            .gfgp-p6body ul.gfgp-ul, .gfgp-p6body ol.gfgp-ol { margin: 2pt 0 2pt 18pt; }
+            .gfgp-p6body ul.gfgp-ul li, .gfgp-p6body ol.gfgp-ol li { margin: 1.5pt 0; font-size: 9.5pt; }
+
+            /* ---- Page 8 (FERS Survivor): two titled sections (comparison grid +
+                    survivor copy with callout and two Min/Max boxes) that overflow
+                    a single sheet, so shrink fonts and trim spacing. Scoped. ---- */
+            .gfgp-p8body .gfgp-title { font-size: 18pt; }
+            .gfgp-p8body .gfgp-accent { margin-bottom: 8pt; }
+            .gfgp-p8body .gfgp-p { font-size: 9.5pt; margin: 4pt 0; }
+            .gfgp-p8body .gfgp-cmp { margin: 7pt 0 9pt; }
+            .gfgp-p8body .gfgp-cmp td { padding: 5pt 6pt 2pt; font-size: 9pt; }
+            .gfgp-p8body .gfgp-cmp tr.hd td { font-size: 8pt; padding: 2.5pt 6pt 5pt; }
+            .gfgp-p8body ul.gfgp-red-ul { margin: 3pt 0 3pt 18pt; }
+            .gfgp-p8body ul.gfgp-red-ul li { margin: 1.5pt 0; font-size: 9.5pt; }
+            .gfgp-p8body ul.gfgp-ul { margin: 2pt 0 2pt 18pt; }
+            .gfgp-p8body ul.gfgp-ul li { margin: 1.5pt 0; font-size: 9.5pt; }
+            .gfgp-p8body .gfgp-callout { padding: 6pt 10pt; margin: 0; font-size: 9pt; }
+            .gfgp-p8body .gfgp-survbox { padding: 6pt 10pt 9pt; }
+            .gfgp-p8body .gfgp-survbox__title { font-size: 10pt; margin: 0 0 5pt; }
+            .gfgp-p8body .gfgp-calc td { padding: 2pt 4pt; font-size: 9.5pt; }
+            .gfgp-p8body .gfgp-survcap { font-size: 9pt; margin-top: 6pt; }
+
+            /* ---- Page 9 (FERS Special Groups): intro copy + two-column formula
+                    block + live calculation + Air Traffic Controllers section,
+                    so shrink fonts and trim spacing to fit one sheet. Scoped. ---- */
+            .gfgp-p9body .gfgp-p { margin: 5pt 0; }
+            .gfgp-p9body ul.gfgp-ul li { margin: 3pt 0; }
+            .gfgp-p9body .gfgp-eg { margin: 4pt 0; }
+            .gfgp-p9body .gfgp-eg-total { margin: 5pt 0; }
+            .gfgp-p9body .gfgp-calc-section { padding-top: 10pt; margin-top: 11pt; }
+            .gfgp-p9body .gfgp-fcalc { margin: 5pt auto; }
+            .gfgp-p9body .gfgp-fcalc td { padding: 3pt 5pt; }
+            .gfgp-p9body .gfgp-center-h { margin: 11pt 0 4pt; }
+            .gfgp-p9body p.gfgp-center { margin: 4pt 0; }
+
+            /* ---- Page 10 (FERS Special Supplement): long text page (intro,
+                    recap block, three dividers, two bullet lists, Earnings Test
+                    copy + calc block) that spills onto a second sheet, so shrink
+                    fonts and trim spacing. Scoped. ---- */
+            .gfgp-p10body .gfgp-title { font-size: 18pt; }
+            .gfgp-p10body .gfgp-accent { margin-bottom: 8pt; }
+            .gfgp-p10body .gfgp-p { font-size: 9.5pt; margin: 4pt 0; }
+            .gfgp-p10body p.gfgp-center { font-size: 9.5pt; margin: 2.5pt 0; }
+            .gfgp-p10body .gfgp-rule { margin: 7pt 0; }
+            .gfgp-p10body ul.gfgp-ul { margin: 2pt 0 2pt 18pt; }
+            .gfgp-p10body ul.gfgp-ul li { margin: 1.5pt 0; font-size: 9.5pt; }
+            .gfgp-p10body .gfgp-center-h { font-size: 12pt; margin: 7pt 0 3pt; }
+            .gfgp-p10body .gfgp-calc-section { padding-top: 8pt; margin-top: 9pt; }
+            .gfgp-p10body .gfgp-fcalc { margin: 3pt auto; }
+            .gfgp-p10body .gfgp-fcalc td { padding: 2pt 5pt; font-size: 10pt; }
+
+            /* ---- Page 11 (TSP / Resources / Forms): three titled sections (TSP
+                    three-column block + options, Resources link list, Military
+                    Time Recapture table) that spill onto a second sheet, so
+                    shrink titles, copy and the link list. Scoped. ---- */
+            .gfgp-p11body .gfgp-title { font-size: 18pt; }
+            .gfgp-p11body .gfgp-accent { margin-bottom: 7pt; }
+            .gfgp-p11body .gfgp-p { font-size: 9.5pt; margin: 4pt 0; }
+            .gfgp-p11body ul.gfgp-ul { margin: 2pt 0 2pt 18pt; }
+            .gfgp-p11body ul.gfgp-ul li { margin: 1.5pt 0; font-size: 9.5pt; }
+            .gfgp-p11body .gfgp-linkrow { font-size: 9pt; margin: 1.5pt 0; }
+            .gfgp-p11body .gfgp-mtr { margin-top: 4pt; font-size: 8.5pt; }
+            .gfgp-p11body .gfgp-mtr td { padding: 2.5pt 10pt; }
+            .gfgp-p11body .gfgp-mtr .hdr { font-size: 11pt; padding: 4pt 10pt; }
+
             /* ---- Lists ---- */
             ul.gfgp-ul, ol.gfgp-ol { margin: 4pt 0 4pt 18pt; padding: 0; }
             ul.gfgp-ul li, ol.gfgp-ol li { margin: 3pt 0; }
@@ -269,7 +408,7 @@
         <table class="gfgp-sheet">
             <tr>
                 <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">2</div></td>
-                <td class="gfgp-body">
+                <td class="gfgp-body gfgp-p2body">
                     <div class="gfgp-title">Federal Benefits &amp; Retirement Analysis</div>
                     <div class="gfgp-accent"></div>
 
@@ -289,7 +428,7 @@
                         </tr>
                     </table>
 
-                    <p class="gfgp-center gfgp-italic" style="margin:8pt 0;">
+                    <p class="gfgp-center gfgp-italic" style="margin:4pt 0;">
                         Information used in this analysis is provided by the federal employee
                     </p>
 
@@ -470,7 +609,7 @@
             rendered="{!Lead.Basic__c == true || (Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != 'Ao' && Lead.FEGLI_Code_Picklist__c != 'Bo')}">
         <table class="gfgp-sheet">
             <tr>
-                <td class="gfgp-body">
+                <td class="gfgp-body gfgp-p3body">
                     <div class="gfgp-title">Federal Employee Group Life Insurance</div>
                     <div class="gfgp-accent"></div>
 
@@ -545,7 +684,7 @@
         <table class="gfgp-sheet">
             <tr>
                 <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">4</div></td>
-                <td class="gfgp-body">
+                <td class="gfgp-body gfgp-p4body">
                     <!-- ===== Option A (rendered only when Option A active) ===== -->
                     <apex:outputPanel layout="none" rendered="{!Lead.OptionA__c == true || CONTAINS(Lead.FEGLI_Plan__c, 'Option A')}">
                     <div class="gfgp-title">FEGLI - Option A</div>
@@ -625,7 +764,7 @@
         <apex:outputPanel layout="none" rendered="{!Lead.OptionB__c == true}">
         <table class="gfgp-sheet">
             <tr>
-                <td class="gfgp-body">
+                <td class="gfgp-body gfgp-p5body">
                     <div class="gfgp-title">FEGLI - Option B</div>
                     <div class="gfgp-accent"></div>
                     <p class="gfgp-p"><b>Option B</b> - Additional Optional Insurance - This benefit is calculated by taking your annual rate of pay and rounding it to the next $1,000 and using your multiplier (1-5) to determine your coverage amount. The factor chart below is based on each $1,000 of coverage. Group costs to the employee increase every five years after age 35.</p>
@@ -748,7 +887,7 @@
         <apex:outputPanel layout="none" rendered="{!Lead.OptionB__c == true}">
         <table class="gfgp-sheet">
             <tr>
-                <td class="gfgp-body">
+                <td class="gfgp-body gfgp-p5bbody">
                     <div class="gfgp-title">FEGLI - Option B Coverage</div>
                     <div class="gfgp-accent"></div>
 
@@ -840,7 +979,7 @@
         <apex:outputPanel layout="none" rendered="{!Lead.FERS__c == true}">
         <table class="gfgp-sheet">
             <tr>
-                <td class="gfgp-body">
+                <td class="gfgp-body gfgp-p6body">
                     <div class="gfgp-title">FERS - Federal Employee Retirement System</div>
                     <div class="gfgp-accent"></div>
 
@@ -1041,7 +1180,7 @@
         <apex:outputPanel layout="none" rendered="{!Lead.FERS__c == true}">
         <table class="gfgp-sheet">
             <tr>
-                <td class="gfgp-body">
+                <td class="gfgp-body gfgp-p8body">
                     <!-- Section A: FERS - Calculating FERS Retirement (continued) -->
                     <div class="gfgp-title">FERS - Calculating FERS Retirement</div>
                     <div class="gfgp-accent"></div>
@@ -1149,7 +1288,7 @@
         <table class="gfgp-sheet">
             <tr>
                 <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">9</div></td>
-                <td class="gfgp-body">
+                <td class="gfgp-body gfgp-p9body">
                     <div class="gfgp-title">FERS - Special Groups</div>
                     <div class="gfgp-accent"></div>
                     <p class="gfgp-p">Members of special groups, such as <u>law enforcement officers, firefighters and air traffic controllers</u>, pay different levels of employee contributions toward retirement and are eligible for retirement under age and service combinations that differ from those that apply for the standard retirement.</p>
@@ -1236,7 +1375,7 @@
         <apex:outputPanel layout="none" rendered="{!ssShowSpecialSupp}">
         <table class="gfgp-sheet">
             <tr>
-                <td class="gfgp-body">
+                <td class="gfgp-body gfgp-p10body">
                     <div class="gfgp-title">FERS - Special Supplement</div>
                     <div class="gfgp-accent"></div>
                     <p class="gfgp-p">Also known as the Special Retirement Supplement or SRS. It is designed to help bridge the income gap for certain FERS employees who retire before age 62. It will supplement your missing Social Security income until you reach age 62 and then stop. Since the SRS is not paid by Social Security, you do not have to start receiving benefits from Social Security at age 62. You may delay taking these benefits to help increase your future Social Security annuity.</p>
@@ -1308,7 +1447,7 @@
         <table class="gfgp-sheet">
             <tr>
                 <td class="gfgp-rail" valign="bottom"><div class="gfgp-pageno">11</div></td>
-                <td class="gfgp-body">
+                <td class="gfgp-body gfgp-p11body">
                     <!-- Section A: TSP -->
                     <div class="gfgp-title">TSP - Thrift Savings Plan</div>
                     <div class="gfgp-accent"></div>
@@ -1358,7 +1497,7 @@
                     </div>
 
                     <!-- Section B: Resources -->
-                    <div class="gfgp-title" style="margin-top:16pt;">Resources</div>
+                    <div class="gfgp-title" style="margin-top:7pt;">Resources</div>
                     <div class="gfgp-accent"></div>
                     <p class="gfgp-p">Information in this workbook came from many sources (see below) and, due to time and space, has been condensed to offer you a basic overview. It is not meant to provide a detailed explanation of all benefits. Below are links with extensive information on the benefits which we covered during our review. Should you have additional questions, please review these links and contact us so we may assist you further.</p>
                     <div class="gfgp-linkrow">Federal Retirement: <a class="gfgp-link" href="http://www.opm.gov/retirement-services/publications-forms/pamphlets/ri90-8.pdf">http://www.opm.gov/retirement-services/publications-forms/pamphlets/ri90-8.pdf</a></div>
@@ -1371,7 +1510,7 @@
                     <div class="gfgp-linkrow">Government Pension Offset (GPO): <a class="gfgp-link" href="http://www.socialsecurity.gov/pubs/EN-05-10007.pdf">http://www.socialsecurity.gov/pubs/EN-05-10007.pdf</a></div>
 
                     <!-- Section C: Forms For Collecting Benefits -->
-                    <div class="gfgp-title" style="margin-top:16pt;">Forms For Collecting Benefits</div>
+                    <div class="gfgp-title" style="margin-top:7pt;">Forms For Collecting Benefits</div>
                     <div class="gfgp-accent"></div>
                     <table class="gfgp-mtr">
                         <tr><td class="hdr" colspan="2">MILITARY TIME RECAPTURE</td></tr>
