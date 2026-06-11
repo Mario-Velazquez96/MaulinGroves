@@ -16,7 +16,16 @@
  */
 public with sharing class FedWorkbook_FegliACExt {
 
-    /** Bound on the page so the manual Starting-Age / Multiples inputs persist. */
+    /**
+     * Bound on the page so the manual Starting-Age / Multiples inputs persist.
+     * NOTE: because this property is public and Visualforce merge names are
+     * case-insensitive, every {!Lead.x} reference on the page (including the
+     * page-level rendered gate's {!Lead.FEGLI_Plan__c} / {!Lead.OptionA__c} /
+     * {!Lead.OptionC__c}) resolves to THIS record, not the standard controller.
+     * So any Lead field the markup reads must be in fetchLead()'s SELECT below,
+     * even if no getter here uses it (e.g. FEGLI_Plan__c) — otherwise the page
+     * throws "SObject row was retrieved via SOQL without querying ...".
+     */
     public Lead lead { get; set; }
 
     private final Id leadId;
@@ -32,6 +41,7 @@ public with sharing class FedWorkbook_FegliACExt {
             this.lead = [
                 SELECT OptionA__c,
                        OptionC__c,
+                       FEGLI_Plan__c,
                        FEGLI_Code_Picklist__c,
                        Contact_Age__c,
                        Age_Option_A_Manual__c,

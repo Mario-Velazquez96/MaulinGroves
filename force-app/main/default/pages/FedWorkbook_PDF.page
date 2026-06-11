@@ -33,7 +33,7 @@
             .gfgp-cover img { width: 100%; height: auto; }
 
             /* ---- One workbook sheet = a 2-column table (rail + body) ---- */
-            .gfgp-sheet { width: 100%; border-collapse: collapse; page-break-after: always; }
+            .gfgp-sheet { width: 100%; border-collapse: collapse; table-layout: fixed; page-break-after: always; }
             .gfgp-rail { width: 30px; background-color: #3A5754; }
             .gfgp-body { vertical-align: top; padding: 0 10px; }
             .gfgp-pageno {
@@ -102,7 +102,13 @@
             .gfgp-p3body p.gfgp-center { margin: 5pt 0; }
             .gfgp-p3body .gfgp-center-h { margin: 10pt 0 4pt; }
             .gfgp-p3body .gfgp-calc td { padding: 2.5pt 4pt; }
-            .gfgp-p3body .gfgp-tab { margin: 6pt 0; }
+            /* Rate factor table only: shrink font/padding so the 4-column table
+               fits inside its 45% column even on the legacy PDF engine (which
+               ignores table-layout:fixed and renders glyphs wider). Body copy
+               stays at the larger page-3 size. */
+            .gfgp-p3body .gfgp-tab { margin: 6pt 0; font-size: 8.5pt; }
+            .gfgp-p3body .gfgp-tab th { padding: 3pt 4pt; }
+            .gfgp-p3body .gfgp-tab td { padding: 2pt 4pt; }
             .gfgp-p3body ul.gfgp-ul li { margin: 2.5pt 0; }
 
             /* ---- Page 4 (FEGLI Option A and C): two rate tables + heavy copy, so
@@ -227,7 +233,7 @@
             .gfgp-bold-li li { font-weight: bold; }
 
             /* ---- Data tables (rate / projection / comparison) ---- */
-            .gfgp-tab { width: 100%; border-collapse: collapse; margin: 8pt 0; font-size: 10pt; }
+            .gfgp-tab { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 8pt 0; font-size: 10pt; }
             .gfgp-tab th { background-color: #3A5754; color: #ffffff; padding: 4pt 6pt; text-align: center; border: 1px solid #ffffff; }
             .gfgp-tab td { padding: 3pt 6pt; text-align: center; border: 1px solid #cccccc; }
             .gfgp-tab--rate th { background-color: #B91C1C; color: #ffffff; font-weight: bold; }
@@ -235,7 +241,7 @@
             .gfgp-tab tfoot td { background-color: #4B5563; color: #ffffff; font-weight: bold; }
 
             /* ---- Option B future-cost projection table ---- */
-            .gfgp-proj { width: 100%; border-collapse: collapse; margin: 8pt 0 2pt; font-size: 9pt; }
+            .gfgp-proj { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 8pt 0 2pt; font-size: 9pt; }
             .gfgp-proj th, .gfgp-proj td { padding: 4pt 5pt; text-align: center; border: 1px solid #ffffff; }
             .gfgp-proj thead th { background-color: #3A5754; color: #ffffff; font-weight: bold; }
             .gfgp-proj thead th.ageband { background-color: #B91C1C; }
@@ -245,7 +251,7 @@
             .gfgp-rate-note { text-align: center; font-size: 9pt; font-weight: bold; margin: 4pt 0 10pt; }
 
             /* ---- Option B Coverage projection (page 5b) ---- */
-            .gfgp-obproj { width: 100%; border-collapse: collapse; margin: 6pt 0 2pt; font-size: 9pt; }
+            .gfgp-obproj { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 6pt 0 2pt; font-size: 9pt; }
             .gfgp-obproj th, .gfgp-obproj td { padding: 4pt 5pt; text-align: center; border: 1px solid #ffffff; }
             .gfgp-obproj thead th { background-color: #3A5754; color: #ffffff; font-weight: bold; }
             .gfgp-obproj thead th.title { background-color: #8FA68C; color: #2b2b2b; }
@@ -257,7 +263,7 @@
             .gfgp-obproj tfoot td.yrs { background-color: #A5BFA1; color: #2b2b2b; }
             .gfgp-obproj tfoot td.grand { background-color: #B91C1C; color: #ffffff; }
 
-            .gfgp-obcmp { width: 100%; border-collapse: collapse; margin: 6pt 0; font-size: 9.5pt; }
+            .gfgp-obcmp { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 6pt 0; font-size: 9.5pt; }
             .gfgp-obcmp td, .gfgp-obcmp th { padding: 5pt 8pt; border: 1px solid #ffffff; }
             .gfgp-obcmp th { background-color: #3A5754; color: #ffffff; font-weight: bold; text-align: center; }
             .gfgp-obcmp td.lbl { background-color: #FDE700; color: #2b2b2b; text-align: right; font-weight: bold; }
@@ -266,7 +272,7 @@
             .gfgp-obcmp td.save { background-color: #51D235; color: #ffffff; text-align: center; font-weight: bold; }
             .gfgp-obcmp td.benefit { background-color: #ffffff; color: #2b2b2b; text-align: center; font-weight: bold; }
 
-            .gfgp-obprop { width: 100%; border-collapse: collapse; margin: 10pt 0 2pt; font-size: 8.5pt; }
+            .gfgp-obprop { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 10pt 0 2pt; font-size: 8.5pt; }
             .gfgp-obprop td, .gfgp-obprop th { padding: 5pt 5pt; text-align: center; border: 1px solid #ffffff; }
             .gfgp-obprop th { background-color: #8FA68C; color: #2b2b2b; font-weight: bold; }
             .gfgp-obprop td.title { background-color: #3A5754; color: #ffffff; font-weight: bold; }
@@ -280,7 +286,7 @@
             ul.gfgp-red-ul li { margin: 3pt 0; font-weight: bold; }
 
             /* ---- FERS eligibility (MRA) table ---- */
-            .gfgp-elig { width: 100%; border-collapse: collapse; margin: 8pt 0 4pt; font-size: 8pt; }
+            .gfgp-elig { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 8pt 0 4pt; font-size: 8pt; }
             .gfgp-elig th { background-color: #3A5754; color: #ffffff; font-weight: bold; padding: 4pt 4pt; text-align: center; border: 1px solid #ffffff; }
             .gfgp-elig td { background-color: #A5BFA1; color: #ffffff; padding: 3pt 5pt; text-align: center; border: 1px solid #ffffff; vertical-align: middle; }
             .gfgp-elig td.gray { background-color: #4B5563; }
@@ -288,11 +294,11 @@
             .gfgp-elig .note { display: block; font-style: italic; font-size: 7pt; margin-top: 2pt; }
 
             /* ---- FERS scenario grid (borderless, underline-blank look) ---- */
-            .gfgp-sc { width: 100%; border-collapse: collapse; margin: 16pt 0 0; }
+            .gfgp-sc { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 16pt 0 0; }
             .gfgp-sc > tbody > tr > td { border: none; padding: 5pt 6pt; vertical-align: bottom; font-size: 11pt; }
             .gfgp-sc .lhead { text-align: left; }
             .gfgp-sc .schead { text-align: center; font-weight: bold; font-size: 14pt; padding-bottom: 6pt; }
-            .gfgp-scin { width: 100%; border-collapse: collapse; }
+            .gfgp-scin { width: 100%; border-collapse: collapse; table-layout: fixed; }
             .gfgp-scin td { border: none; padding: 0 3pt; vertical-align: bottom; font-size: 11pt; }
             .gfgp-scin .lab { text-align: left; white-space: nowrap; }
             .gfgp-scin .op { white-space: nowrap; }
@@ -302,13 +308,13 @@
             .gfgp-sc .lhead.red { color: #B91C1C; }
             .gfgp-sc .schead .pri { display: block; font-size: 9pt; font-weight: bold; color: #B91C1C; }
             /* Top "current values" summary banner above the scenario grid */
-            .gfgp-scsum { width: 100%; border-collapse: collapse; margin: 14pt 0 0; }
+            .gfgp-scsum { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 14pt 0 0; }
             .gfgp-scsum td { border: none; border-bottom: 1.5pt solid #8FA68C; padding: 3pt 6pt 7pt; font-size: 10pt; text-align: center; }
             .gfgp-scsum td b { color: #3A5754; }
             .gfgp-scsum .v { color: #1f3b38; font-weight: bold; }
 
             /* ---- FERS survivor: 4-column comparison grid ---- */
-            .gfgp-cmp { width: 100%; border-collapse: collapse; margin: 10pt 0 14pt; }
+            .gfgp-cmp { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 10pt 0 14pt; }
             .gfgp-cmp td { padding: 7pt 6pt 2pt; text-align: center; vertical-align: bottom; font-size: 10pt; }
             .gfgp-cmp td.l { text-align: left; }
             .gfgp-cmp .vblank { display: block; border-bottom: 1px solid #2b2b2b; font-weight: bold; color: #1f3b38; padding-bottom: 2pt; }
@@ -335,7 +341,7 @@
 
             /* ---- TSP contribution limits / matching ---- */
             .gfgp-uhead { font-weight: bold; text-decoration: underline; font-size: 10pt; margin: 0 0 4pt; }
-            .gfgp-contrib { width: 100%; border-collapse: collapse; }
+            .gfgp-contrib { width: 100%; border-collapse: collapse; table-layout: fixed; }
             .gfgp-contrib td { border: none; padding: 2pt 4pt; font-size: 10pt; vertical-align: bottom; }
             .gfgp-contrib .val { border-bottom: 1px solid #2b2b2b; text-align: center; color: #1f3b38; width: 38%; }
             .gfgp-contrib .sub { font-size: 8pt; font-style: italic; color: #555; }
@@ -346,13 +352,13 @@
             .gfgp-linkrow { font-size: 9.5pt; margin: 4pt 0; }
 
             /* ---- Military Time Recapture table ---- */
-            .gfgp-mtr { width: 100%; border-collapse: collapse; margin-top: 8pt; font-size: 9.5pt; }
+            .gfgp-mtr { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 8pt; font-size: 9.5pt; }
             .gfgp-mtr td { background-color: #3A5754; color: #ffffff; padding: 6pt 10pt; border: 1px solid #ffffff; vertical-align: middle; }
             .gfgp-mtr .hdr { text-align: center; font-family: 'Helvetica', Arial, sans-serif; font-weight: bold; font-size: 13pt; letter-spacing: 1px; }
             .gfgp-mtr .branch { text-align: center; width: 120px; }
 
             /* ---- Financial Snapshot underline-blank rows ---- */
-            .gfgp-snap { width: 100%; border-collapse: collapse; margin: 2pt 0; }
+            .gfgp-snap { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 2pt 0; }
             .gfgp-snap td { border: none; padding: 3pt 4pt; font-size: 10.5pt; vertical-align: bottom; }
             .gfgp-snap .lab { width: 36%; }
             .gfgp-snap .sign { width: 16pt; text-align: center; font-weight: bold; }
@@ -374,7 +380,7 @@
             .gfgp-seclabel { font-family: 'Helvetica', Arial, sans-serif; font-size: 9pt; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: #3A5754; border-bottom: 1px solid #d0d0d0; padding-bottom: 3pt; margin: 10pt 0 4pt; }
 
             /* ---- Total Basic &amp; Optional Life Insurance summary ---- */
-            .gfgp-summary { width: 100%; border-collapse: collapse; margin: 6pt 0; }
+            .gfgp-summary { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 6pt 0; }
             .gfgp-summary td { padding: 4pt 6pt; font-size: 10.5pt; vertical-align: bottom; }
             .gfgp-summary .lbl { width: 22%; }
             .gfgp-summary .cell { border-bottom: 1px solid #9aa6a3; text-align: center; }
@@ -383,7 +389,7 @@
             .gfgp-bottom-note { text-align: center; font-size: 9pt; margin: 10pt 0 0; background-color: #f6f1e9; padding: 8pt; }
 
             /* ---- Calculation rows ---- */
-            .gfgp-calc { width: 100%; border-collapse: collapse; }
+            .gfgp-calc { width: 100%; border-collapse: collapse; table-layout: fixed; }
             .gfgp-calc td { padding: 3pt 4pt; font-size: 10.5pt; vertical-align: bottom; }
             .gfgp-calc .v { border-bottom: 1px solid #2b2b2b; font-weight: bold; text-align: right; }
             .gfgp-cost { color: #B91C1C; font-weight: bold; }
@@ -582,7 +588,7 @@
                     </p>
 
                     <div class="gfgp-h2 gfgp-center">The first steps in developing a financial strategy involve understanding:</div>
-                    <table style="width:100%;"><tr>
+                    <table style="width:100%;table-layout:fixed;"><tr>
                         <td style="vertical-align:top;width:50%;">
                             <ul class="gfgp-ul"><li>What you have</li><li>What you want</li><li>What your costs will be</li></ul>
                         </td>
@@ -592,7 +598,7 @@
                     </tr></table>
 
                     <div class="gfgp-h2 gfgp-center">During this review we will cover the following core benefits that apply to you:</div>
-                    <table style="width:100%;"><tr>
+                    <table style="width:100%;table-layout:fixed;"><tr>
                         <td style="vertical-align:top;width:50%;">
                             <ul class="gfgp-ul"><li>Your Federal Retirement System</li><li>Retirement Annuity</li><li>FERS Supplement Annuity</li><li>Thrift Savings Plan</li></ul>
                         </td>
@@ -631,8 +637,8 @@
                     <p class="gfgp-p"><b>II. Extra Benefit</b> - (age Multiplication Factor) If you are under the age of 45 and covered by Basic, you automatically have extra coverage. (See chart)</p>
                     <p class="gfgp-p"><b>III. Accidental Death and Dismemberment</b> - (AD&amp;D) Accidental death benefits are equal to your Basic Life Insurance coverage. Accidental dismemberment benefits for the loss of a hand, foot, or eye are equal to half of the Basic Life Insurance Amount; however if you lose any two of these, the full amount is payable. There is no additional cost for this coverage.</p>
 
-                    <table style="width:100%;"><tr>
-                        <td style="width:55%;vertical-align:top;padding-right:10px;">
+                    <table style="width:100%;table-layout:fixed;"><tr>
+                        <td style="width:52%;vertical-align:top;padding-right:10px;">
                             <table class="gfgp-calc">
                                 <tr>
                                     <td><apex:outputText value="Current Age:" rendered="{!Lead.FEGLI_Code_Picklist__c != '--' && Lead.FEGLI_Code_Picklist__c != '' && Lead.Basic__c == true}" /><apex:outputText value="Starting Age:" rendered="{!Lead.FEGLI_Code_Picklist__c == '--' && Lead.Basic__c == true}" /></td>
@@ -645,8 +651,9 @@
                                 <apex:outputPanel layout="none" rendered="{!blShowYearsRemaining}"><tr><td>Extra Benefit Years Remaining:</td><td class="v"><apex:outputText value="{0, number, #,##0}"><apex:param value="{!blExtraBenefitYearsRemaining}" /></apex:outputText></td></tr></apex:outputPanel>
                             </table>
                         </td>
-                        <td style="width:45%;vertical-align:top;">
-                            <table class="gfgp-tab gfgp-tab--rate">
+                        <td style="width:48%;vertical-align:top;">
+                            <table class="gfgp-tab gfgp-tab--rate" style="width:100%;font-size:8pt;">
+                                <colgroup><col style="width:25%" /><col style="width:25%" /><col style="width:25%" /><col style="width:25%" /></colgroup>
                                 <thead><tr><th>AGE</th><th>FACTOR</th><th>AGE</th><th>FACTOR</th></tr></thead>
                                 <tbody>
                                     <tr><td>Under 35</td><td>1</td><td>40</td><td>0.5</td></tr>
@@ -692,7 +699,7 @@
                     <p class="gfgp-p">Optional Life Insurance - Federal employees who are covered under Basic life insurance program may also elect to purchase one or all three of the Optional coverage plans.</p>
                     <p class="gfgp-p"><b>Option A</b> - Standard Optional Insurance - <span style="color:#B91C1C;">The employee pays the full cost</span> for this optional insurance which offers an additional $10,000 of FEGLI. Option A also offers an equal amount of AD&amp;D protection. Costs are age-based.</p>
 
-                    <table style="width:100%;"><tr>
+                    <table style="width:100%;table-layout:fixed;"><tr>
                         <td style="width:50%;vertical-align:top;padding-right:12px;">
                             <table class="gfgp-tab gfgp-tab--rate">
                                 <thead><tr><th>Employee Age Band</th><th>Pay Mode factor<br/>Bi-Weekly</th><th>Pay Mode Factor<br/>Monthly</th></tr></thead>
@@ -727,7 +734,7 @@
                     <p class="gfgp-p"><b>Option C</b> - Family Optional Insurance - <span style="color:#B91C1C;">The employee pays the full cost</span> for optional family coverage. This coverage insures the lives of your spouse and eligible dependent children. You have the option of one to five multiples. <span style="color:#B91C1C;">Each multiple is equal to $5,000 for your spouse and $2,500 for each eligible dependent child.</span></p>
                     <p class="gfgp-p">"Eligible family members" means your present spouse, and your unmarried dependent child, including an adopted child, a stepchild or a recognized natural child who is living with you, or who is receiving regular and substantial support from you. To be covered, a child must be under 22 years of age, or be 22 or over and incapable of self-support because of mental or physical disability, which existed before the child became 22 years of age.</p>
 
-                    <table style="width:100%;"><tr>
+                    <table style="width:100%;table-layout:fixed;"><tr>
                         <td style="width:50%;vertical-align:top;padding-right:12px;">
                             <table class="gfgp-calc">
                                 <tr><td><apex:outputText value="Current Age:" rendered="{!acShowCurrentAgeC}" /><apex:outputText value="Starting Age:" rendered="{!acShowStartingAgeC}" /></td><td class="v"><apex:outputText value="{0, number, #0}" rendered="{!acShowCurrentAgeC}"><apex:param value="{!Lead.Contact_Age__c}" /></apex:outputText><apex:outputText value="{!Lead.Age_Option_C_Manual__c}" rendered="{!acShowStartingAgeC}" /></td></tr>
@@ -775,7 +782,7 @@
                     <p class="gfgp-p"><b>Option B</b> - Additional Optional Insurance - This benefit is calculated by taking your annual rate of pay and rounding it to the next $1,000 and using your multiplier (1-5) to determine your coverage amount. The factor chart below is based on each $1,000 of coverage. Group costs to the employee increase every five years after age 35.</p>
 
                     <!-- Factor table (left) + calculation rows (right) -->
-                    <table style="width:100%;"><tr>
+                    <table style="width:100%;table-layout:fixed;"><tr>
                         <td style="width:50%;vertical-align:top;padding-right:12px;">
                             <table class="gfgp-tab gfgp-tab--rate">
                                 <thead><tr><th>Employee Age Band</th><th>Bi-Weekly Factor</th><th>Monthly Factor</th></tr></thead>
@@ -1235,7 +1242,7 @@
                     <p class="gfgp-p">To provide a survivor annuity for a person who has an "insurable interest" in you, your annual annuity would be reduced from 10 to 40 percent, depending on the difference in your age and the age of the person named.</p>
                     <p class="gfgp-p">Age of the person named in relation to the retiring employee and the corresponding reduction in annuity:</p>
 
-                    <table style="width:100%;"><tr>
+                    <table style="width:100%;table-layout:fixed;"><tr>
                         <td style="width:58%;vertical-align:top;">
                             <ul class="gfgp-ul">
                                 <li>Older, same age, or less than 5 years younger 10% =</li>
@@ -1256,7 +1263,7 @@
                     </tr></table>
 
                     <!-- Minimum / Maximum Survivor Benefit boxes -->
-                    <table style="width:100%;margin-top:12pt;"><tr>
+                    <table style="width:100%;table-layout:fixed;margin-top:12pt;"><tr>
                         <td style="width:50%;vertical-align:top;padding-right:14px;">
                             <div class="gfgp-survbox{!IF(fsMinSelected, ' sel', '')}">
                                 <div class="gfgp-survbox__title">Minimum Survivor Benefit Monthly Cost</div>
@@ -1301,7 +1308,7 @@
                     <p class="gfgp-p">Law enforcement officers and firefighters under the FERS system are defined to be classified as special group employees if the position held is limited to "young and vigorous" personnel. In addition, they must have occupied a primary, first-line law enforcement, or firefighter position for at least 3 years before moving to a secondary (administrative or supervisory) position.</p>
 
                     <!-- Two-column block: bullets (left) + formula example (right) -->
-                    <table style="width:100%;margin-top:8pt;"><tr>
+                    <table style="width:100%;table-layout:fixed;margin-top:8pt;"><tr>
                         <td style="width:48%;vertical-align:top;padding-right:12px;">
                             <p class="gfgp-center" style="font-weight:bold;margin:0 0 4pt;">FERS Special Groups</p>
                             <ul class="gfgp-ul">
@@ -1459,7 +1466,7 @@
                     <div class="gfgp-accent"></div>
                     <p class="gfgp-p">The Thrift Savings Plan (TSP) is a retirement savings and investment plan for Federal employees and members of the uniformed services, including the Ready Reserve. It was established by Congress in the Federal Employees' Retirement System Act of 1986. For FERS employees, TSP is one of a three-part retirement package that also includes your FERS basic annuity and Social Security. For a FERS employee to take full advantage of this plan, they should contribute 5% to receive the full matching benefit. CSRS employees receive no matching funds.</p>
 
-                    <table style="width:100%;margin-top:6pt;">
+                    <table style="width:100%;table-layout:fixed;margin-top:6pt;">
                         <colgroup><col style="width:46%" /><col style="width:20%" /><col style="width:34%" /></colgroup>
                         <tr>
                             <!-- Column 1: Contribution Limits + Current -->
@@ -1538,7 +1545,7 @@
                     <div class="gfgp-accent"></div>
 
                     <!-- Top row: logo (left) + date (right) -->
-                    <table style="width:100%;margin-bottom:8pt;">
+                    <table style="width:100%;table-layout:fixed;margin-bottom:8pt;">
                         <tr>
                             <td style="vertical-align:middle;"><apex:image url="{!$Resource.Pg13GrovesLogo}" width="200" alt="Groves Financial Group" /></td>
                             <td style="vertical-align:middle;text-align:right;font-size:10.5pt;">Date: <span style="display:inline-block;min-width:80pt;border-bottom:1px solid #2b2b2b;text-align:center;"><apex:outputText value="{0, date, MM/dd/yyyy}"><apex:param value="{!TODAY()}" /></apex:outputText></span></td>
@@ -1620,7 +1627,7 @@
 
                     <!-- Section B: Retirement Income (left) + TSP panel (bottom-right) -->
                     <div class="gfgp-seclabel">Retirement Income</div>
-                    <table style="width:100%;"><tr>
+                    <table style="width:100%;table-layout:fixed;"><tr>
                     <td style="vertical-align:bottom;padding-right:12pt;">
                     <table class="gfgp-snap">
                         <apex:outputPanel layout="none" rendered="{!snapYosFormulaVisible}">
