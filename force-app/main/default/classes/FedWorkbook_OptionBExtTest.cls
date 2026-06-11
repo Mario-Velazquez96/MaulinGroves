@@ -24,13 +24,21 @@ private class FedWorkbook_OptionBExtTest {
         System.assertNotEquals(null, ext.getTotalCoverage(), 'Total coverage');
         System.assertNotEquals(null, ext.getTotalBiWeeklyCost(), 'Total bi-weekly cost');
         System.assertNotEquals(null, ext.getTotalMonthlyCost(), 'Total monthly cost');
+        System.assertNotEquals(null, ext.getShowCurrentAge(), 'Show Current Age');
+        System.assertNotEquals(null, ext.getShowStartingAge(), 'Show Starting Age');
+        System.assertNotEquals(null, ext.getShowMultiplierManual(), 'Show manual multiplier');
     }
 
     @isTest
     static void testWithFegliCode() {
         Lead l = FedWorkbook_TestData.fegliWithCode();
         Test.startTest();
-        exerciseAll(new FedWorkbook_OptionBExt(FedWorkbook_TestData.sc(l.Id)));
+        FedWorkbook_OptionBExt ext = new FedWorkbook_OptionBExt(FedWorkbook_TestData.sc(l.Id));
+        exerciseAll(ext);
+        // Code on file => locked Current Age + derived multiplier.
+        System.assertEquals(true, ext.getShowCurrentAge(), 'Coded => Current Age');
+        System.assertEquals(false, ext.getShowStartingAge(), 'Coded => no Starting Age');
+        System.assertEquals(false, ext.getShowMultiplierManual(), 'Coded => derived multiplier');
         Test.stopTest();
     }
 
@@ -38,7 +46,12 @@ private class FedWorkbook_OptionBExtTest {
     static void testManualBands() {
         Lead l = FedWorkbook_TestData.fegliManual();
         Test.startTest();
-        exerciseAll(new FedWorkbook_OptionBExt(FedWorkbook_TestData.sc(l.Id)));
+        FedWorkbook_OptionBExt ext = new FedWorkbook_OptionBExt(FedWorkbook_TestData.sc(l.Id));
+        exerciseAll(ext);
+        // No code => editable Starting Age + manual multiplier.
+        System.assertEquals(true, ext.getShowStartingAge(), 'Manual => Starting Age');
+        System.assertEquals(false, ext.getShowCurrentAge(), 'Manual => no Current Age');
+        System.assertEquals(true, ext.getShowMultiplierManual(), 'Manual => editable multiplier');
         Test.stopTest();
     }
 

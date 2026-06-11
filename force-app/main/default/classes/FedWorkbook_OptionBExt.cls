@@ -107,6 +107,24 @@ public with sharing class FedWorkbook_OptionBExt {
     public Boolean getHasOptionA() { return lead.OptionA__c == true; }
     public Boolean getHasOptionB() { return lead.OptionB__c == true; }
     public Boolean getHasOptionC() { return lead.OptionC__c == true; }
+
+    // ---- Current Age / Starting Age label gates (mirrors legacy OptionB.page) ----
+    // A FEGLI code on file locks the age to the derived Contact Age (Current Age)
+    // and derives the multiplier from the code; otherwise the member picks a
+    // manual age band (Starting Age) and types the multiplier (Your Multiplier).
+
+    /** Show read-only "Current Age:" (code present + Option B elected). */
+    public Boolean getShowCurrentAge() {
+        return hasFegliCode() && lead.OptionB__c == true;
+    }
+    /** Show editable "Starting Age:" (no code + Option B elected). */
+    public Boolean getShowStartingAge() {
+        return !hasFegliCode() && lead.OptionB__c == true;
+    }
+    /** The multiplier is editable only in manual mode (no FEGLI code). */
+    public Boolean getShowMultiplierManual() {
+        return !hasFegliCode() && lead.OptionB__c == true;
+    }
     public Boolean getIsUSPS() {
         return lead.Affiliation__c == 'United States Postal Service (USPS)';
     }

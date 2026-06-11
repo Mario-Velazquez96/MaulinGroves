@@ -102,6 +102,9 @@ public with sharing class FedWorkbook_PDFExt {
     public Boolean getObHasOptionC()        { return ob().getHasOptionC(); }
     public Decimal getObAnnualRatePay()     { return ob().getAnnualRatePay(); }
     public Integer getObMultiplier()        { return ob().getMultiplier(); }
+    // Current Age (locked) vs Starting Age (manual) label gates — match the page.
+    public Boolean getObShowCurrentAge()    { return ob().getShowCurrentAge(); }
+    public Boolean getObShowStartingAge()   { return ob().getShowStartingAge(); }
     public Decimal getObOptionBCoverage()   { return ob().getOptionBCoverage(); }
     public Decimal getObOptionBBiWeeklyCost() { return ob().getOptionBBiWeeklyCost(); }
     public Decimal getObOptionBMonthlyCost()  { return ob().getOptionBMonthlyCost(); }

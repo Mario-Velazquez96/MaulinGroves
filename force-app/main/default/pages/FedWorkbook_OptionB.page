@@ -76,6 +76,16 @@
             color: #1f3b38;
             font-weight: 700;
         }
+        /* Current Age / Starting Age line + editable manual inputs
+           (mirrors legacy OptionB.page) */
+        .gfg5-age-val { color: #B91C1C; font-weight: 700; text-decoration: underline; }
+        .gfg5-age-input, .gfg5-mult-input {
+            border: 1px solid #ccc; background: #f1fbfd;
+            font: inherit; font-weight: 700; color: #1f3b38;
+            padding: 1px 4px; text-align: center;
+        }
+        .gfg5-age-input:focus, .gfg5-mult-input:focus { outline: none; border-color: #3A5754; }
+        .gfg5-mult-input { width: 56px; }
 
         /* Pricing projection table (big table near the bottom of the section) */
         .gfg5-proj { width: 100%; border-collapse: collapse; margin: 18px 0 4px; font-size: 13px; }
@@ -137,6 +147,13 @@
                 employee increase every five years after age 35.
             </p>
 
+          <apex:form id="gfg5form">
+            <!-- apex:actionFunction (not actionSupport) so the Starting-Age /
+                 Multiplier edits still fire when this page is aggregated inside
+                 FedWorkbook_Preview via apex:include. -->
+            <apex:actionFunction name="gfg5Save" action="{!saveLead}" reRender="gfg5calc,gfg5summary,gfg5msgs" />
+            <apex:outputPanel id="gfg5msgs"><apex:pageMessages /></apex:outputPanel>
+
             <div class="gfg5-cols">
                 <!-- Left: factor table -->
                 <div class="gfg5-cols__left">
@@ -166,6 +183,22 @@
 
                 <!-- Right: calculation rows -->
                 <div class="gfg5-cols__right">
+                  <apex:outputPanel id="gfg5calc" layout="block">
+                    <!-- Current Age (locked, code on file) vs Starting Age
+                         (editable manual band, no code) -->
+                    <div class="gfg5-row">
+                        <apex:outputPanel layout="none" rendered="{!showCurrentAge}">
+                            <span class="gfg5-label">Current Age:</span>
+                            <span class="gfg5-blank gfg5-age-val"><apex:outputField value="{!Lead.Contact_Age__c}" /></span>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="none" rendered="{!showStartingAge}">
+                            <span class="gfg5-label">Starting Age:</span>
+                            <span class="gfg5-blank">
+                                <apex:inputField value="{!Lead.Age_Option_B_Manual__c}"
+                                    styleClass="gfg5-age-input" onchange="gfg5Save();" />
+                            </span>
+                        </apex:outputPanel>
+                    </div>
                     <div class="gfg5-row">
                         <span class="gfg5-label">Annual Rate of Pay Rounded Up:</span>
                         <span class="gfg5-blank">
@@ -176,11 +209,20 @@
                     </div>
                     <div class="gfg5-row">
                         <span class="gfg5-label">Your Multiplier:</span>
-                        <span class="gfg5-blank">
-                            <apex:outputText value="{0, number, #0}">
-                                <apex:param value="{!multiplier}" />
-                            </apex:outputText>
-                        </span>
+                        <!-- Editable in manual mode; derived from the FEGLI code letter otherwise -->
+                        <apex:outputPanel layout="none" rendered="{!showMultiplierManual}">
+                            <span class="gfg5-blank">
+                                <apex:inputField value="{!Lead.Multiples_B_Manual__c}"
+                                    styleClass="gfg5-mult-input" onchange="gfg5Save();" />
+                            </span>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="none" rendered="{!NOT(showMultiplierManual)}">
+                            <span class="gfg5-blank">
+                                <apex:outputText value="{0, number, #0}">
+                                    <apex:param value="{!multiplier}" />
+                                </apex:outputText>
+                            </span>
+                        </apex:outputPanel>
                     </div>
                     <div class="gfg5-row">
                         <span class="gfg5-label">Option B Insurance Coverage:</span>
@@ -206,6 +248,7 @@
                             </apex:outputText>
                         </span>
                     </div>
+                  </apex:outputPanel>
                 </div>
             </div>
 
@@ -251,6 +294,7 @@
             <!-- Total Basic and Optional Life Insurance -->
             <h2 class="gfg5-summary-h">Total Basic &amp; Optional Life Insurance</h2>
 
+            <apex:outputPanel id="gfg5summary" layout="block">
             <div class="gfg5-summary">
                 <div class="gfg5-summary__left">
                     <div class="gfg5-summary__head">
@@ -337,12 +381,14 @@
                     </div>
                 </div>
             </div>
+            </apex:outputPanel>
 
             <!-- Rates disclaimer (full width, below the now single-column summary) -->
             <p class="gfg5-bottom-note">
                 Rates are subject to change and are not guaranteed upon approval.<br/>
                 FEGLI rates are based on current rates.
             </p>
+          </apex:form>
 
         </div>
     </div>

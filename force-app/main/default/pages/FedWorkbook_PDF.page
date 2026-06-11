@@ -796,6 +796,7 @@
                         </td>
                         <td style="width:50%;vertical-align:top;">
                             <table class="gfgp-calc">
+                                <tr><td><apex:outputText value="Current Age:" rendered="{!obShowCurrentAge}" /><apex:outputText value="Starting Age:" rendered="{!obShowStartingAge}" /></td><td class="v"><apex:outputText value="{0, number, #0}" rendered="{!obShowCurrentAge}"><apex:param value="{!Lead.Contact_Age__c}" /></apex:outputText><apex:outputText value="{!Lead.Age_Option_B_Manual__c}" rendered="{!obShowStartingAge}" /></td></tr>
                                 <tr><td>Annual Rate of Pay Rounded Up:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obAnnualRatePay}" /></apex:outputText></td></tr>
                                 <tr><td>Your Multiplier:</td><td class="v"><apex:outputText value="{!obMultiplier}" /></td></tr>
                                 <tr><td>Option B Insurance Coverage:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!obOptionBCoverage}" /></apex:outputText></td></tr>
