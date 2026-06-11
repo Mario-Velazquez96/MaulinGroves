@@ -322,7 +322,7 @@
                             <label>TSP Balance ($):</label>
                             <span class="gfg2-affix">
                                 <span class="gfg2-sym">$</span>
-                                <apex:inputField value="{!Lead.TSP_Total__c}" styleClass="gfg2-input" style="min-width:100px" onchange="gfg2Save();" />
+                                <apex:inputField value="{!Lead.TSP_Balance_No_Match__c}" styleClass="gfg2-input" style="min-width:100px" onchange="gfg2Save();" />
                             </span>
                         </span>
                         <span class="gfg2-field">

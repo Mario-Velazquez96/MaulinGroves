@@ -519,7 +519,7 @@
                         <!-- TSP Balance ($) + contribution (% or $ mode) -->
                         <tr>
                             <td class="gfgp-lbl">TSP Balance:</td>
-                            <td class="gfgp-val"><apex:outputField value="{!Lead.TSP_Total__c}" /></td>
+                            <td class="gfgp-val"><apex:outputField value="{!Lead.TSP_Balance_No_Match__c}" /></td>
                             <td class="gfgp-lbl">
                                 <apex:outputText value="TSP Contribution (%):" rendered="{!Lead.percTSP__c == true}" />
                                 <apex:outputText value="TSP Contribution ($):" rendered="{!Lead.dollarTSP__c == true}" />
