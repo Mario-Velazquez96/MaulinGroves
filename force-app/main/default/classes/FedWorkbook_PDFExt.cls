@@ -89,6 +89,12 @@ public with sharing class FedWorkbook_PDFExt {
     public Decimal getAcOptionACost()          { return ac().getOptionACost(); }
     public Integer getAcOptionCMultiples()      { return ac().getOptionCMultiples(); }
     public Decimal getAcOptionCBiWeeklyFactor() { return ac().getOptionCBiWeeklyFactor(); }
+    // Current Age (locked) vs Starting Age (manual) label gates — match the
+    // interactive page so the label always agrees with the displayed rate.
+    public Boolean getAcShowCurrentAgeA()  { return ac().getShowCurrentAgeA(); }
+    public Boolean getAcShowStartingAgeA() { return ac().getShowStartingAgeA(); }
+    public Boolean getAcShowCurrentAgeC()  { return ac().getShowCurrentAgeC(); }
+    public Boolean getAcShowStartingAgeC() { return ac().getShowStartingAgeC(); }
 
     // ----- Page 5: FEGLI Option B + Total Basic & Optional summary --------
     public Boolean getObHasOptionA()        { return ob().getHasOptionA(); }

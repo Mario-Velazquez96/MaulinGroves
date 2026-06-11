@@ -86,6 +86,19 @@
         .gfg4-row > .gfg4-label { flex: 0 0 auto; }
         .gfg4-row > .gfg4-blank { flex: 1 1 auto; }
 
+        /* Current Age / Starting Age line (mirrors legacy FEGLIAC.page) */
+        .gfg4-agerow { margin: 6px 0 10px; font-weight: 700; color: #1f3b38; }
+        .gfg4-age-label { margin-right: 6px; }
+        .gfg4-age-val { color: #B91C1C; font-weight: 700; text-decoration: underline; }
+        /* Editable manual Starting-Age / Multiples inputs */
+        .gfg4-age-input, .gfg4-mult-input {
+            border: 1px solid #ccc; background: #f1fbfd;
+            font: inherit; font-weight: 700; color: #1f3b38;
+            padding: 1px 4px; text-align: center;
+        }
+        .gfg4-age-input:focus, .gfg4-mult-input:focus { outline: none; border-color: #3A5754; }
+        .gfg4-mult-input { width: 56px; }
+
         @media (max-width: 700px) {
             .gfg4-cols { flex-direction: column; }
         }
@@ -95,6 +108,15 @@
         <div class="gfg4-sidebar"><span class="gfg4-pagenum">4</span></div>
 
         <div class="gfg4-main">
+
+          <apex:form id="gfg4form">
+            <!-- apex:actionFunction (not actionSupport) so the Starting-Age /
+                 Multiples edits still fire when this page is aggregated inside
+                 FedWorkbook_Preview via apex:include. Per-option functions so we
+                 never reRender a panel that belongs to a non-rendered section. -->
+            <apex:actionFunction name="gfg4SaveA" action="{!saveLead}" reRender="gfg4aPanel,gfg4msgs" />
+            <apex:actionFunction name="gfg4SaveC" action="{!saveLead}" reRender="gfg4cPanel,gfg4msgs" />
+            <apex:outputPanel id="gfg4msgs"><apex:pageMessages /></apex:outputPanel>
 
             <!-- ===== OPTION A ===== -->
             <apex:outputPanel layout="block"
@@ -148,14 +170,31 @@
                         <apex:image url="{!$Resource.Pg5GrovesArrow}"
                             styleClass="gfg4-arrow-img"
                             alt="Option A coverage decreases from $10,000 to $2,500" />
-                        <p style="text-align:center;margin-top:18px">
-                            Option A Cost: <span class="gfg4-cost">$</span>
-                            <span class="gfg4-blank" style="min-width:90px">
-                                <apex:outputText value="{0, number, 0.00}">
-                                    <apex:param value="{!optionACost}" />
-                                </apex:outputText>
-                            </span>
-                        </p>
+
+                        <apex:outputPanel id="gfg4aPanel" layout="block">
+                            <!-- Current Age (locked, when a FEGLI code is on file)
+                                 vs Starting Age (editable manual band, no code) -->
+                            <p class="gfg4-agerow" style="text-align:center">
+                                <apex:outputPanel layout="none" rendered="{!showCurrentAgeA}">
+                                    <span class="gfg4-age-label">Current Age:</span>
+                                    <span class="gfg4-age-val"><apex:outputField value="{!lead.Contact_Age__c}" /></span>
+                                </apex:outputPanel>
+                                <apex:outputPanel layout="none" rendered="{!showStartingAgeA}">
+                                    <span class="gfg4-age-label">Starting Age:</span>
+                                    <apex:inputField value="{!lead.Age_Option_A_Manual__c}"
+                                        styleClass="gfg4-age-input" onchange="gfg4SaveA();" />
+                                </apex:outputPanel>
+                            </p>
+
+                            <p style="text-align:center;margin-top:10px">
+                                Option A Cost: <span class="gfg4-cost">$</span>
+                                <span class="gfg4-blank" style="min-width:90px">
+                                    <apex:outputText value="{0, number, 0.00}">
+                                        <apex:param value="{!optionACost}" />
+                                    </apex:outputText>
+                                </span>
+                            </p>
+                        </apex:outputPanel>
                     </div>
                 </div>
             </apex:outputPanel>
@@ -188,13 +227,37 @@
 
                 <div class="gfg4-cols">
                     <div class="gfg4-cols__left">
+                      <apex:outputPanel id="gfg4cPanel" layout="block">
+                        <!-- Current Age (locked, code on file) vs Starting Age
+                             (editable manual band, no code) -->
+                        <p class="gfg4-agerow">
+                            <apex:outputPanel layout="none" rendered="{!showCurrentAgeC}">
+                                <span class="gfg4-age-label">Current Age:</span>
+                                <span class="gfg4-age-val"><apex:outputField value="{!lead.Contact_Age__c}" /></span>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="none" rendered="{!showStartingAgeC}">
+                                <span class="gfg4-age-label">Starting Age:</span>
+                                <apex:inputField value="{!lead.Age_Option_C_Manual__c}"
+                                    styleClass="gfg4-age-input" onchange="gfg4SaveC();" />
+                            </apex:outputPanel>
+                        </p>
+
                         <div class="gfg4-row">
                             <span class="gfg4-label">Number of Multiples:</span>
-                            <span class="gfg4-blank">
-                                <apex:outputText value="{0, number, #0}">
-                                    <apex:param value="{!optionCMultiples}" />
-                                </apex:outputText>
-                            </span>
+                            <!-- Editable in manual mode; derived from the FEGLI code otherwise -->
+                            <apex:outputPanel layout="none" rendered="{!showMultiplesManualC}">
+                                <span class="gfg4-blank">
+                                    <apex:inputField value="{!lead.Multiples_C_Manual__c}"
+                                        styleClass="gfg4-mult-input" onchange="gfg4SaveC();" />
+                                </span>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="none" rendered="{!NOT(showMultiplesManualC)}">
+                                <span class="gfg4-blank">
+                                    <apex:outputText value="{0, number, #0}">
+                                        <apex:param value="{!optionCMultiples}" />
+                                    </apex:outputText>
+                                </span>
+                            </apex:outputPanel>
                         </div>
                         <div class="gfg4-row">
                             <span class="gfg4-label">Spouse Benefit:</span>
@@ -234,6 +297,7 @@
                                 </apex:outputText>
                             </span>
                         </div>
+                      </apex:outputPanel>
                     </div>
 
                     <div class="gfg4-cols__right">
@@ -275,6 +339,8 @@
                     premiums and maintain coverage.
                 </p>
             </apex:outputPanel>
+
+          </apex:form>
 
         </div>
     </div>

@@ -711,7 +711,11 @@
                             <div class="gfgp-center-h" style="text-decoration:underline;">Option A - After Retirement</div>
                             <p class="gfgp-center gfgp-italic">The amount of your Option A life insurance decreases at age 65 or at retirement, whichever is later, at a rate of 2% per month until a 75% reduction is reached.</p>
                             <apex:image url="{!$Resource.Pg5GrovesArrow}" width="180" alt="Option A coverage decreases from $10,000 to $2,500" />
-                            <p class="gfgp-center" style="margin-top:10pt;">Option A Cost: <span class="gfgp-cost">$</span> <span class="gfgp-amt"><apex:outputText value="{0, number, 0.00}"><apex:param value="{!acOptionACost}" /></apex:outputText></span></p>
+                            <p class="gfgp-center" style="margin-top:8pt;font-weight:bold;">
+                                <apex:outputText value="Current Age: " rendered="{!acShowCurrentAgeA}" /><apex:outputText value="{0, number, #0}" rendered="{!acShowCurrentAgeA}"><apex:param value="{!Lead.Contact_Age__c}" /></apex:outputText>
+                                <apex:outputText value="Starting Age: " rendered="{!acShowStartingAgeA}" /><apex:outputText value="{!Lead.Age_Option_A_Manual__c}" rendered="{!acShowStartingAgeA}" />
+                            </p>
+                            <p class="gfgp-center" style="margin-top:6pt;">Option A Cost: <span class="gfgp-cost">$</span> <span class="gfgp-amt"><apex:outputText value="{0, number, 0.00}"><apex:param value="{!acOptionACost}" /></apex:outputText></span></p>
                         </td>
                     </tr></table>
                     </apex:outputPanel>
@@ -726,6 +730,7 @@
                     <table style="width:100%;"><tr>
                         <td style="width:50%;vertical-align:top;padding-right:12px;">
                             <table class="gfgp-calc">
+                                <tr><td><apex:outputText value="Current Age:" rendered="{!acShowCurrentAgeC}" /><apex:outputText value="Starting Age:" rendered="{!acShowStartingAgeC}" /></td><td class="v"><apex:outputText value="{0, number, #0}" rendered="{!acShowCurrentAgeC}"><apex:param value="{!Lead.Contact_Age__c}" /></apex:outputText><apex:outputText value="{!Lead.Age_Option_C_Manual__c}" rendered="{!acShowStartingAgeC}" /></td></tr>
                                 <tr><td>Number of Multiples:</td><td class="v"><apex:outputText value="{!acOptionCMultiples}" /></td></tr>
                                 <tr><td>Spouse Benefit:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!acOptionCMultiples * 5000}" /></apex:outputText></td></tr>
                                 <tr><td>Each Child Benefit:</td><td class="v"><apex:outputText value="{0, number, $#,##0.00}"><apex:param value="{!acOptionCMultiples * 2500}" /></apex:outputText></td></tr>
