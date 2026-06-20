@@ -16,8 +16,8 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
                    Expected_Retirement_Age__c,
                    FERS__c,
                    Special_Group_Member__c, Remaining_Years__c,
-                   Scenario1_Primary__c, Scenario1_Retirement_Age__c, Scenario1_YOS__c,
-                   Scenario2_Primary__c, Scenario2_Retirement_Age__c, Scenario2_YOS__c,
+                   Scenario1_Primary__c, Scenario1_Retirement_Age__c, Scenario1_YOS__c, Scenario1_YOS_Manual__c,
+                   Scenario2_Primary__c, Scenario2_Retirement_Age__c, Scenario2_YOS__c, Scenario2_YOS_Manual__c,
                    High_3_Salary2__c, Years_of_Employment__c,
                    Date_of_Birth__c, Date_of_Hire__c,
                    Marital_Status__c, Opt_Out__c, Min__c, Max__c,
@@ -121,6 +121,30 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
                 || (lead.Scenario2_Primary__c == true && d(lead.Scenario2_Retirement_Age__c) >= 62);
         }
         return d(lead.Expected_Retirement_Age__c) >= 62;
+    }
+
+    // -----------------------------------------------------------------------
+    // getSocialSecurityStartAge()
+    // The "Start Age:" value shown next to the Social Security row. It MUST use
+    // the same age-selection criteria as getSocialSecurityEligible() above, so
+    // the displayed age is the same one that decided eligibility:
+    //   Special Group   → Expected_Retirement_Age__c (ignores scenario ages)
+    //   FERS            → Scenario1/Scenario2 primary age, else Expected
+    //   neither         → Expected_Retirement_Age__c
+    // (The raw scenario-primary display previously here was wrong for a Special
+    // Group member with a primary scenario — it showed the scenario age while
+    // eligibility was judged against Expected_Retirement_Age__c.)
+    // -----------------------------------------------------------------------
+    public Decimal getSocialSecurityStartAge() {
+        if (lead.Special_Group_Member__c == true) {
+            return d(lead.Expected_Retirement_Age__c);
+        }
+        if (lead.FERS__c == true) {
+            if (lead.Scenario1_Primary__c == true) { return d(lead.Scenario1_Retirement_Age__c); }
+            if (lead.Scenario2_Primary__c == true) { return d(lead.Scenario2_Retirement_Age__c); }
+            return d(lead.Expected_Retirement_Age__c);
+        }
+        return d(lead.Expected_Retirement_Age__c);
     }
 
     // -----------------------------------------------------------------------
@@ -229,6 +253,14 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
         return retirementAge - Math.abs(yearsBetween);
     }
 
+    // Apply the Flow-safe manual YOS override (Scenario1/2_YOS_Manual__c) when set,
+    // otherwise keep this page's existing baseline. Lets a manual what-if entered on
+    // the FERS-Calc page flow through to the snapshot pension while leaving untouched
+    // leads unchanged. Shared concept with FedWorkbook_FersCalcExt / FersSurvivorExt.
+    private Decimal overrideOr(Decimal manualYos, Decimal baseline) {
+        return (manualYos != null && manualYos != 0) ? manualYos : baseline;
+    }
+
     // -----------------------------------------------------------------------
     // Raw (un-reduced) monthly pension. Handles two paths:
     //   * Special Group Members: ((High_3 * 0.017 * 20) + (High_3 * 0.01 * Remaining_Years)) / 12
@@ -252,14 +284,14 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
 
         if (lead.Scenario1_Primary__c == true) {
             high3            = d(lead.High_3_Salary__c);
-            yosCareer        = scenarioXYos(lead.Scenario1_Retirement_Age__c);
+            yosCareer        = overrideOr(lead.Scenario1_YOS_Manual__c, scenarioXYos(lead.Scenario1_Retirement_Age__c));
             retirementAge    = d(lead.Scenario1_Retirement_Age__c);
-            scenarioYosField = d(lead.Scenario1_YOS__c);
+            scenarioYosField = overrideOr(lead.Scenario1_YOS_Manual__c, d(lead.Scenario1_YOS__c));
         } else if (lead.Scenario2_Primary__c == true) {
             high3            = d(lead.High_3_Salary2__c);
-            yosCareer        = scenarioXYos(lead.Scenario2_Retirement_Age__c);
+            yosCareer        = overrideOr(lead.Scenario2_YOS_Manual__c, scenarioXYos(lead.Scenario2_Retirement_Age__c));
             retirementAge    = d(lead.Scenario2_Retirement_Age__c);
-            scenarioYosField = d(lead.Scenario2_YOS__c);
+            scenarioYosField = overrideOr(lead.Scenario2_YOS_Manual__c, d(lead.Scenario2_YOS__c));
         } else {
             // Neither scenario primary — legacy non-scenario path (lines 804-833)
             // uses Years_of_Employment__c instead of scenarioXYos.

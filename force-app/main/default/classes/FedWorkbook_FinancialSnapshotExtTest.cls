@@ -3,6 +3,7 @@ private class FedWorkbook_FinancialSnapshotExtTest {
 
     private static void exerciseAll(FedWorkbook_FinancialSnapshotExt ext) {
         System.assertNotEquals(null, ext.getSocialSecurityEligible(), 'SS eligible');
+        System.assertNotEquals(null, ext.getSocialSecurityStartAge(), 'SS start age');
         System.assertNotEquals(null, ext.getPensionBase(), 'Pension base');
         System.assertNotEquals(null, ext.getSurvivingSpouseBenefit(), 'Surviving spouse benefit');
         System.assertNotEquals(null, ext.getIsMarried(), 'Is married');
@@ -58,6 +59,35 @@ private class FedWorkbook_FinancialSnapshotExtTest {
         Test.startTest();
         exerciseAll(new FedWorkbook_FinancialSnapshotExt(FedWorkbook_TestData.sc(l.Id)));
         Test.stopTest();
+    }
+
+    @isTest
+    static void testSocialSecurityStartAgeFollowsEligibilityCriteria() {
+        // FERS with a primary scenario → start age is the scenario retirement age.
+        Lead fers = FedWorkbook_TestData.fersBefore62(); // Scenario1_Primary, age 60
+        FedWorkbook_FinancialSnapshotExt fersExt =
+            new FedWorkbook_FinancialSnapshotExt(FedWorkbook_TestData.sc(fers.Id));
+        System.assertEquals(60, fersExt.getSocialSecurityStartAge(),
+            'FERS primary scenario => scenario retirement age');
+
+        // Special Group member WITH a primary scenario → must IGNORE the scenario
+        // age and use Expected_Retirement_Age__c, matching getSocialSecurityEligible.
+        Lead sg = new Lead(
+            LastName = 'SgScenario', Company = 'Fed Agency',
+            Special_Group_Member__c = true, FERS__c = true,
+            High_3_Salary__c = 115000, Remaining_Years__c = 3,
+            Scenario1_Primary__c = true, Scenario1_Retirement_Age__c = 58,
+            Date_of_Birth__c = System.today().addYears(-53),
+            Date_of_Hire__c = System.today().addYears(-23),
+            Expected_Retirement_Date__c = System.today().addYears(-1)
+        );
+        insert sg;
+        FedWorkbook_FinancialSnapshotExt sgExt =
+            new FedWorkbook_FinancialSnapshotExt(FedWorkbook_TestData.sc(sg.Id));
+        Decimal expectedAge = sgExt.lead.Expected_Retirement_Age__c == null
+            ? 0 : sgExt.lead.Expected_Retirement_Age__c;
+        System.assertEquals(expectedAge, sgExt.getSocialSecurityStartAge(),
+            'Special Group => Expected_Retirement_Age__c, not the primary scenario age');
     }
 
     @isTest

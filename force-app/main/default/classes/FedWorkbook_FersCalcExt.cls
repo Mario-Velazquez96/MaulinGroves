@@ -30,6 +30,43 @@ public with sharing class FedWorkbook_FersCalcExt {
         this.lead = fetchLead();
     }
 
+    // NOTE: the open-time reseed of Scenario1/2_YOS_Manual__c from the Flow
+    // values is performed by the container page's action method
+    // (FedWorkbook_PreviewExt.reseedYosOnOpen), NOT here. DML is not allowed in
+    // an extension constructor while the page is being rendered as an
+    // apex:include, which is how this page is shown in the workbook.
+
+    // Editable "Times (x) Years of Service".
+    //
+    // Stored in the Flow-safe Scenario1/2_YOS_Manual__c field — the client's Flow
+    // recomputes Scenario1/2_YOS__c on every Lead update, so a manual entry kept
+    // there would be overwritten. Shared across the workbook pages so FersCalc,
+    // FersSurvivor and FinancialSnapshot all agree on the value.
+    //
+    // Each time the workbook is opened the override is reseeded from the current
+    // Flow value (see FedWorkbook_PreviewExt.reseedYosOnOpen); during the session
+    // the user can edit it and the entry persists. The getter returns the effective
+    // whole-number YOS (manual -> Flow -> projected); the setter stores the entered
+    // whole number.
+    public Decimal scenario1XYOS {
+        get { return wholeYos(effectiveYos(lead.Scenario1_YOS_Manual__c, lead.Scenario1_YOS__c, lead.Scenario1_Retirement_Age__c)); }
+        set { lead.Scenario1_YOS_Manual__c = (value == null) ? null : wholeYos(value); }
+    }
+    public Decimal scenario2XYOS {
+        get { return wholeYos(effectiveYos(lead.Scenario2_YOS_Manual__c, lead.Scenario2_YOS__c, lead.Scenario2_Retirement_Age__c)); }
+        set { lead.Scenario2_YOS_Manual__c = (value == null) ? null : wholeYos(value); }
+    }
+    private Decimal effectiveYos(Decimal manualYos, Decimal flowYos, Decimal retAge) {
+        if (manualYos != null && manualYos != 0) { return manualYos; }
+        if (flowYos != null && flowYos != 0) { return flowYos; }
+        return projectedYos(retAge);
+    }
+    // Years of Service is a whole-year value, so show/use it without decimals
+    // (the underlying Number(8,2) field would otherwise render e.g. "55.00").
+    private Decimal wholeYos(Decimal v) {
+        return v == null ? null : v.setScale(0, System.RoundingMode.HALF_UP);
+    }
+
     // Centralised SOQL fetch — called by constructor and after save so
     // computed getters always see fresh values.
     private Lead fetchLead() {
@@ -48,6 +85,8 @@ public with sharing class FedWorkbook_FersCalcExt {
                    Scenario2_Retirement_Age__c,
                    Scenario1_YOS__c,
                    Scenario2_YOS__c,
+                   Scenario1_YOS_Manual__c,
+                   Scenario2_YOS_Manual__c,
                    High_3_Salary__c,
                    High_3_Salary2__c
             FROM Lead
@@ -120,23 +159,18 @@ public with sharing class FedWorkbook_FersCalcExt {
 
     // Retirement-age change seeds the editable "Times Years of Service" with the
     // projected YOS (legacy scenario1XYOS = RetAge - ageAtHire), then saves.
-    public PageReference saveS1Age() {
-        Decimal proj = projectedYos(lead.Scenario1_Retirement_Age__c);
-        if (proj != 0) { lead.Scenario1_YOS__c = proj; }
-        return saveLead();
-    }
-    public PageReference saveS2Age() {
-        Decimal proj = projectedYos(lead.Scenario2_Retirement_Age__c);
-        if (proj != 0) { lead.Scenario2_YOS__c = proj; }
-        return saveLead();
-    }
+    // Retirement-age change just persists (the Flow recomputes Scenario1/2_YOS__c).
+    // A manual override, if present, deliberately persists across an age change;
+    // clearing it is an explicit user action (blank the YOS box).
+    public PageReference saveS1Age() { return saveLead(); }
+    public PageReference saveS2Age() { return saveLead(); }
 
     // ---- Scenario 1 --------------------------------------------------------
     public Decimal getS1RetirementAge() {
         return lead.Scenario1_Retirement_Age__c == null ? 0 : lead.Scenario1_Retirement_Age__c;
     }
     public Decimal getS1YearsOfService() {
-        return lead.Scenario1_YOS__c == null ? 0 : lead.Scenario1_YOS__c;
+        return scenario1XYOS == null ? 0 : scenario1XYOS;
     }
     public Decimal getS1HighThree() {
         return lead.High_3_Salary__c == null ? 0 : lead.High_3_Salary__c;
@@ -162,7 +196,7 @@ public with sharing class FedWorkbook_FersCalcExt {
         return lead.Scenario2_Retirement_Age__c == null ? 0 : lead.Scenario2_Retirement_Age__c;
     }
     public Decimal getS2YearsOfService() {
-        return lead.Scenario2_YOS__c == null ? 0 : lead.Scenario2_YOS__c;
+        return scenario2XYOS == null ? 0 : scenario2XYOS;
     }
     public Decimal getS2HighThree() {
         return lead.High_3_Salary2__c == null ? 0 : lead.High_3_Salary2__c;

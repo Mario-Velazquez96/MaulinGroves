@@ -1656,9 +1656,9 @@
                             </td>
                             <td class="extra">Start Age:
                                 <span class="u">
-                                    <apex:outputText value="{0, number, #0}" rendered="{!Lead.Scenario1_Primary__c == true}"><apex:param value="{!Lead.Scenario1_Retirement_Age__c}" /></apex:outputText>
-                                    <apex:outputText value="{0, number, #0}" rendered="{!Lead.Scenario2_Primary__c == true}"><apex:param value="{!Lead.Scenario2_Retirement_Age__c}" /></apex:outputText>
-                                    <apex:outputText value="{0, number, #0}" rendered="{!AND(Lead.Scenario1_Primary__c == false, Lead.Scenario2_Primary__c == false)}"><apex:param value="{!Lead.Expected_Retirement_Age__c}" /></apex:outputText>
+                                    <!-- Matches getSocialSecurityEligible criteria via getSocialSecurityStartAge
+                                         (Special Group → Expected, FERS → primary scenario age, else Expected). -->
+                                    <apex:outputText value="{0, number, #0}"><apex:param value="{!snapSocialSecurityStartAge}" /></apex:outputText>
                                 </span>
                             </td>
                         </tr>

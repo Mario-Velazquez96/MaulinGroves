@@ -616,15 +616,11 @@
                         <span class="gfg13-inline-extra">
                             Start Age:
                             <span class="gfg13-blank gfg13-blank--xs">
-                                <apex:outputText value="{0, number, #0}" rendered="{!lead.Scenario1_Primary__c == true}">
-                                    <apex:param value="{!lead.Scenario1_Retirement_Age__c}" />
-                                </apex:outputText>
-                                <apex:outputText value="{0, number, #0}" rendered="{!lead.Scenario2_Primary__c == true}">
-                                    <apex:param value="{!lead.Scenario2_Retirement_Age__c}" />
-                                </apex:outputText>
-                                <apex:outputText value="{0, number, #0}"
-                                    rendered="{!AND(lead.Scenario1_Primary__c == false, lead.Scenario2_Primary__c == false)}">
-                                    <apex:param value="{!lead.Expected_Retirement_Age__c}" />
+                                <!-- Uses getSocialSecurityStartAge() so the age matches the same
+                                     criteria as getSocialSecurityEligible (Special Group → Expected,
+                                     FERS → primary scenario age, else Expected). -->
+                                <apex:outputText value="{0, number, #0}">
+                                    <apex:param value="{!socialSecurityStartAge}" />
                                 </apex:outputText>
                             </span>
                         </span>

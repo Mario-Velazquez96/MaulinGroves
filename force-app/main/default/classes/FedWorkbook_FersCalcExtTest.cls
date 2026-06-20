@@ -62,11 +62,16 @@ private class FedWorkbook_FersCalcExtTest {
         System.assertEquals(true, ext.getS1HasRetAge(), 'S1 retirement age is set');
         System.assertEquals(true, ext.getS2HasRetAge(), 'S2 retirement age is set');
 
-        // Retirement-age change seeds the projected YOS onto the YOS field.
+        // With no manual override, the effective YOS resolves to the Flow value,
+        // falling back to projected YOS when that is empty too.
         ext.saveS1Age();
         ext.saveS2Age();
-        System.assertEquals(ext.getS1ProjectedYOS(), ext.getS1YearsOfService(),
-            'saveS1Age seeds Scenario1_YOS__c with the projected YOS');
+        // Scenario 1 has a Flow-computed YOS (25) => effective YOS is that value.
+        System.assertEquals(25, ext.getS1YearsOfService(),
+            'Effective YOS uses the Flow-computed Scenario1_YOS__c when no override');
+        // Scenario 2 has no Flow YOS => effective YOS falls back to projected.
+        System.assertEquals(ext.getS2ProjectedYOS(), ext.getS2YearsOfService(),
+            'Effective YOS falls back to projected when Scenario2_YOS__c is empty');
 
         // Selecting Scenario 2 primary clears Scenario 1 primary.
         ext.lead.Scenario2_Primary__c = true;
@@ -78,6 +83,40 @@ private class FedWorkbook_FersCalcExtTest {
         ext.setPrimary1();
         System.assertEquals(false, ext.lead.Scenario2_Primary__c,
             'Selecting Scenario 1 primary clears Scenario 2');
+        Test.stopTest();
+    }
+
+    @isTest
+    static void testManualYosOverride() {
+        // A manual entry persists to the Flow-safe override field (not Scenario1_YOS__c),
+        // drives the annuity, and is shared across pages via that field.
+        Lead l = FedWorkbook_TestData.fersBefore62();   // Scenario1_YOS__c = 25
+        Test.startTest();
+        FedWorkbook_FersCalcExt ext = new FedWorkbook_FersCalcExt(FedWorkbook_TestData.sc(l.Id));
+        System.assertEquals(25, ext.getS1YearsOfService(),
+            'With no override, the effective YOS is the Flow-computed value (25)');
+
+        // User types a manual override and it saves.
+        ext.scenario1XYOS = 40;
+        ext.saveLead();
+        System.assertEquals(40, ext.getS1YearsOfService(),
+            'Manual override drives the annuity calculation');
+        System.assertEquals(ext.getS1FactorTimesHighThree() * 40, ext.getS1AnnualAnnuity(),
+            'Annual annuity reflects the manual override');
+
+        // The override is stored in the Flow-safe field; the Flow-owned field is untouched.
+        Lead fresh = [SELECT Scenario1_YOS__c, Scenario1_YOS_Manual__c
+                      FROM Lead WHERE Id = :l.Id];
+        System.assertEquals(40, fresh.Scenario1_YOS_Manual__c,
+            'Override is persisted to Scenario1_YOS_Manual__c');
+        System.assertEquals(25, fresh.Scenario1_YOS__c,
+            'The Flow-owned Scenario1_YOS__c is left untouched');
+
+        // Blanking the box clears the override and falls back to the Flow value.
+        ext.scenario1XYOS = null;
+        ext.saveLead();
+        System.assertEquals(25, ext.getS1YearsOfService(),
+            'Clearing the override falls back to the Flow-computed YOS');
         Test.stopTest();
     }
 

@@ -55,11 +55,15 @@ public with sharing class FedWorkbook_FersSurvivorExt {
         return [
             SELECT FERS__c,
                    Marital_Status__c,
+                   Date_of_Birth__c,
+                   Date_of_Hire__c,
                    Scenario1_Retirement_Age__c,
                    Scenario1_YOS__c,
+                   Scenario1_YOS_Manual__c,
                    Scenario1_Primary__c,
                    Scenario2_Retirement_Age__c,
                    Scenario2_YOS__c,
+                   Scenario2_YOS_Manual__c,
                    Scenario2_Primary__c,
                    High_3_Salary__c,
                    High_3_Salary2__c,
@@ -129,6 +133,29 @@ public with sharing class FedWorkbook_FersSurvivorExt {
         return 1.0;
     }
 
+    // Projected Years of Service at retirement = RetAge - age at hire.
+    // Mirrors FedWorkbook_FersCalcExt.projectedYos (legacy scenario1XYOS seed).
+    private Decimal projectedYos(Decimal retAge) {
+        if (retAge == null || retAge == 0
+                || lead.Date_of_Birth__c == null || lead.Date_of_Hire__c == null) {
+            return 0;
+        }
+        Integer ageAtHire = (Integer) Math.floor(
+            lead.Date_of_Birth__c.daysBetween(lead.Date_of_Hire__c) / 365.25);
+        return retAge - Math.abs(ageAtHire);
+    }
+
+    // Effective Years of Service used by every annuity calculation, shared with
+    // FedWorkbook_FersCalcExt so all workbook pages agree:
+    //   manual override (Scenario1/2_YOS_Manual__c, Flow-safe)
+    //     -> Flow-computed value (Scenario1/2_YOS__c)
+    //     -> projected (RetAge - age at hire)
+    private Decimal effectiveYos(Decimal manualYos, Decimal flowYos, Decimal retAge) {
+        if (manualYos != null && manualYos != 0) { return manualYos; }
+        if (flowYos != null && flowYos != 0) { return flowYos; }
+        return projectedYos(retAge);
+    }
+
     private Decimal monthlyAnnuityCalc(Decimal high3, Decimal retAge, Decimal yos) {
         Decimal f = factor(retAge, yos);
         return (high3 * (f / 100) * yos) / 12;
@@ -151,11 +178,11 @@ public with sharing class FedWorkbook_FersSurvivorExt {
     public Decimal getS1MonthlyRetirementAnnuity() {
         // Mirrors FERS_System.page lines 1515/1524/1533/1542:
         //   ((Lead.High_3_Salary__c * 0.01 or 0.011) * scenario1XYOS) / 12
-        // scenario1XYOS == Scenario1_YOS__c in the rebrand extension convention
+        // scenario1XYOS is the effective YOS (manual override -> Flow -> projected).
         return monthlyAnnuityCalc(
             safe(lead.High_3_Salary__c),
             safe(lead.Scenario1_Retirement_Age__c),
-            safe(lead.Scenario1_YOS__c)
+            effectiveYos(lead.Scenario1_YOS_Manual__c, lead.Scenario1_YOS__c, lead.Scenario1_Retirement_Age__c)
         );
     }
 
@@ -184,7 +211,7 @@ public with sharing class FedWorkbook_FersSurvivorExt {
         return monthlyAnnuityCalc(
             safe(lead.High_3_Salary2__c),
             safe(lead.Scenario2_Retirement_Age__c),
-            safe(lead.Scenario2_YOS__c)
+            effectiveYos(lead.Scenario2_YOS_Manual__c, lead.Scenario2_YOS__c, lead.Scenario2_Retirement_Age__c)
         );
     }
 
@@ -211,14 +238,14 @@ public with sharing class FedWorkbook_FersSurvivorExt {
             return monthlyAnnuityCalc(
                 safe(lead.High_3_Salary__c),
                 safe(lead.Scenario1_Retirement_Age__c),
-                safe(lead.Scenario1_YOS__c)
+                effectiveYos(lead.Scenario1_YOS_Manual__c, lead.Scenario1_YOS__c, lead.Scenario1_Retirement_Age__c)
             );
         }
         if (s2Primary && lead.Scenario2_Retirement_Age__c != null) {
             return monthlyAnnuityCalc(
                 safe(lead.High_3_Salary2__c),
                 safe(lead.Scenario2_Retirement_Age__c),
-                safe(lead.Scenario2_YOS__c)
+                effectiveYos(lead.Scenario2_YOS_Manual__c, lead.Scenario2_YOS__c, lead.Scenario2_Retirement_Age__c)
             );
         }
         // Default (no scenario is primary): Expected_Retirement_Age__c + Years_of_Employment__c

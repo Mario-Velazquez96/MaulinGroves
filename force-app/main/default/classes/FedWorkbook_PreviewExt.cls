@@ -7,6 +7,57 @@ public with sharing class FedWorkbook_PreviewExt {
     }
 
     // -----------------------------------------------------------------------
+    // reseedYosOnOpen()
+    // Invoked from the page's action= attribute. Each time the workbook is opened,
+    // reset the editable "Times (x) Years of Service" overrides
+    // (Scenario1/2_YOS_Manual__c) to the current Flow-computed values
+    // (Scenario1/2_YOS__c).
+    //
+    // The action runs AFTER the apex:include section controllers have already
+    // constructed and queried the Lead, so the reseed's DML isn't visible to them
+    // on this render. To avoid that one-render lag we reseed and then redirect once
+    // to the same page (?yosSeeded=1); on that clean request the sections re-query
+    // and read the committed values.
+    //
+    // Skip markers:
+    //   yosSeeded=1 — the post-reseed redirect (don't reseed again / no loop)
+    //   yosEdited=1 — the reload after a manual YOS edit (preserve the entry)
+    // -----------------------------------------------------------------------
+    public PageReference reseedYosOnOpen() {
+        Id leadId = stdCtrl.getId();
+        if (leadId == null) { return null; }
+
+        PageReference p = ApexPages.currentPage();
+        Map<String, String> params = (p == null)
+            ? new Map<String, String>() : p.getParameters();
+        if (params.get('yosSeeded') == '1' || params.get('yosEdited') == '1') {
+            return null; // already seeded this open, or preserving a manual edit
+        }
+
+        try {
+            Lead l = [
+                SELECT Scenario1_YOS__c, Scenario2_YOS__c,
+                       Scenario1_YOS_Manual__c, Scenario2_YOS_Manual__c
+                FROM Lead WHERE Id = :leadId LIMIT 1
+            ];
+            l.Scenario1_YOS_Manual__c = l.Scenario1_YOS__c;
+            l.Scenario2_YOS_Manual__c = l.Scenario2_YOS__c;
+            update l;
+        } catch (Exception e) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            return null;
+        }
+
+        if (p == null) { return null; } // test context with no page — DML already done
+
+        // Redirect to the same page so the included sections re-query the committed
+        // overrides on a fresh request (their constructors run before this action).
+        p.getParameters().put('yosSeeded', '1');
+        p.setRedirect(true);
+        return p;
+    }
+
+    // -----------------------------------------------------------------------
     // saveAttachment()
     // Rebrand equivalent of Federal_LeadControllerExtension.pdfAction():
     //   - bumps Lead.Workbook_Version__c,

@@ -197,6 +197,7 @@ public with sharing class FedWorkbook_PDFExt {
 
     // ----- Page 12: Financial Snapshot -----------------------------------
     public Boolean getSnapSocialSecurityEligible()  { return snap().getSocialSecurityEligible(); }
+    public Decimal getSnapSocialSecurityStartAge()  { return snap().getSocialSecurityStartAge(); }
     public Decimal getSnapPensionBase()             { return snap().getPensionBase(); }
     public Decimal getSnapSurvivingSpouseBenefit()  { return snap().getSurvivingSpouseBenefit(); }
     public Boolean getSnapIsMarried()               { return snap().getIsMarried(); }

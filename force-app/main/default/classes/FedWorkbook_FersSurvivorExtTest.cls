@@ -69,6 +69,25 @@ private class FedWorkbook_FersSurvivorExtTest {
     }
 
     @isTest
+    static void testManualOverrideDrivesAnnuity() {
+        // A manual YOS override (entered on the FERS-Calc page and stored in the
+        // shared Flow-safe field) must flow through to the survivor-page annuity.
+        Lead l = FedWorkbook_TestData.fersBefore62();   // S1 primary, age 60, High-3 100k
+        l.Scenario1_YOS_Manual__c = 40;                 // override the Flow's 25
+        update l;
+        Test.startTest();
+        FedWorkbook_FersSurvivorExt ext =
+            new FedWorkbook_FersSurvivorExt(FedWorkbook_TestData.sc(l.Id));
+        // Age 60 (<62) => 1.0% factor; (100000 * 0.01 * 40) / 12
+        Decimal expected = (100000 * 0.01 * 40) / 12;
+        System.assertEquals(expected, ext.getS1MonthlyRetirementAnnuity(),
+            'Manual YOS override drives the survivor-page monthly retirement annuity');
+        System.assertEquals(expected, ext.getMonthlyAnnuity(),
+            'Override also drives the primary-scenario survivor benefit annuity');
+        Test.stopTest();
+    }
+
+    @isTest
     static void testNullId() {
         Test.startTest();
         FedWorkbook_FersSurvivorExt ext =

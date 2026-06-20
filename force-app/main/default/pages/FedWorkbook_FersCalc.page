@@ -275,6 +275,15 @@
                 <!-- Primary selection (mutually exclusive). -->
                 <apex:actionFunction name="gfg8Primary1" action="{!setPrimary1}" reRender="gfg8grid,gfg8msgs" />
                 <apex:actionFunction name="gfg8Primary2" action="{!setPrimary2}" reRender="gfg8grid,gfg8msgs" />
+                <!-- Years of Service save. Once the value is persisted, reload the
+                     workbook so the OTHER pages (FersSurvivor, FinancialSnapshot)
+                     re-query and show the new annuity — their separate controllers
+                     can't be refreshed by this form's AJAX re-render alone.
+                     The reload carries ?yosEdited=1 so the open-time reseed is
+                     skipped and the just-entered value is preserved. -->
+                <apex:actionFunction name="gfg8SaveYos" action="{!saveLead}"
+                    reRender="gfg8grid,gfg8msgs"
+                    oncomplete="sessionStorage.setItem('fwScrollY', String(window.pageYOffset || document.documentElement.scrollTop)); var u=new URL(window.location.href); u.searchParams.set('yosEdited','1'); window.location.replace(u.toString());" />
                 <apex:outputPanel id="gfg8msgs"><apex:pageMessages /></apex:outputPanel>
 
                 <apex:outputPanel id="gfg8grid" layout="block">
@@ -376,18 +385,20 @@
                         </span>
                     </div>
 
-                    <!-- Row 5: Times (x) Years of Service (editable) -->
+                    <!-- Row 5: Times (x) Years of Service (editable). Writes to the
+                         Flow-safe Scenario1/2_YOS_Manual__c override field so the entry
+                         survives the Flow and is shared across the workbook pages. -->
                     <div class="gfg8-calc__label">Times (x) Years of Service:</div>
                     <div class="gfg8-calc__row">
                         <span class="gfg8-blank">
-                            <apex:inputField value="{!lead.Scenario1_YOS__c}"
-                                styleClass="gfg8-age-input" onchange="gfg8Save();" />
+                            <apex:inputText value="{!scenario1XYOS}"
+                                styleClass="gfg8-age-input" onchange="gfg8SaveYos();" />
                         </span>
                     </div>
                     <div class="gfg8-calc__row">
                         <span class="gfg8-blank">
-                            <apex:inputField value="{!lead.Scenario2_YOS__c}"
-                                styleClass="gfg8-age-input" onchange="gfg8Save();" />
+                            <apex:inputText value="{!scenario2XYOS}"
+                                styleClass="gfg8-age-input" onchange="gfg8SaveYos();" />
                         </span>
                     </div>
 
@@ -426,4 +437,18 @@
 
         </div>
     </div>
+
+    <!-- Restore the scroll position after the YOS-edit reload so the user stays
+         on this section instead of jumping back to the top of the workbook. -->
+    <script type="text/javascript">
+        (function () {
+            window.addEventListener('load', function () {
+                var y = sessionStorage.getItem('fwScrollY');
+                if (y !== null) {
+                    sessionStorage.removeItem('fwScrollY');
+                    window.scrollTo(0, parseInt(y, 10));
+                }
+            });
+        })();
+    </script>
 </apex:page>
