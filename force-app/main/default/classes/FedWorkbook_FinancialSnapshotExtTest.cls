@@ -71,7 +71,7 @@ private class FedWorkbook_FinancialSnapshotExtTest {
             'FERS primary scenario => scenario retirement age');
 
         // Special Group member WITH a primary scenario → must IGNORE the scenario
-        // age and use Expected_Retirement_Age__c, matching getSocialSecurityEligible.
+        // age and use the date-derived expected retirement age, matching getSocialSecurityEligible.
         Lead sg = new Lead(
             LastName = 'SgScenario', Company = 'Fed Agency',
             Special_Group_Member__c = true, FERS__c = true,
@@ -84,10 +84,10 @@ private class FedWorkbook_FinancialSnapshotExtTest {
         insert sg;
         FedWorkbook_FinancialSnapshotExt sgExt =
             new FedWorkbook_FinancialSnapshotExt(FedWorkbook_TestData.sc(sg.Id));
-        Decimal expectedAge = sgExt.lead.Expected_Retirement_Age__c == null
-            ? 0 : sgExt.lead.Expected_Retirement_Age__c;
+        Decimal derivedAge = FedWorkbook_Util.expectedRetirementAge(sgExt.lead);
+        Decimal expectedAge = derivedAge == null ? 0 : derivedAge;
         System.assertEquals(expectedAge, sgExt.getSocialSecurityStartAge(),
-            'Special Group => Expected_Retirement_Age__c, not the primary scenario age');
+            'Special Group => date-derived expected retirement age, not the primary scenario age');
     }
 
     @isTest

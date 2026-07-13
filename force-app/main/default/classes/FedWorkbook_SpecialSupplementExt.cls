@@ -13,7 +13,8 @@ public with sharing class FedWorkbook_SpecialSupplementExt {
         return [
             SELECT Special_Group_Member__c,
                    FERS__c,
-                   Expected_Retirement_Age__c,
+                   Date_of_Birth__c,
+                   Expected_Retirement_Date__c,
                    Scenario1_Primary__c, Scenario1_Retirement_Age__c,
                    Scenario2_Primary__c, Scenario2_Retirement_Age__c,
                    YOS_Special_Supplement__c,
@@ -43,7 +44,8 @@ public with sharing class FedWorkbook_SpecialSupplementExt {
     public Boolean getShowSpecialSupp() {
         Boolean isSpecial = lead.Special_Group_Member__c == true;
         Boolean isFers = lead.FERS__c == true;
-        Decimal expected = lead.Expected_Retirement_Age__c == null ? 999 : lead.Expected_Retirement_Age__c;
+        Decimal expectedAge = FedWorkbook_Util.expectedRetirementAge(lead);
+        Decimal expected = expectedAge == null ? 999 : expectedAge;
         Decimal s1Age = lead.Scenario1_Retirement_Age__c == null ? 999 : lead.Scenario1_Retirement_Age__c;
         Decimal s2Age = lead.Scenario2_Retirement_Age__c == null ? 999 : lead.Scenario2_Retirement_Age__c;
         Boolean s1Primary = lead.Scenario1_Primary__c == true;

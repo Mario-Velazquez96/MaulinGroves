@@ -326,6 +326,7 @@
             .gfgp-survbox.sel { border: 1.5pt solid #3A5754; background: #f3f7f2; }
             .gfgp-survbox__title { font-weight: bold; text-align: center; font-size: 11pt; margin: 0 0 8pt; }
             .gfgp-survbox__sel { text-align: center; font-size: 8.5pt; font-weight: bold; color: #3A5754; margin: -4pt 0 8pt; }
+            .gfgp-survbox__optout { text-align: center; font-size: 8.5pt; font-weight: bold; color: #b00020; margin: -4pt 0 8pt; }
             .gfgp-survcap { text-align: center; color: #B91C1C; font-size: 10pt; line-height: 1.5; margin-top: 10pt; }
             .gfgp-survcap .u { border-bottom: 1px solid #B91C1C; font-weight: bold; padding: 0 6pt; }
 
@@ -488,7 +489,7 @@
                             <td class="gfgp-lbl">Years of Creditable Service:</td>
                             <td class="gfgp-val"><apex:outputField value="{!Lead.Years_of_Employment__c}" /></td>
                             <td class="gfgp-lbl">Expected Retirement Age:</td>
-                            <td class="gfgp-val"><apex:outputField value="{!Lead.Expected_Retirement_Age__c}" /></td>
+                            <td class="gfgp-val"><apex:outputText value="{0, number, #0}"><apex:param value="{!fcExpectedRetirementAge}" /></apex:outputText></td>
                         </tr>
                         <!-- Marital / Spouse / Federal Employee -->
                         <tr>
@@ -1258,6 +1259,9 @@
                             <div class="gfgp-callout">
                                 <div class="gfgp-callout-title">Points to Consider</div>
                                 If you opt out of the survivor benefit, your spouse or any other family member covered under FEHB will lose that coverage if you predecease them during retirement, unless they are otherwise eligible for coverage. In addition, they will lose the ability to initially enroll in FLTCIP coverage, unless otherwise eligible, although they could continue coverage if already enrolled.
+                                <apex:outputPanel layout="none" rendered="{!fsOptedOut}">
+                                    <div style="text-align:center;font-weight:bold;margin-top:6pt;">&#9745; Opted out of survivor benefit</div>
+                                </apex:outputPanel>
                             </div>
                         </td>
                     </tr></table>
@@ -1268,6 +1272,7 @@
                             <div class="gfgp-survbox{!IF(fsMinSelected, ' sel', '')}">
                                 <div class="gfgp-survbox__title">Minimum Survivor Benefit Monthly Cost</div>
                                 <apex:outputPanel layout="none" rendered="{!fsMinSelected}"><div class="gfgp-survbox__sel">&#10003; Selected</div></apex:outputPanel>
+                                <apex:outputPanel layout="none" rendered="{!fsOptedOut}"><div class="gfgp-survbox__optout">Opted Out</div></apex:outputPanel>
                                 <table class="gfgp-calc">
                                     <tr><td>Monthly Annuity: $</td><td class="v"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fsMonthlyAnnuity}" /></apex:outputText></td></tr>
                                     <tr><td>Minus 5%</td><td class="v"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fsMinus5Pct}" /></apex:outputText></td></tr>
@@ -1280,6 +1285,7 @@
                             <div class="gfgp-survbox{!IF(fsMaxSelected, ' sel', '')}">
                                 <div class="gfgp-survbox__title">Maximum Survivor Benefit Monthly Cost</div>
                                 <apex:outputPanel layout="none" rendered="{!fsMaxSelected}"><div class="gfgp-survbox__sel">&#10003; Selected</div></apex:outputPanel>
+                                <apex:outputPanel layout="none" rendered="{!fsOptedOut}"><div class="gfgp-survbox__optout">Opted Out</div></apex:outputPanel>
                                 <table class="gfgp-calc">
                                     <tr><td>Monthly Annuity: $</td><td class="v"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fsMonthlyAnnuity}" /></apex:outputText></td></tr>
                                     <tr><td>Minus 10%</td><td class="v"><apex:outputText value="{0, number, #,##0.00}"><apex:param value="{!fsMinus10Pct}" /></apex:outputText></td></tr>
@@ -1571,7 +1577,7 @@
                                 <span style="display:inline-block;min-width:36pt;border-bottom:1px solid #2b2b2b;text-align:center;">
                                     <apex:outputText value="{0, number, #0}" rendered="{!Lead.Scenario1_Primary__c == true}"><apex:param value="{!Lead.Scenario1_Retirement_Age__c}" /></apex:outputText>
                                     <apex:outputText value="{0, number, #0}" rendered="{!Lead.Scenario2_Primary__c == true}"><apex:param value="{!Lead.Scenario2_Retirement_Age__c}" /></apex:outputText>
-                                    <apex:outputText value="{0, number, #0}" rendered="{!AND(Lead.Scenario1_Primary__c == false, Lead.Scenario2_Primary__c == false)}"><apex:param value="{!Lead.Expected_Retirement_Age__c}" /></apex:outputText>
+                                    <apex:outputText value="{0, number, #0}" rendered="{!AND(Lead.Scenario1_Primary__c == false, Lead.Scenario2_Primary__c == false)}"><apex:param value="{!fcExpectedRetirementAge}" /></apex:outputText>
                                 </span>
                             </td>
                         </tr>

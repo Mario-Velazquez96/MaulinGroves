@@ -6,6 +6,27 @@ public with sharing class FedWorkbook_PreviewExt {
         this.stdCtrl = stdController;
     }
 
+    // Expected retirement age (date-derived; see FedWorkbook_Util) — used by the
+    // preview nav's Special Supplement render gate. Replaces the unreliable stored
+    // Expected_Retirement_Age__c formula. Lazily queried/cached: the Preview page
+    // composes sub-pages via apex:include, so the dates aren't otherwise loaded here.
+    private Decimal expectedRetAge;
+    private Boolean expectedRetAgeLoaded = false;
+    public Decimal getExpectedRetirementAge() {
+        if (!expectedRetAgeLoaded) {
+            expectedRetAgeLoaded = true;
+            Id leadId = stdCtrl.getId();
+            if (leadId != null) {
+                Lead l = [
+                    SELECT Date_of_Birth__c, Expected_Retirement_Date__c
+                    FROM Lead WHERE Id = :leadId LIMIT 1
+                ];
+                expectedRetAge = FedWorkbook_Util.expectedRetirementAge(l);
+            }
+        }
+        return expectedRetAge;
+    }
+
     // -----------------------------------------------------------------------
     // reseedYosOnOpen()
     // Invoked from the page's action= attribute. Each time the workbook is opened,

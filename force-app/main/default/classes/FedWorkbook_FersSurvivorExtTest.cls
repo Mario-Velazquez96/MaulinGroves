@@ -69,6 +69,40 @@ private class FedWorkbook_FersSurvivorExtTest {
     }
 
     @isTest
+    static void testOptOut() {
+        Lead l = FedWorkbook_TestData.fersBefore62();   // S1 primary, married path
+        Test.startTest();
+        FedWorkbook_FersSurvivorExt ext =
+            new FedWorkbook_FersSurvivorExt(FedWorkbook_TestData.sc(l.Id));
+
+        // Baseline (not opted out): reductions and surviving-spouse income are non-zero.
+        Decimal annuity = ext.getMonthlyAnnuity();
+        System.assert(annuity > 0, 'Annuity should be positive for this scenario');
+        System.assertEquals(annuity * 0.25, ext.getSurvivingSpouseMin(), 'Min benefit before opt-out');
+        System.assertEquals(annuity * 0.50, ext.getSurvivingSpouseMax(), 'Max benefit before opt-out');
+
+        // Pre-select Min; opting out must NOT change the Min/Max election.
+        ext.lead.Min__c = true;
+        ext.setMin();
+        System.assertEquals(true, ext.getMinSelected(), 'Min selected before opt-out');
+
+        // Opt out: independent of Min/Max — leaves them untouched, but still
+        // zeros reductions and surviving-spouse income (opt-out takes precedence).
+        ext.lead.Opt_Out__c = true;
+        ext.optOut();
+        System.assertEquals(true, ext.getOptedOut(), 'Opted out');
+        System.assertEquals(true, ext.getMinSelected(), 'Min election preserved through opt-out');
+        System.assertEquals(false, ext.getMaxSelected(), 'Max still unset');
+        System.assertEquals(0, ext.getMinus5Pct(), 'No 5% reduction when opted out');
+        System.assertEquals(0, ext.getMinus10Pct(), 'No 10% reduction when opted out');
+        System.assertEquals(ext.getMonthlyAnnuity(), ext.getReducedMin(), 'Reduced = full annuity when opted out');
+        System.assertEquals(ext.getMonthlyAnnuity(), ext.getReducedMax(), 'Reduced = full annuity when opted out');
+        System.assertEquals(0, ext.getSurvivingSpouseMin(), 'Surviving spouse min $0 when opted out');
+        System.assertEquals(0, ext.getSurvivingSpouseMax(), 'Surviving spouse max $0 when opted out');
+        Test.stopTest();
+    }
+
+    @isTest
     static void testManualOverrideDrivesAnnuity() {
         // A manual YOS override (entered on the FERS-Calc page and stored in the
         // shared Flow-safe field) must flow through to the survivor-page annuity.

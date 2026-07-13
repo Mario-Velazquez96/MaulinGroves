@@ -475,7 +475,7 @@
                                 </apex:outputText>
                                 <apex:outputText value="{0, number, #0}"
                                     rendered="{!AND(lead.Scenario1_Primary__c == false, lead.Scenario2_Primary__c == false)}">
-                                    <apex:param value="{!lead.Expected_Retirement_Age__c}" />
+                                    <apex:param value="{!expectedRetirementAge}" />
                                 </apex:outputText>
                             </span>
                         </div>

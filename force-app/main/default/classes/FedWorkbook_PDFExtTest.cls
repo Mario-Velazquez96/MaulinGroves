@@ -55,6 +55,7 @@ private class FedWorkbook_PDFExtTest {
         ext.getFsS2CurrentMonthlyIncome();
         ext.getFsS2MonthlyRetirementAnnuity();
         ext.getFsS2DifferenceInMonthlyAnnuity();
+        ext.getFsOptedOut();
         ext.getFsMonthlyAnnuity();
         ext.getFsMinus5Pct();
         ext.getFsReducedMin();

@@ -68,10 +68,11 @@ public with sharing class FedWorkbook_FersSurvivorExt {
                    High_3_Salary__c,
                    High_3_Salary2__c,
                    Base_Salary__c,
-                   Expected_Retirement_Age__c,
+                   Expected_Retirement_Date__c,
                    Years_of_Employment__c,
                    Min__c,
                    Max__c,
+                   Opt_Out__c,
                    Snapshot_Flow_Completed__c
             FROM Lead
             WHERE Id = :this.leadId
@@ -102,10 +103,12 @@ public with sharing class FedWorkbook_FersSurvivorExt {
 
     public Boolean getMinSelected() { return lead.Min__c == true; }
     public Boolean getMaxSelected() { return lead.Max__c == true; }
+    public Boolean getOptedOut()    { return lead.Opt_Out__c == true; }
 
     public PageReference setMin() {
         if (lead.Min__c == true) {
             lead.Max__c = false;
+            lead.Opt_Out__c = false;
             lead.Snapshot_Flow_Completed__c = false;
         }
         return saveLead();
@@ -114,8 +117,21 @@ public with sharing class FedWorkbook_FersSurvivorExt {
     public PageReference setMax() {
         if (lead.Max__c == true) {
             lead.Min__c = false;
+            lead.Opt_Out__c = false;
             lead.Snapshot_Flow_Completed__c = false;
         }
+        return saveLead();
+    }
+
+    // Opt out of the survivor benefit (legacy "Opt out of Benefit" checkbox,
+    // FERS_System.page line 1938). Independent of the Min/Max election — toggling
+    // it (true or false) must NOT change Min__c/Max__c. Reset the snapshot flag
+    // either way so the downstream financial snapshot recomputes for the new
+    // opt-out state. When opted out the surviving-spouse income shows $0.00 and
+    // the annuity is not reduced — matching FedWorkbook_FinancialSnapshotExt's
+    // opt-out gate, which already takes precedence over Min/Max.
+    public PageReference optOut() {
+        lead.Snapshot_Flow_Completed__c = false;
         return saveLead();
     }
 
@@ -248,11 +264,11 @@ public with sharing class FedWorkbook_FersSurvivorExt {
                 effectiveYos(lead.Scenario2_YOS_Manual__c, lead.Scenario2_YOS__c, lead.Scenario2_Retirement_Age__c)
             );
         }
-        // Default (no scenario is primary): Expected_Retirement_Age__c + Years_of_Employment__c
+        // Default (no scenario is primary): expected retirement age + Years_of_Employment__c
         // Mirrors FERS_System.page lines 2067-2080
         return monthlyAnnuityCalc(
             safe(lead.High_3_Salary__c),
-            safe(lead.Expected_Retirement_Age__c),
+            safe(FedWorkbook_Util.expectedRetirementAge(lead)),
             safe(lead.Years_of_Employment__c)
         );
     }
@@ -260,26 +276,33 @@ public with sharing class FedWorkbook_FersSurvivorExt {
     // ---- Minimum Survivor Benefit (5% reduction, 25% surviving spouse) ------
 
     public Decimal getMinus5Pct() {
-        // Mirrors FERS_System.page line 2226: (monthly annuity) * 0.05
+        // Mirrors FERS_System.page line 2226: (monthly annuity) * 0.05.
+        // Opted out => no reduction is taken (you keep the full annuity).
+        if (getOptedOut()) { return 0; }
         return getMonthlyAnnuity() * 0.05;
     }
 
     public Decimal getReducedMin() {
         // Reduced annuity after 5% deduction
+        // (equals the full annuity when opted out, since the deduction is 0).
         return getMonthlyAnnuity() - getMinus5Pct();
     }
 
     public Decimal getSurvivingSpouseMin() {
         // 25% of Monthly Annuity (surviving spouse monthly income)
         // Mirrors FERS_System.page lines 2292-2307 pattern (the surviving-spouse
-        // income is the elected 25% of the full annuity, not of the reduced annuity)
+        // income is the elected 25% of the full annuity, not of the reduced annuity).
+        // Opted out => $0.00 (legacy FERS_System.page line 2694).
+        if (getOptedOut()) { return 0; }
         return getMonthlyAnnuity() * 0.25;
     }
 
     // ---- Maximum Survivor Benefit (10% reduction, 50% surviving spouse) -----
 
     public Decimal getMinus10Pct() {
-        // Mirrors FERS_System.page line 2342: (monthly annuity) * 0.10
+        // Mirrors FERS_System.page line 2342: (monthly annuity) * 0.10.
+        // Opted out => no reduction is taken.
+        if (getOptedOut()) { return 0; }
         return getMonthlyAnnuity() * 0.10;
     }
 
@@ -288,7 +311,9 @@ public with sharing class FedWorkbook_FersSurvivorExt {
     }
 
     public Decimal getSurvivingSpouseMax() {
-        // 50% of Monthly Annuity
+        // 50% of Monthly Annuity.
+        // Opted out => $0.00 (legacy FERS_System.page line 2795).
+        if (getOptedOut()) { return 0; }
         return getMonthlyAnnuity() * 0.50;
     }
 }

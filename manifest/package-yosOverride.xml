@@ -6,13 +6,16 @@
      Lists only the components changed for this feature. -->
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
+		<members>FedWorkbook_EmployeeInfo</members>
 		<members>FedWorkbook_FersCalc</members>
+		<members>FedWorkbook_FersSurvivor</members>
 		<members>FedWorkbook_FinancialSnapshot</members>
 		<members>FedWorkbook_PDF</members>
 		<members>FedWorkbook_Preview</members>
 		<name>ApexPage</name>
 	</types>
 	<types>
+		<members>FedWorkbook_EmployeeInfoExt</members>
 		<members>FedWorkbook_FersCalcExt</members>
 		<members>FedWorkbook_FersCalcExtTest</members>
 		<members>FedWorkbook_FersSurvivorExt</members>
@@ -20,8 +23,11 @@
 		<members>FedWorkbook_FinancialSnapshotExt</members>
 		<members>FedWorkbook_FinancialSnapshotExtTest</members>
 		<members>FedWorkbook_PDFExt</members>
+		<members>FedWorkbook_PDFExtTest</members>
 		<members>FedWorkbook_PreviewExt</members>
 		<members>FedWorkbook_PreviewExtTest</members>
+		<members>FedWorkbook_SpecialSupplementExt</members>
+		<members>FedWorkbook_Util</members>
 		<name>ApexClass</name>
 	</types>
 	<types>

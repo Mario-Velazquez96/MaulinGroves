@@ -13,7 +13,7 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
         return [
             SELECT Id, Name,
                    Contact_Age__c,
-                   Expected_Retirement_Age__c,
+                   Expected_Retirement_Date__c,
                    FERS__c,
                    Special_Group_Member__c, Remaining_Years__c,
                    Scenario1_Primary__c, Scenario1_Retirement_Age__c, Scenario1_YOS__c, Scenario1_YOS_Manual__c,
@@ -58,6 +58,12 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
     // -----------------------------------------------------------------------
     private Decimal d(Decimal v) { return v == null ? 0 : v; }
 
+    // Expected retirement age (date-derived; see FedWorkbook_Util). Exposed for
+    // the page's "Age at Retirement" display on the no-primary-scenario path.
+    public Decimal getExpectedRetirementAge() {
+        return d(FedWorkbook_Util.expectedRetirementAge(lead));
+    }
+
     // -----------------------------------------------------------------------
     // Helper: YOS (years of service) value used in pension formula.
     // Legacy pages use YOS_Special_Supplement__c as the editable YOS input
@@ -82,7 +88,7 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
         return (lead.Scenario1_Primary__c == true && d(lead.Scenario1_Retirement_Age__c) < 62)
             || (lead.Scenario2_Primary__c == true && d(lead.Scenario2_Retirement_Age__c) < 62)
             || (lead.Scenario1_Primary__c != true && lead.Scenario2_Primary__c != true
-                && d(lead.Expected_Retirement_Age__c) < 62);
+                && d(FedWorkbook_Util.expectedRetirementAge(lead)) < 62);
     }
 
     // SocialSecurityValue — legacy lines 606-615: 0 when retiring before 62, else Predicted SS.
@@ -112,7 +118,7 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
     // -----------------------------------------------------------------------
     public Boolean getSocialSecurityEligible() {
         if (lead.Special_Group_Member__c == true) {
-            return d(lead.Expected_Retirement_Age__c) >= 62;
+            return d(FedWorkbook_Util.expectedRetirementAge(lead)) >= 62;
         }
         if (lead.FERS__c == true) {
             // Legacy SS gate (page line 2075) checks ONLY the two scenario clauses;
@@ -120,7 +126,7 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
             return (lead.Scenario1_Primary__c == true && d(lead.Scenario1_Retirement_Age__c) >= 62)
                 || (lead.Scenario2_Primary__c == true && d(lead.Scenario2_Retirement_Age__c) >= 62);
         }
-        return d(lead.Expected_Retirement_Age__c) >= 62;
+        return d(FedWorkbook_Util.expectedRetirementAge(lead)) >= 62;
     }
 
     // -----------------------------------------------------------------------
@@ -137,14 +143,14 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
     // -----------------------------------------------------------------------
     public Decimal getSocialSecurityStartAge() {
         if (lead.Special_Group_Member__c == true) {
-            return d(lead.Expected_Retirement_Age__c);
+            return d(FedWorkbook_Util.expectedRetirementAge(lead));
         }
         if (lead.FERS__c == true) {
             if (lead.Scenario1_Primary__c == true) { return d(lead.Scenario1_Retirement_Age__c); }
             if (lead.Scenario2_Primary__c == true) { return d(lead.Scenario2_Retirement_Age__c); }
-            return d(lead.Expected_Retirement_Age__c);
+            return d(FedWorkbook_Util.expectedRetirementAge(lead));
         }
-        return d(lead.Expected_Retirement_Age__c);
+        return d(FedWorkbook_Util.expectedRetirementAge(lead));
     }
 
     // -----------------------------------------------------------------------
@@ -297,7 +303,7 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
             // uses Years_of_Employment__c instead of scenarioXYos.
             high3            = d(lead.High_3_Salary__c);
             yosCareer        = d(lead.Years_of_Employment__c);
-            retirementAge    = d(lead.Expected_Retirement_Age__c);
+            retirementAge    = d(FedWorkbook_Util.expectedRetirementAge(lead));
             scenarioYosField = d(lead.Years_of_Employment__c);
         }
 
@@ -405,7 +411,7 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
         return (lead.Scenario1_Primary__c == true && d(lead.Scenario1_Retirement_Age__c) <= 62)
             || (lead.Scenario2_Primary__c == true && d(lead.Scenario2_Retirement_Age__c) <= 62)
             || (lead.Scenario1_Primary__c != true && lead.Scenario2_Primary__c != true
-                && d(lead.Expected_Retirement_Age__c) <= 62);
+                && d(FedWorkbook_Util.expectedRetirementAge(lead)) <= 62);
     }
 
     // -----------------------------------------------------------------------
@@ -428,13 +434,13 @@ public with sharing class FedWorkbook_FinancialSnapshotExt {
     // -----------------------------------------------------------------------
     public Boolean getFersSupplementEligible() {
         if (lead.Special_Group_Member__c == true) {
-            return d(lead.Expected_Retirement_Age__c) < 62;
+            return d(FedWorkbook_Util.expectedRetirementAge(lead)) < 62;
         }
         if (lead.FERS__c == true) {
             return (lead.Scenario1_Primary__c == true && d(lead.Scenario1_Retirement_Age__c) < 62)
                 || (lead.Scenario2_Primary__c == true && d(lead.Scenario2_Retirement_Age__c) < 62);
         }
-        return d(lead.Expected_Retirement_Age__c) < 62;
+        return d(FedWorkbook_Util.expectedRetirementAge(lead)) < 62;
     }
 
     // -----------------------------------------------------------------------

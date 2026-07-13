@@ -93,7 +93,7 @@
                             style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">Calculating FERS</a>
                         <a href="#nav-ferssurvivor"
                             style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">FERS Gap/Survivor Benefits</a>
-                        <apex:outputPanel rendered="{!(IF(Lead.Scenario1_Primary__c == true && Lead.Scenario1_Retirement_Age__c < 62, true,false) || IF(Lead.Scenario2_Primary__c == true && Lead.Scenario2_Retirement_Age__c < 62,true,false) || IF(Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && Lead.Expected_Retirement_Age__c < 62,true,false))}" layout="none">
+                        <apex:outputPanel rendered="{!(IF(Lead.Scenario1_Primary__c == true && Lead.Scenario1_Retirement_Age__c < 62, true,false) || IF(Lead.Scenario2_Primary__c == true && Lead.Scenario2_Retirement_Age__c < 62,true,false) || IF(Lead.Scenario1_Primary__c == false && Lead.Scenario2_Primary__c == false && expectedRetirementAge < 62,true,false))}" layout="none">
                             <a href="#nav-specialsupp"
                                 style="display: block; padding: 8px 12px; text-decoration: none; color: #333; transition:0.2s;">FERS Special Supplement</a>
                         </apex:outputPanel>

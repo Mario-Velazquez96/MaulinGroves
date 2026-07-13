@@ -74,11 +74,11 @@ public with sharing class FedWorkbook_FersCalcExt {
         return [
             SELECT FERS__c,
                    Contact_Age__c,
-                   Expected_Retirement_Age__c,
                    Years_of_Employment__c,
                    Base_Salary__c,
                    Date_of_Birth__c,
                    Date_of_Hire__c,
+                   Expected_Retirement_Date__c,
                    Scenario1_Primary__c,
                    Scenario2_Primary__c,
                    Scenario1_Retirement_Age__c,
@@ -112,8 +112,12 @@ public with sharing class FedWorkbook_FersCalcExt {
     public Decimal getCurrentAge() {
         return lead.Contact_Age__c == null ? 0 : lead.Contact_Age__c;
     }
+    // Expected retirement age = whole years between birth and the expected
+    // retirement date, derived from the two dates (the stored
+    // Expected_Retirement_Age__c formula was unreliable). See FedWorkbook_Util.
     public Decimal getExpectedRetirementAge() {
-        return lead.Expected_Retirement_Age__c == null ? 0 : lead.Expected_Retirement_Age__c;
+        Decimal age = FedWorkbook_Util.expectedRetirementAge(lead);
+        return age == null ? 0 : age;
     }
     public Decimal getCurrentYOS() {
         return lead.Years_of_Employment__c == null ? 0 : lead.Years_of_Employment__c;

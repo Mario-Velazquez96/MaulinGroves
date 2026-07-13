@@ -259,7 +259,7 @@
                     </span>
                     <span class="gfg2-field">
                         <label>Expected Retirement Age:</label>
-                        <apex:outputField value="{!Lead.Expected_Retirement_Age__c}" styleClass="gfg2-ro" />
+                        <apex:outputText value="{0, number, #0}" styleClass="gfg2-ro"><apex:param value="{!expectedRetirementAge}" /></apex:outputText>
                     </span>
                 </div>
 

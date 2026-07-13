@@ -167,6 +167,22 @@
             text-align: center;
             margin: 0;
         }
+        /* Opt-out toggle inside the Points to Consider callout */
+        .gfg9-callout__optout {
+            margin: 12px 0 0;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.35);
+            text-align: center;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .gfg9-callout__optout .gfg9-box__chk {
+            margin: 0 6px 0 0;
+            vertical-align: middle;
+            accent-color: #ffffff;
+        }
 
         /* ---- Survivor benefit calculation boxes ---- */
         .gfg9-boxes {
@@ -388,6 +404,22 @@
                         initially enroll in FLTCIP coverage, unless otherwise eligible,
                         although they could continue coverage if already enrolled.
                     </p>
+                    <!-- Opt out of Benefit toggle (legacy FERS_System.page line 1936).
+                         Lives in its own form; reRenders the local Min/Max boxes so the
+                         surviving-spouse income drops to $0.00 immediately, then reloads
+                         the page on complete. The reload is what refreshes the Financial
+                         Snapshot section: in the Preview/PDF harness that section is a
+                         separate apex:include with its own controller instance, so it can
+                         only pick up the new Opt_Out__c value on a fresh page load. -->
+                    <apex:form id="gfg9optoutform">
+                        <apex:actionFunction name="gfg9OptOut" action="{!optOut}"
+                            reRender="gfg9boxes,gfg9msgs2"
+                            oncomplete="window.location.reload();" />
+                        <p class="gfg9-callout__optout">
+                            <apex:inputField value="{!lead.Opt_Out__c}" styleClass="gfg9-box__chk" onchange="gfg9OptOut();" />
+                            Opt out of Benefit
+                        </p>
+                    </apex:form>
                 </div>
 
                 <ul class="gfg9-bullets">
@@ -403,9 +435,15 @@
                 <!-- Minimum / Maximum Survivor Benefit boxes -->
                 <apex:form id="gfg9form2">
                     <!-- Min / Max are mutually exclusive: choosing one clears the
-                         other (legacy setmin / setmax). reRenders both boxes. -->
-                    <apex:actionFunction name="gfg9SetMin" action="{!setMin}" reRender="gfg9boxes,gfg9msgs2" />
-                    <apex:actionFunction name="gfg9SetMax" action="{!setMax}" reRender="gfg9boxes,gfg9msgs2" />
+                         other (legacy setmin / setmax). reRenders both boxes for
+                         instant local feedback, then reloads the page on complete so
+                         the Financial Snapshot section (a separate apex:include with its
+                         own controller) picks up the new election — Min/Max drive the
+                         snapshot's pension reduction and surviving-spouse benefit. -->
+                    <apex:actionFunction name="gfg9SetMin" action="{!setMin}"
+                        reRender="gfg9boxes,gfg9msgs2" oncomplete="window.location.reload();" />
+                    <apex:actionFunction name="gfg9SetMax" action="{!setMax}"
+                        reRender="gfg9boxes,gfg9msgs2" oncomplete="window.location.reload();" />
                     <apex:outputPanel id="gfg9msgs2"><apex:pageMessages /></apex:outputPanel>
 
                 <apex:outputPanel id="gfg9boxes" layout="block" styleClass="gfg9-boxes">

@@ -57,6 +57,12 @@ public with sharing class FedWorkbook_EmployeeInfoExt {
     public Date getRetireDate()           { return liveLead().Expected_Retirement_Date__c; }
     public void setRetireDate(Date value) { liveLead().Expected_Retirement_Date__c = value; }
 
+    // Expected retirement age (date-derived; see FedWorkbook_Util) — replaces the
+    // unreliable stored Expected_Retirement_Age__c formula in the read-only display.
+    public Decimal getExpectedRetirementAge() {
+        return FedWorkbook_Util.expectedRetirementAge(liveLead());
+    }
+
     // ----- FEGLI Plan: checkboxes <-> FEGLI_Plan__c multi-select picklist --
     // FEGLI_Plan__c stores a semicolon-delimited string. Each checkbox
     // toggles one value within it.
